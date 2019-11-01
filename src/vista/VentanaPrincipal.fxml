@@ -1,8 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1">
-	<!-- TODO Add Nodes -->
-</AnchorPane>
 
+<AnchorPane prefHeight="473.0" prefWidth="629.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+   <children>
+      <ScrollPane layoutX="72.0" layoutY="56.0" prefHeight="144.0" prefWidth="496.0">
+         <content>
+            <TextArea fx:id="textArea">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextArea>
+         </content>
+      </ScrollPane>
+      <HBox layoutX="108.0" layoutY="237.0" prefHeight="100.0" prefWidth="393.0" spacing="50.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#agregarParentesisIzq" prefHeight="50.0" prefWidth="61.0" text="(">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#agregarParentesisDer" prefHeight="50.0" prefWidth="61.0" text=" ) ">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#agregarNegacion" prefHeight="50.0" prefWidth="61.0" text="¬ ">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#agregarConjuncion" prefHeight="50.0" prefWidth="61.0" text="ʌ">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+      <HBox layoutX="108.0" layoutY="324.0" prefHeight="100.0" prefWidth="393.0" spacing="50.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#agregarDisyuncion" prefHeight="50.0" prefWidth="80.0" text="v">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#agregarCondicionalIzq" prefHeight="50.0" prefWidth="80.0" text="→">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#agregarCondicionalDer" prefHeight="50.0" prefWidth="80.0" text="←">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#agregarBicondicional" prefHeight="50.0" prefWidth="80.0" text="↔">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
