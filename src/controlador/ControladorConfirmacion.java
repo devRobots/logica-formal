@@ -82,7 +82,7 @@ public class ControladorConfirmacion implements Initializable {
 					list.add(aux);
 				}
 			} else if (!formula.get(i).equals("¬") && !formula.get(i).equals("ʌ") && !formula.get(i).equals("v")
-					&& !formula.get(i).equals("→") && !formula.get(i).equals("↔")) {
+					&& !formula.get(i).equals("→’") && !formula.get(i).equals("↔")) {
 				boolean ward = true;
 				for (int j = 0; j < atomos.size() && ward; j++) {
 					if (atomos.get(j).getValue().equals(formula.get(i))) {

@@ -125,27 +125,26 @@ public class ControladorVentanaPrincipal implements Initializable {
 		textArea.setText(cadena);
 	}
 
-	private ArrayList<String> completarParentesisIzq() {
-		int pos = textArea.getCaretPosition();
-		int paD = 0, paI = 0;
-		for (int i = pos; i < formula.size(); i++) {
-			if (i == formula.size() - 1) {
-				formula.add(")");
-				return formula;
-			} else if (formula.get(i).equals(")") && paD == 1 && paI == 0) {
-				if (i + 1 < formula.size() - 1) {
-					formula.add(i + 1, ")");
-				} else {
-					formula.add(")");
+	private ArrayList<String> completarParentesis() {
+		ArrayList<String> formulaAux=new ArrayList<String>(formula);
+		ArrayList<Integer> parentesis = new ArrayList<Integer>();
+		for (int i = 0; i < formula.size(); i++) {
+			if (formulaAux.get(i).equals("ʌ") && formulaAux.get(i).equals("v")
+					&& formulaAux.get(i).equals("→’") && formulaAux.get(i).equals("↔")) {
+				if (i-1>0&&i+1<formulaAux.size()) {
+					for(int j=0;j>=0;j--) {
+						
+					}
+				}else {
+					return null;
 				}
-				return formula;
-			} else if (formula.get(i).equals("(")) {
-				paD++;
-			} else if (formula.get(i).equals(")")) {
-				paI--;
+			} else {
+				
+				
 			}
+			//formula.get(i).equals("¬")
 		}
-		return formula;
+		return formulaAux;
 	}
 
 	@FXML
@@ -161,10 +160,10 @@ public class ControladorVentanaPrincipal implements Initializable {
 				stage.setTitle("Proyecto");
 				stage.setScene(scene);
 				ControladorConfirmacion con = fxmlLoader.getController();
-				con.setFormula(list,formula,(Stage)textArea.getScene().getWindow());
+				con.setFormula(list, formula, (Stage) textArea.getScene().getWindow());
 				stage.show();
-				((Stage)textArea.getScene().getWindow()).close();
-				
+				((Stage) textArea.getScene().getWindow()).close();
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -196,7 +195,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 					par = false;
 				}
 			} else if (!formula.get(i).equals("¬") && !formula.get(i).equals("ʌ") && !formula.get(i).equals("v")
-					&& !formula.get(i).equals("→") && !formula.get(i).equals("↔")) {
+					&& !formula.get(i).equals("→’") && !formula.get(i).equals("↔")) {
 				boolean ward = true;
 				for (int j = 0; j < atomos.size() && ward; j++) {
 					if (atomos.get(j).getValue().equals(formula.get(i))) {
@@ -225,7 +224,8 @@ public class ControladorVentanaPrincipal implements Initializable {
 			JOptionPane.showMessageDialog(null, "Existe error en los parentesis", "Error", JOptionPane.ERROR_MESSAGE);
 			return null;
 		} else if (atomos.size() < 5) {
-			JOptionPane.showMessageDialog(null, "Use minimo 5 atomos distintos por favor.", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Use minimo 5 atomos distintos por favor.", "Error",
+					JOptionPane.ERROR_MESSAGE);
 			return null;
 		} else {
 			return list;
