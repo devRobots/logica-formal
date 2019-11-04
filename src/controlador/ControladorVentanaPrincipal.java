@@ -30,7 +30,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 
 	@FXML
 	private TextArea textArea;
-	private ArrayList<String> formula = new ArrayList<String>();
+	private ArrayList<String> formula = new ArrayList<>();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -110,7 +110,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 	}
 
 	private void stringaArray() {
-		formula = new ArrayList<String>();
+		formula = new ArrayList<>();
 		for (char aux : textArea.getText().toCharArray()) {
 			formula.add(String.valueOf(aux));
 		}
@@ -126,23 +126,22 @@ public class ControladorVentanaPrincipal implements Initializable {
 	}
 
 	private ArrayList<String> completarParentesis() {
-		ArrayList<String> formulaAux=new ArrayList<String>(formula);
-		ArrayList<Integer> parentesis = new ArrayList<Integer>();
+		ArrayList<String> formulaAux = new ArrayList<>(formula);
+		ArrayList<Integer> parentesis = new ArrayList<>();
 		for (int i = 0; i < formula.size(); i++) {
-			if (formulaAux.get(i).equals("ʌ") && formulaAux.get(i).equals("v")
-					&& formulaAux.get(i).equals("→’") && formulaAux.get(i).equals("↔")) {
-				if (i-1>0&&i+1<formulaAux.size()) {
-					for(int j=0;j>=0;j--) {
-						
+			if (formulaAux.get(i).equals("ʌ") && formulaAux.get(i).equals("v") && formulaAux.get(i).equals("→’")
+					&& formulaAux.get(i).equals("↔")) {
+				if (i - 1 > 0 && i + 1 < formulaAux.size()) {
+					for (int j = 0; j >= 0; j--) {
+
 					}
-				}else {
+				} else {
 					return null;
 				}
 			} else {
-				
-				
+
 			}
-			//formula.get(i).equals("¬")
+			// formula.get(i).equals("¬")
 		}
 		return formulaAux;
 	}
@@ -154,7 +153,8 @@ public class ControladorVentanaPrincipal implements Initializable {
 		if (list != null) {
 			try {
 				FXMLLoader fxmlLoader = new FXMLLoader();
-				fxmlLoader.setLocation(ControladorVentanaPrincipal.class.getResource("VentanaConfirmacion.fxml"));
+				fxmlLoader.setLocation(
+						ControladorVentanaPrincipal.class.getResource("../vista/VentanaConfirmacion.fxml"));
 				Scene scene = new Scene(fxmlLoader.load());
 				Stage stage = new Stage();
 				stage.setTitle("Proyecto");
@@ -173,8 +173,8 @@ public class ControladorVentanaPrincipal implements Initializable {
 	public ObservableList<Node> getFormulaColor(ArrayList<String> formula) {
 		boolean par = true;
 		ObservableList<Node> list = FXCollections.observableArrayList();
-		ArrayList<ColorF> atomos = new ArrayList<ColorF>();
-		ArrayList<ColorF> parentesis = new ArrayList<ColorF>();
+		ArrayList<ColorF> atomos = new ArrayList<>();
+		ArrayList<ColorF> parentesis = new ArrayList<>();
 
 		for (int i = 0; i < formula.size(); i++) {
 			if (formula.get(i).equals("(")) {
