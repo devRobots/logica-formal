@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="283.0" prefWidth="586.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.ControladorConfirmacion">
+   <children>
+      <ScrollPane layoutX="47.0" layoutY="68.0" prefHeight="87.0" prefWidth="496.0" vbarPolicy="NEVER">
+         <content>
+            <TextFlow fx:id="textFlow" prefHeight="88.0" prefWidth="494.0" textAlignment="CENTER" />
+         </content>
+      </ScrollPane>
+      <Button layoutX="418.0" layoutY="223.0" mnemonicParsing="false" onAction="#aceptar" prefHeight="37.0" prefWidth="86.0" style="-fx-background-radius: 50px;" text="Si" />
+      <Label layoutX="207.0" layoutY="28.0" text="Fórmula bien Formada ">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font></Label>
+      <Button layoutX="95.0" layoutY="223.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="37.0" prefWidth="86.0" style="-fx-background-radius: 50px;" text="No" />
+      <Label layoutX="200.0" layoutY="178.0" text="¿Es esta la fórmula que quiere usar?" />
+      <Button defaultButton="true" layoutX="443.0" layoutY="28.0" mnemonicParsing="false" onAction="#cambiarColor" style="-fx-background-radius: 50px;" text="Cambiar color" />
+   </children>
+</AnchorPane>

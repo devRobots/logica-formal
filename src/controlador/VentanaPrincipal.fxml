@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="346.0" prefWidth="586.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.ControladorVentanaPrincipal">
+   <children>
+      <ScrollPane layoutX="45.0" layoutY="98.0" prefHeight="87.0" prefWidth="496.0" vbarPolicy="NEVER">
+         <content>
+            <TextArea fx:id="textArea" minHeight="-Infinity" minWidth="-Infinity" prefHeight="85.0" prefWidth="494.0" promptText="Ingrese aqui la Fórmula" style="-fx-text-alignment: center;">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </TextArea>
+         </content>
+      </ScrollPane>
+      <HBox layoutX="61.0" layoutY="208.0" prefHeight="50.0" prefWidth="464.0" spacing="30.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#agregarParentesisIzq" prefHeight="30.0" prefWidth="41.0" text="(">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#agregarParentesisDer" prefHeight="30.0" prefWidth="41.0" text=" ) ">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#agregarNegacion" prefHeight="30.0" prefWidth="41.0" text="¬ ">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#agregarConjuncion" prefHeight="30.0" prefWidth="41.0" text="ʌ">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#agregarDisyuncion" prefHeight="30.0" prefWidth="45.0" text="v">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#agregarCondicionalIzq" prefHeight="30.0" prefWidth="45.0" text="→">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#agregarBicondicional" prefHeight="30.0" prefWidth="45.0" text="↔">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+      <Label layoutX="150.0" layoutY="69.0" text="Ingrese la fórmula con exceso de parentesis por favor." />
+      <Button fx:id="btnAceptar" defaultButton="true" layoutX="250.0" layoutY="290.0" mnemonicParsing="false" onAction="#aceptar" prefHeight="37.0" prefWidth="86.0" style="-fx-background-radius: 50px;" text="Aceptar" />
+      <Label layoutX="206.0" layoutY="27.0" text="Fórmula bien Formada ">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font></Label>
+   </children>
+</AnchorPane>
