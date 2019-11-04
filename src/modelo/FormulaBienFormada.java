@@ -6,13 +6,9 @@ import modelo.Operadores;
 
 public class FormulaBienFormada {
 	private String fbf;
-	private FormaNormal forma;
-
 	private ArrayList<Character> atomos;
 
 	public FormulaBienFormada(String fbf) {
-		this.fbf = fbf;
-
 		atomos = new ArrayList<Character>();
 
 		for (int i = 0; i < fbf.length(); i++) {
@@ -27,71 +23,97 @@ public class FormulaBienFormada {
 
 		Collections.sort(atomos);
 
-		if (esFND(fbf)) {
-			forma = FormaNormal.FND;
-		} else if (esFNC(fbf)) {
-			forma = FormaNormal.FNC;
-		} else {
-			forma = FormaNormal.NINGUNO;
-		}
+		this.fbf = fbf;
 	}
 
-	public FormulaBienFormada toFND() {
-		FormulaBienFormada fnd = null;
+	private String toFNC() {
+		String fnc = fbf;
 
-		if (forma == FormaNormal.FND) {
-			fnd = this;
-		} else {
-			String fbfFnd = null;
-			fnd = new FormulaBienFormada(fbfFnd);
+		if (fnc.contains(Operadores.EQUIVALENCIA)) {
+			fnc = axioma9(fnc);
+		}
+		if (fnc.contains(Operadores.CONDICIONAL)) {
+			fnc = axioma8(fnc);
 		}
 
-		return fnd;
-	}
+		fnc = axioma7(fnc);
 
-	private boolean esFND(String fbf) {
-		boolean flag = false;
-
-		return flag;
-	}
-
-	public FormulaBienFormada toFNC() {
-		FormulaBienFormada fnc = null;
-
-		if (forma == FormaNormal.FNC) {
-			fnc = this;
-		} else {
-			String fbfFnc = null;
-			fnc = new FormulaBienFormada(fbfFnc);
+		if (fnc.contains(Operadores.NEGACION + Operadores.NEGACION)) {
+			fnc = axioma4(fnc);
 		}
+
+		fnc = aplicarAsociativa(fnc);
 
 		return fnc;
+	}
+
+	private String aplicarAsociativa(String fnc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String axioma4(String fnc) {
+		String salida = fnc;
+
+		salida.replace(Operadores.NEGACION + "(" + Operadores.NEGACION, "");
+
+		return salida;
+	}
+
+	private String axioma7(String fnc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String axioma8(String fnc) {
+		String salida = fnc;
+
+		while (salida.contains(Operadores.CONDICIONAL)) {
+
+		}
+
+		return salida;
+	}
+
+	private String axioma9(String fnc) {
+		String salida = fnc;
+
+		while (salida.contains(Operadores.EQUIVALENCIA)) {
+			
+		}
+
+		return salida;
 	}
 
 	private boolean esFNC(String fbf) {
 		boolean flag = false;
 
+		int indice = fbf.charAt(indiceDeOperadorPrincipal(fbf));
+
+		if (indice != 0) {
+			String operadorPrincipal = fbf.substring(indice, indice + 1);
+
+			if (operadorPrincipal == Operadores.CONJUNCION) {
+				flag = true;
+			}
+		}
+
 		return flag;
 	}
-	
-	private FormulaBienFormada simplificarFormaNormal(FormulaBienFormada formula) {
-		FormulaBienFormada fn = new FormulaBienFormada(formula.getFbf());
-		
-		if (fn.contains(Operadores.EQUIVALENCIA)) {
-			fn = aplicarAxioma(fn, 9);
-		}
-		
-		return fn;
-	}
 
-	public ArrayList<String> toFC() throws Exception {
-		if (forma != FormaNormal.FNC) {
-			throw new Exception("No es una FNC");
+	public ArrayList<String> toFC() {
+		ArrayList<String> fcs = new ArrayList<String>();
+		String[] fds = toFNC().split(Operadores.CONJUNCION);
+
+		for (String fd : fds) {
+			String fc = fd.replace(Operadores.DISYUNCION, "");
+			fc = fc.replace("(", "");
+			fc = fc.replace(")", "");
+
+			fcs.add(fc);
 		}
 
-		ArrayList<String> fc = new ArrayList<String>();
-
-		return fc;
+		return fcs;
 	}
 
 	private int indiceDeOperadorPrincipal(String fbf) {
@@ -120,55 +142,8 @@ public class FormulaBienFormada {
 		return indice;
 	}
 
-	private FormulaBienFormada aplicarAxioma(FormulaBienFormada fbf, int axioma) {
-		FormulaBienFormada salida = null;
-
-		switch (axioma) {
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		case 5:
-			break;
-		case 6:
-			break;
-		case 7:
-			break;
-		case 8:
-			break;
-		case 9:
-			break;
-		case 10:
-			break;
-		default:
-			return null;
-		}
-
-		return salida;
-	}
-	
-	public boolean contains(String elemento) {
-		return fbf.contains(elemento);
-	}
-
 	public String getFbf() {
 		return fbf;
-	}
-
-	public void setFbf(String fbf) {
-		this.fbf = fbf;
-	}
-
-	public FormaNormal getForma() {
-		return forma;
-	}
-
-	public void setForma(FormaNormal forma) {
-		this.forma = forma;
 	}
 
 	public ArrayList<Character> getAtomos() {
