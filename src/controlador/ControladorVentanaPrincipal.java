@@ -17,6 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -32,81 +33,97 @@ public class ControladorVentanaPrincipal implements Initializable {
 	private TextArea textArea;
 	private ArrayList<String> formula = new ArrayList<>();
 
+	private boolean esPosicionValida(int pos) {
+		boolean flag = false;
+
+		String formula = textArea.getText();
+		if (!formula.isEmpty()) {
+			if (pos > -1 && pos < formula.length()) {
+				if (formula.charAt(pos - 1) == '(' && formula.charAt(pos) == ')') {
+					flag = true;
+				}
+			}
+		} else {
+			flag = true;
+		}
+
+		return flag;
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// btnAceptar.requestFocus();
 		textArea.setFocusTraversable(false);
 	}
 
 	@FXML
-	void agregarParentesisIzq(ActionEvent event) {
-		int pos = textArea.getCaretPosition();
-		stringaArray();
-		formula.add(pos, "(");
-		arrayaString();
-		textArea.requestFocus();
-		textArea.positionCaret(pos + 1);
-
-	}
-
-	@FXML
-	void agregarParentesisDer(ActionEvent event) {
-		int pos = textArea.getCaretPosition();
-		stringaArray();
-		formula.add(pos, ")");
-		arrayaString();
-		textArea.requestFocus();
-		textArea.positionCaret(pos + 1);
+	void agregarAtomo(KeyEvent event) {
+		char c = event.getCharacter().charAt(0);
+		if (!Character.isAlphabetic(c)) {
+			event.consume();
+		}
+		if (!esPosicionValida(textArea.getCaretPosition())) {
+			event.consume();
+		}
 	}
 
 	@FXML
 	void agregarNegacion(ActionEvent event) {
 		int pos = textArea.getCaretPosition();
-		stringaArray();
-		formula.add(pos, "¬");
-		arrayaString();
-		textArea.requestFocus();
-		textArea.positionCaret(pos + 1);
+		if (esPosicionValida(pos)) {
+			stringaArray();
+			formula.add(pos, "¬()");
+			arrayaString();
+			textArea.requestFocus();
+			textArea.positionCaret(pos + 2);
+		}
 	}
 
 	@FXML
 	void agregarConjuncion(ActionEvent event) {
 		int pos = textArea.getCaretPosition();
-		stringaArray();
-		formula.add(pos, "ʌ");
-		arrayaString();
-		textArea.requestFocus();
-		textArea.positionCaret(pos + 1);
+		if (esPosicionValida(pos)) {
+			stringaArray();
+			formula.add(pos, "()ʌ()");
+			arrayaString();
+			textArea.requestFocus();
+			textArea.positionCaret(pos + 1);
+		}
 	}
 
 	@FXML
 	void agregarDisyuncion(ActionEvent event) {
 		int pos = textArea.getCaretPosition();
-		stringaArray();
-		formula.add(pos, "v");
-		arrayaString();
-		textArea.requestFocus();
-		textArea.positionCaret(pos + 1);
+		if (esPosicionValida(pos)) {
+			stringaArray();
+			formula.add(pos, "()v()");
+			arrayaString();
+			textArea.requestFocus();
+			textArea.positionCaret(pos + 1);
+		}
 	}
 
 	@FXML
 	void agregarCondicionalIzq(ActionEvent event) {
 		int pos = textArea.getCaretPosition();
-		stringaArray();
-		formula.add(pos, "→");
-		arrayaString();
-		textArea.requestFocus();
-		textArea.positionCaret(pos + 1);
+		if (esPosicionValida(pos)) {
+			stringaArray();
+			formula.add(pos, "()→()");
+			arrayaString();
+			textArea.requestFocus();
+			textArea.positionCaret(pos + 1);
+		}
 	}
 
 	@FXML
 	void agregarBicondicional(ActionEvent event) {
 		int pos = textArea.getCaretPosition();
-		stringaArray();
-		formula.add(pos, "↔");
-		arrayaString();
-		textArea.requestFocus();
-		textArea.positionCaret(pos + 1);
+		if (esPosicionValida(pos)) {
+			stringaArray();
+			formula.add(pos, "()↔()");
+			arrayaString();
+			textArea.requestFocus();
+			textArea.positionCaret(pos + 1);
+		}
 	}
 
 	private void stringaArray() {
@@ -123,27 +140,6 @@ public class ControladorVentanaPrincipal implements Initializable {
 			cadena += aux2;
 		}
 		textArea.setText(cadena);
-	}
-
-	private ArrayList<String> completarParentesis() {
-		ArrayList<String> formulaAux = new ArrayList<>(formula);
-		ArrayList<Integer> parentesis = new ArrayList<>();
-		for (int i = 0; i < formula.size(); i++) {
-			if (formulaAux.get(i).equals("ʌ") && formulaAux.get(i).equals("v") && formulaAux.get(i).equals("→’")
-					&& formulaAux.get(i).equals("↔")) {
-				if (i - 1 > 0 && i + 1 < formulaAux.size()) {
-					for (int j = 0; j >= 0; j--) {
-
-					}
-				} else {
-					return null;
-				}
-			} else {
-
-			}
-			// formula.get(i).equals("¬")
-		}
-		return formulaAux;
 	}
 
 	@FXML
