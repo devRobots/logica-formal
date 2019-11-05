@@ -38,8 +38,9 @@ public class ControladorVentanaPrincipal implements Initializable {
 
 		String formula = textArea.getText();
 		if (!formula.isEmpty()) {
-			if (pos > -1 && pos < formula.length()) {
-				if (formula.charAt(pos - 1) == '(' && formula.charAt(pos) == ')') {
+			if (pos > 0 && pos < formula.length()) {
+				if (formula.charAt(pos - 1) ==
+						'(' && formula.charAt(pos) == ')') {
 					flag = true;
 				}
 			}
@@ -64,6 +65,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		if (!esPosicionValida(textArea.getCaretPosition())) {
 			event.consume();
 		}
+	
 	}
 
 	@FXML
@@ -120,6 +122,18 @@ public class ControladorVentanaPrincipal implements Initializable {
 		if (esPosicionValida(pos)) {
 			stringaArray();
 			formula.add(pos, "()↔()");
+			arrayaString();
+			textArea.requestFocus();
+			textArea.positionCaret(pos + 1);
+		}else if(pos>0&&textArea.getText().charAt(pos-1)==')') {
+			stringaArray();
+			formula.add(pos, "↔()");
+			arrayaString();
+			textArea.requestFocus();
+			textArea.positionCaret(pos + 1);
+		}else if(pos<textArea.getText().length()-1&&textArea.getText().charAt(pos+1)=='(') {
+			stringaArray();
+			formula.add(pos, "()↔");
 			arrayaString();
 			textArea.requestFocus();
 			textArea.positionCaret(pos + 1);
