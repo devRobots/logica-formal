@@ -4,8 +4,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import javax.swing.JOptionPane;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,14 +22,13 @@ public class ControladorConfirmacion implements Initializable {
 	@FXML
 	private TextFlow textFlow;
 
-	private ArrayList<String> formula = new ArrayList<String>();
+	private ArrayList<String> formula = new ArrayList<>();
 
 	private Stage primaryStage;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@FXML
@@ -48,11 +45,11 @@ public class ControladorConfirmacion implements Initializable {
 
 	@FXML
 	void cambiarColor(ActionEvent event) {
-		ObservableList<Node> list=textFlow.getChildren();
+		ObservableList<Node> list = textFlow.getChildren();
 		list.clear();
-		list.addAll(getFormulaColor(formula));	
+		list.addAll(getFormulaColor(formula));
 	}
-	
+
 	public void setFormula(ObservableList<Node> formula, ArrayList<String> form, Stage primaryStage) {
 		ObservableList<Node> list = textFlow.getChildren();
 		list.addAll(formula);
@@ -62,8 +59,8 @@ public class ControladorConfirmacion implements Initializable {
 
 	public ObservableList<Node> getFormulaColor(ArrayList<String> formula) {
 		ObservableList<Node> list = FXCollections.observableArrayList();
-		ArrayList<ColorF> atomos = new ArrayList<ColorF>();
-		ArrayList<ColorF> parentesis = new ArrayList<ColorF>();
+		ArrayList<ColorF> atomos = new ArrayList<>();
+		ArrayList<ColorF> parentesis = new ArrayList<>();
 
 		for (int i = 0; i < formula.size(); i++) {
 			if (formula.get(i).equals("(")) {

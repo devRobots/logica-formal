@@ -23,6 +23,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import modelo.FormulaBienFormada;
+import modelo.Operadores;
 
 public class ControladorVentanaPrincipal implements Initializable {
 
@@ -164,6 +166,10 @@ public class ControladorVentanaPrincipal implements Initializable {
 				e.printStackTrace();
 			}
 		}
+
+		FormulaBienFormada fbf = new FormulaBienFormada(textArea.getText());
+
+		System.out.println(fbf.getArbol());
 	}
 
 	public ObservableList<Node> getFormulaColor(ArrayList<String> formula) {
@@ -190,8 +196,9 @@ public class ControladorVentanaPrincipal implements Initializable {
 				} else {
 					par = false;
 				}
-			} else if (!formula.get(i).equals("¬") && !formula.get(i).equals("ʌ") && !formula.get(i).equals("v")
-					&& !formula.get(i).equals("→’") && !formula.get(i).equals("↔")) {
+			} else if (!formula.get(i).equals(Operadores.NEGACION) && !formula.get(i).equals(Operadores.CONJUNCION)
+					&& !formula.get(i).equals(Operadores.DISYUNCION) && !formula.get(i).equals(Operadores.CONDICIONAL)
+					&& !formula.get(i).equals(Operadores.EQUIVALENCIA)) {
 				boolean ward = true;
 				for (int j = 0; j < atomos.size() && ward; j++) {
 					if (atomos.get(j).getValue().equals(formula.get(i))) {

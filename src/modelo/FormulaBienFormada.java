@@ -2,14 +2,14 @@ package modelo;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import modelo.Operadores;
 
 public class FormulaBienFormada {
 	private String fbf;
 	private ArrayList<Character> atomos;
+	private ArbolFormula arbol;
 
 	public FormulaBienFormada(String fbf) {
-		atomos = new ArrayList<Character>();
+		atomos = new ArrayList<>();
 
 		for (int i = 0; i < fbf.length(); i++) {
 			char c = fbf.charAt(i);
@@ -23,6 +23,7 @@ public class FormulaBienFormada {
 
 		Collections.sort(atomos);
 
+		arbol = new ArbolFormula(fbf);
 		this.fbf = fbf;
 	}
 
@@ -79,7 +80,7 @@ public class FormulaBienFormada {
 		String salida = fnc;
 
 		while (salida.contains(Operadores.EQUIVALENCIA)) {
-			
+
 		}
 
 		return salida;
@@ -102,7 +103,7 @@ public class FormulaBienFormada {
 	}
 
 	public ArrayList<String> toFC() {
-		ArrayList<String> fcs = new ArrayList<String>();
+		ArrayList<String> fcs = new ArrayList<>();
 		String[] fds = toFNC().split(Operadores.CONJUNCION);
 
 		for (String fd : fds) {
@@ -149,4 +150,19 @@ public class FormulaBienFormada {
 	public ArrayList<Character> getAtomos() {
 		return atomos;
 	}
+
+	/**
+	 * @return the arbol
+	 */
+	public ArbolFormula getArbol() {
+		return arbol;
+	}
+
+	/**
+	 * @param arbol the arbol to set
+	 */
+	public void setArbol(ArbolFormula arbol) {
+		this.arbol = arbol;
+	}
+
 }
