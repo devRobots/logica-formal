@@ -6,9 +6,19 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="598.0" prefWidth="852.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.ControladorOperaciones">
+<AnchorPane prefHeight="365.0" prefWidth="479.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlador.ControladorOperaciones">
    <children>
-      <ScrollPane layoutX="178.0" layoutY="31.0" prefHeight="87.0" prefWidth="496.0" vbarPolicy="NEVER" />
-      <TextFlow fx:id="textFlow" layoutX="222.0" layoutY="118.0" prefHeight="88.0" prefWidth="494.0" textAlignment="CENTER" />
+      <ScrollPane layoutX="54.0" layoutY="80.0" prefHeight="90.0" prefViewportHeight="88.0" prefViewportWidth="494.0" prefWidth="371.0">
+         <content>
+            <TextFlow fx:id="textFlow" layoutX="86.0" layoutY="36.0" prefHeight="88.0" prefWidth="369.0" textAlignment="CENTER" />
+         </content>
+      </ScrollPane>
+      <Button layoutX="76.0" layoutY="195.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="141.0" style="-fx-background-radius: 50px;" text="FNC" />
+      <Button layoutX="76.0" layoutY="252.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="141.0" style="-fx-background-radius: 50px;" text="FND" />
+      <Button layoutX="274.0" layoutY="195.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="141.0" style="-fx-background-radius: 50px;" text="FC" />
+      <Button layoutX="274.0" layoutY="252.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="141.0" style="-fx-background-radius: 50px;" text="FC" />
+      <Button layoutX="54.0" layoutY="45.0" mnemonicParsing="false" onAction="#atras" prefHeight="25.0" prefWidth="141.0" style="-fx-background-radius: 50px;" text="Rehacer fórmula" />
+      <Button defaultButton="true" layoutX="284.0" layoutY="45.0" mnemonicParsing="false" onAction="#cambiarColor" prefHeight="25.0" prefWidth="141.0" style="-fx-background-radius: 50px;" text="Cambiar color" />
+      <Button layoutX="169.0" layoutY="308.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="141.0" style="-fx-background-radius: 50px;" text="Satisfacibilidad" />
    </children>
 </AnchorPane>

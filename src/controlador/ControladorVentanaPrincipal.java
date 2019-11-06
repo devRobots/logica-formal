@@ -125,6 +125,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 			arrayaString();
 			textArea.requestFocus();
 			textArea.positionCaret(pos + 1);
+			
 		}
 	}
 

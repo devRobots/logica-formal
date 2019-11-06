@@ -1,5 +1,6 @@
 package controlador;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -8,8 +9,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -33,7 +36,22 @@ public class ControladorConfirmacion implements Initializable {
 
 	@FXML
 	void aceptar(ActionEvent event) {
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader();
+			fxmlLoader.setLocation(
+					ControladorVentanaPrincipal.class.getResource("../vista/VentanaOperaciones.fxml"));
+			Scene scene = new Scene(fxmlLoader.load());
+			Stage stage = new Stage();
+			stage.setTitle("Proyecto");
+			stage.setScene(scene);
+			ControladorOperaciones con = fxmlLoader.getController();
+			con.setFormula(textFlow.getChildren(), formula, (Stage) primaryStage);
+			stage.show();
+			((Stage) textFlow.getScene().getWindow()).close();
 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@FXML
