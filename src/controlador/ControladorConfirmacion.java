@@ -44,8 +44,6 @@ public class ControladorConfirmacion implements Initializable {
 			Stage stage = new Stage();
 			stage.setTitle("Proyecto");
 			stage.setScene(scene);
-			ControladorOperaciones con = fxmlLoader.getController();
-			con.setFormula(textFlow.getChildren(), formula, (Stage) primaryStage);
 			stage.show();
 			((Stage) textFlow.getScene().getWindow()).close();
 
