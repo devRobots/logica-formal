@@ -103,4 +103,8 @@ public class ControladorOperaciones implements Initializable {
 		this.formula = form;
 		this.primaryStage = primaryStage;
 	}
+	
+	public String getFormulaManipulable() {
+		return null;
+	}
 }

@@ -120,7 +120,7 @@ public class FormulaBienFormada {
 	private int indiceDeOperadorPrincipal(String fbf) {
 		int indice = -1;
 
-		if (fbf.startsWith("Â¬")) {
+		if (fbf.startsWith("¬")) {
 			indice = 0;
 		} else {
 			int contParentesis = 0;

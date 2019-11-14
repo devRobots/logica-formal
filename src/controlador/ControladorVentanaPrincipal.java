@@ -1,5 +1,6 @@
 package controlador;
 
+import java.awt.Event;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -16,7 +17,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -32,15 +37,31 @@ public class ControladorVentanaPrincipal implements Initializable {
 	private Button btnAceptar;
 
 	@FXML
+	private TableView<TablaFormulas> tableFormulas;
+
+	@FXML
+	private TableColumn<TablaFormulas, String> columnFormulas;
+
+	@FXML
+	private ComboBox<String> comboMetodo;
+
+	@FXML
+	private Button btnEjecutar;
+
+	@FXML
 	private TextArea textArea;
 	private ArrayList<String> formula = new ArrayList<>();
+
+	@FXML
+	private ObservableList<TablaFormulas> formulasTabla = FXCollections.observableArrayList();
+	private ArrayList<String> historial = new ArrayList<String>();
 
 	private boolean esPosicionValida(int pos) {
 		boolean flag = false;
 
 		String formula = textArea.getText();
 		if (!formula.isEmpty()) {
-			if (pos > -1 && pos < formula.length()) {
+			if (pos > 0 && pos < formula.length()) {
 				if (formula.charAt(pos - 1) == '(' && formula.charAt(pos) == ')') {
 					flag = true;
 				}
@@ -54,17 +75,57 @@ public class ControladorVentanaPrincipal implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		textArea.setFocusTraversable(false);
+		textArea.setFocusTraversable(true);
+		ObservableList<String> aux = FXCollections.observableArrayList();
+		aux.add("FNC");
+		aux.add("FND");
+		aux.add("FC");
+		comboMetodo.setItems(aux);
+		actualizarTabla();
+		historial.add("");
+		historial.add("");
+		columnFormulas.setCellValueFactory(new PropertyValueFactory<>("formula"));
+		tableFormulas.setItems(formulasTabla);
+
 	}
 
 	@FXML
 	void agregarAtomo(KeyEvent event) {
-		char c = event.getCharacter().charAt(0);
-		if (!Character.isAlphabetic(c)) {
-			event.consume();
-		}
-		if (!esPosicionValida(textArea.getCaretPosition())) {
-			event.consume();
+		if (!textArea.getText().isEmpty() && event.getCharacter().equals("")) {
+			actualizarHistorial();
+			boolean ward = true;
+			for (int i = 0; i < historial.get(1).length() && ward; i++) {
+				if (historial.get(1).charAt(i) != historial.get(0).charAt(i)) {
+					char aux = historial.get(0).charAt(i);
+					if (!Character.isAlphabetic(aux) || aux == 'v' || aux=='ʌ') {
+						int pos = textArea.getCaretPosition();
+						textArea.setText(historial.get(0));
+						textArea.positionCaret(pos + 1);
+						actualizarHistorial();
+					}
+					ward = false;
+				}
+			}
+			if(ward) {
+				int pos = textArea.getCaretPosition();
+				textArea.setText(historial.get(0));
+				textArea.positionCaret(pos + 1);
+				actualizarHistorial();
+			}
+		} else {
+			char c = event.getCharacter().charAt(0);
+			boolean ward = true;
+			if (!Character.isAlphabetic(c) || c == 'v') {
+				event.consume();
+				ward = false;
+			}
+			if (!esPosicionValida(textArea.getCaretPosition())) {
+				event.consume();
+				ward = false;
+			}
+			if (ward) {
+				actualizarHistorial();
+			}
 		}
 	}
 
@@ -77,6 +138,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 			arrayaString();
 			textArea.requestFocus();
 			textArea.positionCaret(pos + 2);
+			actualizarHistorial();
 		}
 	}
 
@@ -89,6 +151,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 			arrayaString();
 			textArea.requestFocus();
 			textArea.positionCaret(pos + 1);
+			actualizarHistorial();
 		}
 	}
 
@@ -101,11 +164,12 @@ public class ControladorVentanaPrincipal implements Initializable {
 			arrayaString();
 			textArea.requestFocus();
 			textArea.positionCaret(pos + 1);
+			actualizarHistorial();
 		}
 	}
 
 	@FXML
-	void agregarCondicionalIzq(ActionEvent event) {
+	void agregarCondicional(ActionEvent event) {
 		int pos = textArea.getCaretPosition();
 		if (esPosicionValida(pos)) {
 			stringaArray();
@@ -113,6 +177,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 			arrayaString();
 			textArea.requestFocus();
 			textArea.positionCaret(pos + 1);
+			actualizarHistorial();
 		}
 	}
 
@@ -125,7 +190,8 @@ public class ControladorVentanaPrincipal implements Initializable {
 			arrayaString();
 			textArea.requestFocus();
 			textArea.positionCaret(pos + 1);
-			
+			actualizarHistorial();
+
 		}
 	}
 
@@ -234,6 +300,57 @@ public class ControladorVentanaPrincipal implements Initializable {
 		} else {
 			return list;
 		}
+	}
+
+	@FXML
+	void seleccionar() {
+		if (comboMetodo.getSelectionModel().getSelectedIndex() != -1
+				&& tableFormulas.getSelectionModel().getSelectedIndex() != -1) {
+			btnEjecutar.setDisable(false);
+		} else {
+			btnEjecutar.setDisable(true);
+		}
+	}
+
+	@FXML
+	void agregarTabla(ActionEvent event) {
+		String cadena = textArea.getText();
+		if (cadena.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "El campo está vacio", "Error", JOptionPane.ERROR_MESSAGE);
+		} else if (cadena.contains("()")) {
+			JOptionPane.showMessageDialog(null, "Complete los atomos en la fórmula por favor", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		} else {
+			ArrayList<Character> list = new ArrayList<Character>();
+			for (char aux : cadena.toCharArray()) {
+				if (Character.isAlphabetic(aux) && !list.contains(aux)) {
+					list.add(aux);
+				}
+			}
+			if (list.size() < 5) {
+				JOptionPane.showMessageDialog(null, "Use minimo 5 atomos distintos por favor.", "Error",
+						JOptionPane.ERROR_MESSAGE);
+			} else {
+				textArea.setText("");
+				formulasTabla.add(new TablaFormulas(cadena));
+			}
+		}
+
+	}
+
+	@FXML
+	void limpiar(ActionEvent event) {
+		textArea.setText("");
+	}
+
+	public void actualizarTabla() {
+
+		tableFormulas.setItems(FXCollections.observableArrayList(formulasTabla));
+	}
+
+	private void actualizarHistorial() {
+		historial.add(textArea.getText());
+		historial.remove(0);
 	}
 
 }
