@@ -37,6 +37,7 @@ public class FormulaBienFormada {
 			fnc = axioma8(fnc);
 		}
 
+		fnc = axioma4(fnc);
 		fnc = axioma7(fnc);
 		fnc = axioma4(fnc);
 
@@ -55,10 +56,14 @@ public class FormulaBienFormada {
 
 		while (actual != null) {
 			actual.setValor(actual.getIzquierdo().getIzquierdo().getValor());
+			actual.setFbf(actual.getIzquierdo().getIzquierdo().getFbf());
 
-			if (!actual.esAtomo()) {
-				actual.setIzquierdo(actual.getIzquierdo().getIzquierdo().getIzquierdo());
-				actual.setDerecho(actual.getIzquierdo().getIzquierdo().getDerecho());
+			if (!actual.esAtomo()) {;
+				Nodo izq = actual.getIzquierdo().getIzquierdo().getIzquierdo();
+				Nodo der = actual.getIzquierdo().getIzquierdo().getDerecho();
+				
+				actual.setIzquierdo(izq);
+				actual.setDerecho(der);
 			} else {
 				actual.setIzquierdo(null);
 			}
@@ -72,7 +77,23 @@ public class FormulaBienFormada {
 
 	private String axioma5(String fnc) {
 		String salida = fnc;
+		ArbolFormula arbol = new ArbolFormula(salida);
 
+		Nodo actual = arbol.getNodoDuplicado();
+
+		while (actual != null) {
+			actual.setValor(actual.getIzquierdo().getValor());
+
+			Nodo phi = actual.getIzquierdo().getIzquierdo();
+			Nodo psi = actual.getIzquierdo().getDerecho();
+
+			actual.setIzquierdo(phi);
+			actual.setDerecho(psi);
+
+			actual = arbol.getNodoDuplicado();
+		}
+
+		salida = arbol.toString();
 		return salida;
 	}
 

@@ -57,18 +57,22 @@ public class Nodo {
 	}
 
 	public boolean esAtomo() {
-		switch (fbf) {
-		case Operadores.CONDICIONAL:
+		if (valor == Operadores.CONDICIONAL.charAt(0)) {
 			return false;
-		case Operadores.CONJUNCION:
+		}
+		else if (valor == Operadores.CONJUNCION.charAt(0)) {
 			return false;
-		case Operadores.DISYUNCION:
+		}
+		else if (valor == Operadores.DISYUNCION.charAt(0)) {
 			return false;
-		case Operadores.EQUIVALENCIA:
+		}
+		else if (valor == Operadores.EQUIVALENCIA.charAt(0)) {
 			return false;
-		case Operadores.NEGACION:
+		}
+		else if (valor == Operadores.NEGACION.charAt(0)) {
 			return false;
-		default:
+		}
+		else {
 			return true;
 		}
 	}
@@ -145,23 +149,11 @@ public class Nodo {
 			return false;
 		}
 		Nodo other = (Nodo) obj;
-		if (derecho == null) {
-			if (other.derecho != null) {
-				return false;
-			}
-		} else if (!derecho.equals(other.derecho)) {
+		
+		if (!other.fbf.equals(fbf)) {
 			return false;
 		}
-		if (izquierdo == null) {
-			if (other.izquierdo != null) {
-				return false;
-			}
-		} else if (!izquierdo.equals(other.izquierdo)) {
-			return false;
-		}
-		if (valor != other.valor) {
-			return false;
-		}
+		
 		return true;
 	}
 
