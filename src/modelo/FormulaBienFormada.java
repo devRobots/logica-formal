@@ -27,7 +27,7 @@ public class FormulaBienFormada {
 		this.fbf = fbf;
 	}
 
-	private String toFNC() {
+	public String toFNC() {
 		String fnc = fbf;
 
 		if (fnc.contains(Operadores.EQUIVALENCIA)) {
@@ -38,39 +38,89 @@ public class FormulaBienFormada {
 		}
 
 		fnc = axioma7(fnc);
+		fnc = axioma4(fnc);
 
-		if (fnc.contains(Operadores.NEGACION + Operadores.NEGACION)) {
-			fnc = axioma4(fnc);
-		}
+		fnc = axioma5(fnc);
 
-		fnc = aplicarAsociativa(fnc);
+		fnc = axioma6(fnc);
 
 		return fnc;
 	}
 
-	private String aplicarAsociativa(String fnc) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	private String axioma4(String fnc) {
 		String salida = fnc;
+		ArbolFormula arbol = new ArbolFormula(salida);
 
-		salida.replace(Operadores.NEGACION + "(" + Operadores.NEGACION, "");
+		Nodo actual = arbol.getNodoNegado();
+
+		while (actual != null) {
+			actual.setValor(actual.getIzquierdo().getIzquierdo().getValor());
+
+			if (!actual.esAtomo()) {
+				actual.setIzquierdo(actual.getIzquierdo().getIzquierdo().getIzquierdo());
+				actual.setDerecho(actual.getIzquierdo().getIzquierdo().getDerecho());
+			} else {
+				actual.setIzquierdo(null);
+			}
+
+			actual = arbol.getNodoNegado();
+		}
+
+		salida = arbol.toString();
+		return salida;
+	}
+
+	private String axioma5(String fnc) {
+		String salida = fnc;
 
 		return salida;
 	}
 
+	private String axioma6(String fnc) {
+		String salida = fnc;
+
+		return fnc;
+	}
+
 	private String axioma7(String fnc) {
-		// TODO Auto-generated method stub
-		return null;
+		String salida = fnc;
+		ArbolFormula arbol = new ArbolFormula(fnc);
+
+		Nodo actual = arbol.getNodoMorgan();
+
+		while (actual != null) {
+			if (actual.getIzquierdo().getValor() == Operadores.DISYUNCION.charAt(0)) {
+				actual.setValor(Operadores.CONJUNCION.charAt(0));
+			} else {
+				actual.setValor(Operadores.DISYUNCION.charAt(0));
+			}
+
+			String phi = actual.getIzquierdo().getIzquierdo().getFbf();
+			String psi = actual.getIzquierdo().getDerecho().getFbf();
+
+			actual.setIzquierdo(new Nodo(Operadores.NEGACION + "(" + phi + ")"));
+			actual.setDerecho(new Nodo(Operadores.NEGACION + "(" + psi + ")"));
+
+			actual = arbol.getNodoMorgan();
+			salida = arbol.toString();
+		}
+
+		return salida;
 	}
 
 	private String axioma8(String fnc) {
 		String salida = fnc;
+		ArbolFormula arbol = new ArbolFormula(fnc);
 
-		while (salida.contains(Operadores.CONDICIONAL)) {
+		while (arbol.contains(Operadores.CONDICIONAL.charAt(0))) {
+			Nodo actual = arbol.find(Operadores.CONDICIONAL.charAt(0));
 
+			String phi = actual.getIzquierdo().getFbf();
+
+			actual.setValor(Operadores.DISYUNCION.charAt(0));
+			actual.setIzquierdo(new Nodo(Operadores.NEGACION + "(" + phi + ")"));
+
+			salida = arbol.toString();
 		}
 
 		return salida;
@@ -78,9 +128,19 @@ public class FormulaBienFormada {
 
 	private String axioma9(String fnc) {
 		String salida = fnc;
+		ArbolFormula arbol = new ArbolFormula(fnc);
 
-		while (salida.contains(Operadores.EQUIVALENCIA)) {
+		while (arbol.contains(Operadores.EQUIVALENCIA.charAt(0))) {
+			Nodo actual = arbol.find(Operadores.EQUIVALENCIA.charAt(0));
 
+			String phi = actual.getIzquierdo().getFbf();
+			String psi = actual.getDerecho().getFbf();
+
+			actual.setValor(Operadores.CONJUNCION.charAt(0));
+			actual.setIzquierdo(new Nodo("(" + phi + ")" + Operadores.CONDICIONAL + "(" + psi + ")"));
+			actual.setDerecho(new Nodo("(" + psi + ")" + Operadores.CONDICIONAL + "(" + phi + ")"));
+
+			salida = arbol.toString();
 		}
 
 		return salida;
