@@ -22,6 +22,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -37,10 +38,16 @@ public class ControladorVentanaPrincipal implements Initializable {
 	private Button btnAceptar;
 
 	@FXML
+	private Button btnAtras;
+
+	@FXML
 	private TableView<TablaFormulas> tableFormulas;
 
 	@FXML
 	private TableColumn<TablaFormulas, String> columnFormulas;
+	
+	@FXML
+    private TableColumn<TablaFormulas, Button> columnBoton;
 
 	@FXML
 	private ComboBox<String> comboMetodo;
@@ -85,48 +92,55 @@ public class ControladorVentanaPrincipal implements Initializable {
 		historial.add("");
 		historial.add("");
 		columnFormulas.setCellValueFactory(new PropertyValueFactory<>("formula"));
+		columnBoton.setCellValueFactory(new PropertyValueFactory<>("boton"));
 		tableFormulas.setItems(formulasTabla);
+		textArea.addEventFilter(KeyEvent.ANY, event -> {
+			KeyCode code = event.getCode();
+			if (code == KeyCode.ENTER || code == KeyCode.TAB || code == KeyCode.CONTROL || code == KeyCode.V) {
+				event.consume();
+			} else if (code == KeyCode.BACK_SPACE) {
+				int pos = textArea.getCaretPosition();
+				if (pos > 0) {
+					char c = textArea.getText().charAt(pos - 1);
+					if (!Character.isAlphabetic(c) || c == 'v' || c == 'ʌ') {
+						event.consume();
+					}
+				}
+
+			} else if (code == KeyCode.DELETE) {
+				int pos = textArea.getCaretPosition();
+				if (pos < textArea.getText().length()) {
+					char c = textArea.getText().charAt(pos);
+					if (!Character.isAlphabetic(c) || c == 'v' || c == 'ʌ') {
+						event.consume();
+					}
+				}
+
+			}
+//			System.out.println("[" + event.getCharacter() + "] [" + event.getText() + "] [" + event.getCode() + "] ["
+//					+ event.getEventType() + "] [" + event.getSource() + "] [" + event.getTarget() + "]");
+			actualizarHistorial();
+
+		});
 
 	}
 
 	@FXML
 	void agregarAtomo(KeyEvent event) {
-		if (!textArea.getText().isEmpty() && event.getCharacter().equals("")) {
-			actualizarHistorial();
-			boolean ward = true;
-			for (int i = 0; i < historial.get(1).length() && ward; i++) {
-				if (historial.get(1).charAt(i) != historial.get(0).charAt(i)) {
-					char aux = historial.get(0).charAt(i);
-					if (!Character.isAlphabetic(aux) || aux == 'v' || aux=='ʌ') {
-						int pos = textArea.getCaretPosition();
-						textArea.setText(historial.get(0));
-						textArea.positionCaret(pos + 1);
-						actualizarHistorial();
-					}
-					ward = false;
-				}
-			}
-			if(ward) {
-				int pos = textArea.getCaretPosition();
-				textArea.setText(historial.get(0));
-				textArea.positionCaret(pos + 1);
-				actualizarHistorial();
-			}
-		} else {
-			char c = event.getCharacter().charAt(0);
-			boolean ward = true;
-			if (!Character.isAlphabetic(c) || c == 'v') {
-				event.consume();
-				ward = false;
-			}
-			if (!esPosicionValida(textArea.getCaretPosition())) {
-				event.consume();
-				ward = false;
-			}
-			if (ward) {
-				actualizarHistorial();
-			}
+		char c = event.getCharacter().charAt(0);
+		boolean ward = true;
+		if (!Character.isAlphabetic(c) || c == 'v' || c == 'ʌ') {
+			event.consume();
+			ward = false;
 		}
+		if (!esPosicionValida(textArea.getCaretPosition())) {
+			event.consume();
+			ward = false;
+		}
+		if (ward) {
+			actualizarHistorial();
+		}
+
 	}
 
 	@FXML
@@ -332,10 +346,26 @@ public class ControladorVentanaPrincipal implements Initializable {
 						JOptionPane.ERROR_MESSAGE);
 			} else {
 				textArea.setText("");
-				formulasTabla.add(new TablaFormulas(cadena));
+				historial = new ArrayList<String>();
+				historial.add("");
+				historial.add("");
+				Button boton = new Button("Eliminar");
+				boton.setOnAction(this::handleButtonAction);
+				boton.setId(formulasTabla.size()+"");
+				formulasTabla.add(new TablaFormulas(cadena, boton));
 			}
 		}
 
+	}
+	
+	private void handleButtonAction(ActionEvent action) {
+		String cadena=((Button)action.getSource()).getId();
+		for(TablaFormulas aux:formulasTabla) {
+			if(aux.getId().equals(cadena)) {
+				formulasTabla.remove(aux);
+				break;
+			}
+		}
 	}
 
 	@FXML
@@ -343,14 +373,25 @@ public class ControladorVentanaPrincipal implements Initializable {
 		textArea.setText("");
 	}
 
-	public void actualizarTabla() {
+	@FXML
+	void atras(ActionEvent event) {
+		System.out.println(historial);
+		if (historial.size() > 2) {
+			textArea.setText(historial.get(historial.size() - 2));
+			historial.remove(historial.size() - 1);
+		} else {
+			textArea.setText("");
+		}
+	}
 
+	public void actualizarTabla() {
 		tableFormulas.setItems(FXCollections.observableArrayList(formulasTabla));
 	}
 
 	private void actualizarHistorial() {
-		historial.add(textArea.getText());
-		historial.remove(0);
+		if (!textArea.getText().equals(historial.get(historial.size() - 1))) {
+			historial.add(textArea.getText());
+		}
 	}
 
 }

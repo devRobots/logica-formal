@@ -57,7 +57,16 @@
                                 </rowConstraints>
                                  <children>
       										<Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Ingrese la fórmula" textAlignment="CENTER" GridPane.columnIndex="1" />
-                                    <Button mnemonicParsing="false" onAction="#limpiar" prefHeight="25.0" prefWidth="62.0" text="Limpiar" GridPane.columnIndex="2" />
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                       <children>
+                                          <Button fx:id="btnAtras" mnemonicParsing="false" onAction="#atras" prefHeight="25.0" prefWidth="62.0" text="Atrás" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="10.0" />
+                                       </children>
+                                    </AnchorPane>
+                                    <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+                                       <children>
+                                          <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" onAction="#limpiar" prefHeight="25.0" prefWidth="62.0" text="Limpiar" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
+                                       </children>
+                                    </AnchorPane>
                                  </children>
                               </GridPane>
 									</children>
@@ -144,7 +153,8 @@
                            <children>
       								<TableView fx:id="tableFormulas" onMouseClicked="#seleccionar" prefHeight="276.0" prefWidth="242.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
       									<columns>
-      										<TableColumn fx:id="columnFormulas" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="249.0" text="Formulas" />
+      										<TableColumn fx:id="columnFormulas" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="167.0" text="Formulas" />
+                                    <TableColumn fx:id="columnBoton" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="72.0" />
       									</columns>
       								</TableView>
                            </children>
