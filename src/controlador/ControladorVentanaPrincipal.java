@@ -1,6 +1,5 @@
 package controlador;
 
-import java.awt.Event;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -329,6 +328,11 @@ public class ControladorVentanaPrincipal implements Initializable {
 	@FXML
 	void agregarTabla(ActionEvent event) {
 		String cadena = textArea.getText();
+		
+		FormulaBienFormada fbf = new FormulaBienFormada(cadena);
+		textArea.setText(fbf.toFNC());
+
+		
 		if (cadena.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "El campo está vacio", "Error", JOptionPane.ERROR_MESSAGE);
 		} else if (cadena.contains("()")) {

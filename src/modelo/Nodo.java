@@ -3,16 +3,17 @@ package modelo;
 public class Nodo {
 
 	private char valor;
+	private String fbf;
 	private Nodo izquierdo;
 	private Nodo derecho;
 
 	public Nodo(char valor) {
 		this.valor = valor;
+		fbf = String.valueOf(valor);
 	}
 
 	public Nodo(String fbf) {
 		if (fbf.length() == 1) {
-			System.out.println(fbf);
 			valor = fbf.charAt(0);
 		} else {
 			int indice = indiceDeOperadorPrincipal(fbf);
@@ -26,6 +27,7 @@ public class Nodo {
 			}
 		}
 
+		this.fbf = fbf;
 	}
 
 	private int indiceDeOperadorPrincipal(String fbf) {
@@ -52,6 +54,23 @@ public class Nodo {
 		}
 
 		return indice;
+	}
+
+	public boolean esAtomo() {
+		switch (fbf) {
+		case Operadores.CONDICIONAL:
+			return false;
+		case Operadores.CONJUNCION:
+			return false;
+		case Operadores.DISYUNCION:
+			return false;
+		case Operadores.EQUIVALENCIA:
+			return false;
+		case Operadores.NEGACION:
+			return false;
+		default:
+			return true;
+		}
 	}
 
 	/**
@@ -94,6 +113,14 @@ public class Nodo {
 	 */
 	public void setDerecho(Nodo derecho) {
 		this.derecho = derecho;
+	}
+
+	public String getFbf() {
+		return fbf;
+	}
+
+	public void setFbf(String fbf) {
+		this.fbf = fbf;
 	}
 
 	@Override
