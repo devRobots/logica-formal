@@ -1,12 +1,12 @@
 package modelo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class FormulaBienFormada {
 	private String fbf;
 	private ArrayList<Character> atomos;
-	private ArbolFormula arbol;
 
 	public FormulaBienFormada(String fbf) {
 		atomos = new ArrayList<>();
@@ -14,157 +14,161 @@ public class FormulaBienFormada {
 		for (int i = 0; i < fbf.length(); i++) {
 			char c = fbf.charAt(i);
 
-			if (Character.isAlphabetic(c)) {
-				if (!atomos.contains(c)) {
-					atomos.add(c);
+			if (esAtomo(c)) {
+				if (c != Operadores.DISYUNCION.charAt(0)) {					
+					if (!atomos.contains(c)) {
+						atomos.add(c);
+					}
 				}
 			}
 		}
 
 		Collections.sort(atomos);
-
-		arbol = new ArbolFormula(fbf);
+		
 		this.fbf = fbf;
+	}
+	
+	private boolean esAtomo(char c) {
+		return c >= 97 && c <= 122;
 	}
 
 	public String toFNC() {
-		String fnc = fbf;
+		String fnc = "";
 
-		if (fnc.contains(Operadores.EQUIVALENCIA)) {
-			fnc = axioma9(fnc);
+		int[][] entradas = tabularEntradas();
+		int[] salidas = evaluarFBF(entradas);
+
+		for (int i = 0; i < entradas[0].length; i++) {
+			fnc += "(";
+			for (int j = 0; j < entradas.length; j++) {
+				if (salidas[i] == 1) {
+					if (entradas[j][i] == 0) {
+						fnc += Operadores.NEGACION;
+					}
+					fnc += atomos.get(j);
+				}
+			}
+			fnc += ")";
+
+			fnc += i < entradas[0].length - 1 ? Operadores.CONJUNCION : "";
 		}
-		if (fnc.contains(Operadores.CONDICIONAL)) {
-			fnc = axioma8(fnc);
-		}
-
-		fnc = axioma4(fnc);
-		fnc = axioma7(fnc);
-		fnc = axioma4(fnc);
-
-		fnc = axioma5(fnc);
-
-		fnc = axioma6(fnc);
+		
+		System.out.println(Arrays.toString(salidas));
+		
+		fnc.replace("()", "");
 
 		return fnc;
 	}
 
-	private String axioma4(String fnc) {
-		String salida = fnc;
-		ArbolFormula arbol = new ArbolFormula(salida);
+	private int[] evaluarFBF(int[][] entradas) {
+		int[] salidas = new int[(int) Math.pow(2, atomos.size())];
 
-		Nodo actual = arbol.getNodoNegado();
+		for (int i = 0; i < entradas[0].length; i++) {
+			int[] entradaTmp = new int[atomos.size()];
 
-		while (actual != null) {
-			actual.setValor(actual.getIzquierdo().getIzquierdo().getValor());
-			actual.setFbf(actual.getIzquierdo().getIzquierdo().getFbf());
-
-			if (!actual.esAtomo()) {;
-				Nodo izq = actual.getIzquierdo().getIzquierdo().getIzquierdo();
-				Nodo der = actual.getIzquierdo().getIzquierdo().getDerecho();
-				
-				actual.setIzquierdo(izq);
-				actual.setDerecho(der);
-			} else {
-				actual.setIzquierdo(null);
+			for (int j = 0; j < entradas.length; j++) {
+				entradaTmp[j] = entradas[j][i];
 			}
 
-			actual = arbol.getNodoNegado();
+			salidas[i] = valorDeVerdadFBF(entradaTmp, fbf);
 		}
 
-		salida = arbol.toString();
-		return salida;
+		return salidas;
 	}
 
-	private String axioma5(String fnc) {
-		String salida = fnc;
-		ArbolFormula arbol = new ArbolFormula(salida);
-
-		Nodo actual = arbol.getNodoDuplicado();
-
-		while (actual != null) {
-			actual.setValor(actual.getIzquierdo().getValor());
-
-			Nodo phi = actual.getIzquierdo().getIzquierdo();
-			Nodo psi = actual.getIzquierdo().getDerecho();
-
-			actual.setIzquierdo(phi);
-			actual.setDerecho(psi);
-
-			actual = arbol.getNodoDuplicado();
+	private int valorDeVerdadFBF(int[] entradas, String fbf) {
+		if (esAtomo(fbf)) {
+			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : " + entradas[atomos.indexOf(fbf.charAt(0))]);
+			return entradas[atomos.indexOf(fbf.charAt(0))];
 		}
 
-		salida = arbol.toString();
-		return salida;
+		int indice = indiceDeOperadorPrincipal(fbf);
+
+		if (indice == 0) {
+			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : " + negar(valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
+			return negar(valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1)));
+		}
+
+		char c = fbf.charAt(indice);
+
+		if (Operadores.CONJUNCION.equals(String.valueOf(c))) {
+			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : " + conj(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
+					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
+			return conj(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
+					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1)));
+		} else if (Operadores.DISYUNCION.equals(String.valueOf(c))) {
+			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : " + disy(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
+					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
+			return disy(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
+					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1)));
+		} else if (Operadores.CONDICIONAL.equals(String.valueOf(c))) {
+			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : " + cond(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
+					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
+			return cond(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
+					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1)));
+		} else {
+			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : " + equi(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
+					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
+			return equi(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
+					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1)));
+		}
 	}
 
-	private String axioma6(String fnc) {
-		String salida = fnc;
-
-		return fnc;
+	private boolean esAtomo(String fbf) {
+		return fbf.length() == 1;
 	}
 
-	private String axioma7(String fnc) {
-		String salida = fnc;
-		ArbolFormula arbol = new ArbolFormula(fnc);
+	private int conj(int a, int b) {
+		if (a == 1 && b == 1) {
+			return 1;
+		}
+		return 0;
+	}
 
-		Nodo actual = arbol.getNodoMorgan();
+	private int disy(int a, int b) {
+		if (a == 1 || b == 1) {
+			return 1;
+		}
+		return 0;
+	}
 
-		while (actual != null) {
-			if (actual.getIzquierdo().getValor() == Operadores.DISYUNCION.charAt(0)) {
-				actual.setValor(Operadores.CONJUNCION.charAt(0));
-			} else {
-				actual.setValor(Operadores.DISYUNCION.charAt(0));
+	private int cond(int a, int b) {
+		if (a == 1 && b == 0) {
+			return 0;
+		}
+		return 1;
+	}
+
+	private int equi(int a, int b) {
+		if (a == b) {
+			return 1;
+		}
+		return 0;
+	}
+
+	private int negar(int val) {
+		if (val == 0) {
+			return 1;
+		}
+		return 0;
+	}
+
+	private int[][] tabularEntradas() {
+		int[][] tabla = new int[atomos.size()][(int) Math.pow(2, atomos.size())];
+
+		for (int i = 0; i < tabla[0].length; i++) {
+			int valor = i;
+			for (int j = 0; j < tabla.length && valor > 0; j++) {
+				int tmp = (int) Math.pow(2, tabla.length - j - 1);
+
+				if (tmp <= valor) {
+					tabla[j][i] = 1;
+					valor -= tmp;
+				}
 			}
-
-			String phi = actual.getIzquierdo().getIzquierdo().getFbf();
-			String psi = actual.getIzquierdo().getDerecho().getFbf();
-
-			actual.setIzquierdo(new Nodo(Operadores.NEGACION + "(" + phi + ")"));
-			actual.setDerecho(new Nodo(Operadores.NEGACION + "(" + psi + ")"));
-
-			actual = arbol.getNodoMorgan();
-			salida = arbol.toString();
 		}
 
-		return salida;
-	}
-
-	private String axioma8(String fnc) {
-		String salida = fnc;
-		ArbolFormula arbol = new ArbolFormula(fnc);
-
-		while (arbol.contains(Operadores.CONDICIONAL.charAt(0))) {
-			Nodo actual = arbol.find(Operadores.CONDICIONAL.charAt(0));
-
-			String phi = actual.getIzquierdo().getFbf();
-
-			actual.setValor(Operadores.DISYUNCION.charAt(0));
-			actual.setIzquierdo(new Nodo(Operadores.NEGACION + "(" + phi + ")"));
-
-			salida = arbol.toString();
-		}
-
-		return salida;
-	}
-
-	private String axioma9(String fnc) {
-		String salida = fnc;
-		ArbolFormula arbol = new ArbolFormula(fnc);
-
-		while (arbol.contains(Operadores.EQUIVALENCIA.charAt(0))) {
-			Nodo actual = arbol.find(Operadores.EQUIVALENCIA.charAt(0));
-
-			String phi = actual.getIzquierdo().getFbf();
-			String psi = actual.getDerecho().getFbf();
-
-			actual.setValor(Operadores.CONJUNCION.charAt(0));
-			actual.setIzquierdo(new Nodo("(" + phi + ")" + Operadores.CONDICIONAL + "(" + psi + ")"));
-			actual.setDerecho(new Nodo("(" + psi + ")" + Operadores.CONDICIONAL + "(" + phi + ")"));
-
-			salida = arbol.toString();
-		}
-
-		return salida;
+		return tabla;
 	}
 
 	private boolean esFNC(String fbf) {
@@ -230,20 +234,6 @@ public class FormulaBienFormada {
 
 	public ArrayList<Character> getAtomos() {
 		return atomos;
-	}
-
-	/**
-	 * @return the arbol
-	 */
-	public ArbolFormula getArbol() {
-		return arbol;
-	}
-
-	/**
-	 * @param arbol the arbol to set
-	 */
-	public void setArbol(ArbolFormula arbol) {
-		this.arbol = arbol;
 	}
 
 }

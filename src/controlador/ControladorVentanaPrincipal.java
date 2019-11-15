@@ -249,7 +249,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 
 		FormulaBienFormada fbf = new FormulaBienFormada(textArea.getText());
 
-		System.out.println(fbf.getArbol());
+		System.out.println(fbf.toFNC());
 	}
 
 	public ObservableList<Node> getFormulaColor(ArrayList<String> formula) {
