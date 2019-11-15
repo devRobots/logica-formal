@@ -61,11 +61,12 @@ public class ArbolFormula {
 		}
 
 		if (nodo.getValor() == Operadores.NEGACION.charAt(0)) {
-			if (nodo.getIzquierdo().getValor() == Operadores.DISYUNCION.charAt(0) || nodo.getIzquierdo().getValor() == Operadores.CONJUNCION.charAt(0)) {
+			if (nodo.getIzquierdo().getValor() == Operadores.DISYUNCION.charAt(0)
+					|| nodo.getIzquierdo().getValor() == Operadores.CONJUNCION.charAt(0)) {
 				return nodo;
 			}
 		}
-		
+
 		Nodo izq = getNodoMorgan(nodo.getIzquierdo());
 		Nodo der = getNodoMorgan(nodo.getDerecho());
 
@@ -75,108 +76,110 @@ public class ArbolFormula {
 			return der;
 		}
 	}
-	
+
 	public Nodo getNodoConjuncion() {
 		return getNodoConjuncion(raiz);
 	}
-	
+
 	private Nodo getNodoConjuncion(Nodo nodo) {
 		if (nodo == null) {
 			return null;
 		}
-		
+
 		if (nodo.getValor() == Operadores.CONJUNCION.charAt(0)) {
-			if (nodo.getIzquierdo() != null) {				
+			if (nodo.getIzquierdo() != null) {
 				if (nodo.getIzquierdo().getValor() == Operadores.CONJUNCION.charAt(0)) {
 					return nodo;
 				}
 			}
 		}
-		
+
 		Nodo izq = getNodoConjuncion(nodo.getIzquierdo());
 		Nodo der = getNodoConjuncion(nodo.getDerecho());
-		
+
 		if (izq != null) {
 			return izq;
 		} else {
 			return der;
 		}
 	}
-	
+
 	public Nodo getNodoDisyuncion() {
 		return getNodoDisyuncion(raiz);
 	}
-	
+
 	private Nodo getNodoDisyuncion(Nodo nodo) {
 		if (nodo == null) {
 			return null;
 		}
-		
+
 		if (nodo.getValor() == Operadores.DISYUNCION.charAt(0)) {
-			if (nodo.getIzquierdo() != null) {				
+			if (nodo.getIzquierdo() != null) {
 				if (nodo.getIzquierdo().getValor() == Operadores.DISYUNCION.charAt(0)) {
 					return nodo;
 				}
 			}
 		}
-		
+
 		Nodo izq = getNodoDisyuncion(nodo.getIzquierdo());
 		Nodo der = getNodoDisyuncion(nodo.getDerecho());
-		
+
 		if (izq != null) {
 			return izq;
 		} else {
 			return der;
 		}
 	}
-	
+
 	public Nodo getNodoConjuncionDisyuncion() {
 		return getNodoConjuncionDisyuncion(raiz);
 	}
-	
+
 	private Nodo getNodoConjuncionDisyuncion(Nodo nodo) {
 		if (nodo == null) {
 			return null;
 		}
-		
+
 		if (nodo.getValor() == Operadores.CONJUNCION.charAt(0)) {
-			if (nodo.getIzquierdo() != null) {				
-				if (nodo.getIzquierdo().getValor() == Operadores.DISYUNCION.charAt(0)||nodo.getDerecho().getValor() == Operadores.DISYUNCION.charAt(0)) {
+			if (nodo.getIzquierdo() != null) {
+				if (nodo.getIzquierdo().getValor() == Operadores.DISYUNCION.charAt(0)
+						|| nodo.getDerecho().getValor() == Operadores.DISYUNCION.charAt(0)) {
 					return nodo;
 				}
 			}
 		}
-		
+
 		Nodo izq = getNodoConjuncionDisyuncion(nodo.getIzquierdo());
 		Nodo der = getNodoConjuncionDisyuncion(nodo.getDerecho());
-		
+
 		if (izq != null) {
 			return izq;
 		} else {
 			return der;
 		}
 	}
-	
+
 	public Nodo getNodoDisyuncionConjuncion() {
 		return getNodoDisyuncionConjuncion(raiz);
 	}
-	
+
 	private Nodo getNodoDisyuncionConjuncion(Nodo nodo) {
 		if (nodo == null) {
 			return null;
 		}
-		
+
 		if (nodo.getValor() == Operadores.DISYUNCION.charAt(0)) {
-			if (nodo.getIzquierdo() != null) {				
-				if (nodo.getIzquierdo().getValor() == Operadores.CONJUNCION.charAt(0)||nodo.getDerecho().getValor() == Operadores.CONJUNCION.charAt(0)) {
+			if (nodo.getIzquierdo() != null) {
+				if (nodo.getIzquierdo().getValor() == Operadores.CONJUNCION.charAt(0)
+						|| nodo.getDerecho().getValor() == Operadores.CONJUNCION.charAt(0)) {
 					return nodo;
 				}
 			}
 		}
-		
+
 		Nodo izq = getNodoDisyuncionConjuncion(nodo.getIzquierdo());
 		Nodo der = getNodoDisyuncionConjuncion(nodo.getDerecho());
-		
+
 		if (izq != null) {
 			return izq;
 		} else {
@@ -194,13 +197,13 @@ public class ArbolFormula {
 		}
 
 		if (nodo.getValor() == Operadores.NEGACION.charAt(0)) {
-			if (nodo.getIzquierdo() != null) {				
+			if (nodo.getIzquierdo() != null) {
 				if (nodo.getIzquierdo().getValor() == Operadores.NEGACION.charAt(0)) {
 					return nodo;
 				}
 			}
 		}
-		
+
 		Nodo izq = getNodoNegado(nodo.getIzquierdo());
 		Nodo der = getNodoNegado(nodo.getDerecho());
 
@@ -210,24 +213,24 @@ public class ArbolFormula {
 			return der;
 		}
 	}
-	
+
 	public Nodo getNodoDuplicado() {
 		return getNodoDuplicado(raiz);
 	}
-	
-	public Nodo getNodoDuplicado(Nodo nodo) {
+
+	private Nodo getNodoDuplicado(Nodo nodo) {
 		if (nodo == null) {
 			return null;
 		}
-		
+
 		if (nodo.getIzquierdo() == null) {
 			return null;
 		}
-		
+
 		if (nodo.getIzquierdo().equals(nodo.getDerecho())) {
 			return nodo;
 		}
-		
+
 		Nodo izq = getNodoDuplicado(nodo.getIzquierdo());
 		Nodo der = getNodoDuplicado(nodo.getDerecho());
 
@@ -237,27 +240,26 @@ public class ArbolFormula {
 			return der;
 		}
 	}
-	
+
 	public boolean contains(char valor) {
 		return contains(raiz, valor);
 	}
-	
+
 	private boolean contains(Nodo nodo, char valor) {
 		if (nodo == null) {
 			return false;
 		}
-		
+
 		if (nodo.getValor() == valor) {
 			return true;
 		}
 
 		boolean izq = contains(nodo.getIzquierdo(), valor);
 		boolean der = contains(nodo.getDerecho(), valor);
-		
+
 		if (izq) {
 			return izq;
-		}
-		else {
+		} else {
 			return der;
 		}
 	}

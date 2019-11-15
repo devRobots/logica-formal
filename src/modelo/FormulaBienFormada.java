@@ -7,6 +7,7 @@ public class FormulaBienFormada {
 	public String fbf;
 	public ArrayList<Character> atomos;
 	public ArbolFormula arbol;
+	public ArrayList<String> procedimiento;
 
 	public FormulaBienFormada(String fbf) {
 		atomos = new ArrayList<>();
@@ -27,23 +28,37 @@ public class FormulaBienFormada {
 		this.fbf = fbf;
 	}
 
+	public ArrayList<String> getProcedimiento() {
+		return procedimiento;
+	}
+
 	public String toFNC() {
 		String fnc = fbf;
-
+		procedimiento = new ArrayList<String>();
+		
 		if (fnc.contains(Operadores.EQUIVALENCIA)) {
 			fnc = axioma9(fnc);
+			procedimiento.add(fnc+" ... Axioma 9");
 		}
 		if (fnc.contains(Operadores.CONDICIONAL)) {
 			fnc = axioma8(fnc);
+			procedimiento.add(fnc+" ... Axioma 8");
 		}
-
+		
 		fnc = axioma4(fnc);
+		procedimiento.add(fnc+" ... Axioma 4");
+		
 		fnc = axioma7(fnc);
+		procedimiento.add(fnc+" ... Axioma 7");
+		
 		fnc = axioma4(fnc);
+		procedimiento.add(fnc+" ... Axioma 4");
 
 		fnc = axioma5(fnc);
+		procedimiento.add(fnc+" ... Axioma 5");
 
-		fnc = axioma6(fnc);
+		fnc = axioma3(fnc);
+		procedimiento.add(fnc+" ... Axioma 3");
 
 		return fnc;
 	}
@@ -66,8 +81,10 @@ public class FormulaBienFormada {
 
 				actual.setIzquierdo(izq);
 				actual.setDerecho(der);
+				
+				actual.setValor(Operadores.CONJUNCION.charAt(0));
 
-			} else {
+			} else if(actual.getDerecho().getValor() == Operadores.CONJUNCION.charAt(0)){
 				Nodo izq = new Nodo(Operadores.DISYUNCION.charAt(0));
 				izq.setIzquierdo(new Nodo(actual.getDerecho().getIzquierdo().getFbf()));
 				izq.setDerecho(actual.getIzquierdo());
@@ -78,9 +95,12 @@ public class FormulaBienFormada {
 
 				actual.setIzquierdo(izq);
 				actual.setDerecho(der);
+				
+				actual.setValor(Operadores.CONJUNCION.charAt(0));
+				
 			}
-			actual.setValor(Operadores.CONJUNCION.charAt(0));
 			actual = arbol.getNodoDisyuncionConjuncion();
+			
 		}
 
 		salida = arbol.toString();
@@ -232,7 +252,7 @@ public class FormulaBienFormada {
 		return flag;
 	}
 
-	public boolean esFNC(Nodo nodo, boolean isConjuncion) {
+	private boolean esFNC(Nodo nodo, boolean isConjuncion) {
 		if (nodo.esAtomo()) {
 			return true;
 		}

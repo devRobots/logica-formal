@@ -389,6 +389,12 @@ public class ControladorVentanaPrincipal implements Initializable {
 		String cadena="";
 		if(comboMetodo.getSelectionModel().getSelectedItem().equals("FNC")) {
 			cadena=fbf.toFNC();
+	//		cadena+="\n¿Es FNC?"+fbf.esFNC(cadena)+"\n\n";
+			cadena+="\nProcedimiento:\n";
+			for(String aux:fbf.procedimiento) {
+				cadena+=aux+"\n";
+			}
+			
 		}else if(comboMetodo.getSelectionModel().getSelectedItem().equals("FC")) {
 			cadena="";
 		}else if(comboMetodo.getSelectionModel().getSelectedItem().equals("FND")) {
@@ -403,7 +409,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 			stage.setTitle("Proyecto");
 			stage.setScene(scene);
 			ControladorOperaciones con = fxmlLoader.getController();
-			con.setFormula(tableFormulas.getSelectionModel().getSelectedItem().getFormula(), cadena , (Stage) textArea.getScene().getWindow());
+			con.setFormula(tableFormulas.getSelectionModel().getSelectedItem().getFormula(),cadena, (Stage) textArea.getScene().getWindow());
 			stage.show();
 			((Stage) textArea.getScene().getWindow()).close();
 
