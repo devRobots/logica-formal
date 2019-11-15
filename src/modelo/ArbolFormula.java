@@ -9,6 +9,25 @@ public class ArbolFormula {
 		raiz = new Nodo(fbf);
 	}
 
+	public void addNodo(Nodo nodo) {
+		if (raiz == null) {
+			raiz = nodo;
+		} else if (nodo.getValor()==Operadores.CONJUNCION.charAt(0)) {
+			nodo.setIzquierdo(raiz);
+			raiz=nodo;
+		} else  {
+			if(raiz.getValor()==Operadores.CONJUNCION.charAt(0)) {
+				if(raiz.getDerecho()==null){
+					raiz.setDerecho(nodo);
+				}else {
+					raiz.getDerecho().addNodo(nodo);
+				}
+			}else {
+				raiz.addNodo(nodo);
+			}
+		}
+	}
+
 	public ArrayList<Nodo> findAll(char caracter) {
 		ArrayList<Nodo> coincidencias = new ArrayList<>();
 		findAll(raiz, caracter, coincidencias);

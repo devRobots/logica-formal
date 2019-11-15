@@ -2,7 +2,7 @@ package modelo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+//import java.util.Collections;
 
 public class FormulaBienFormada {
 	public String fbf;
@@ -16,22 +16,18 @@ public class FormulaBienFormada {
 		for (int i = 0; i < fbf.length(); i++) {
 			char c = fbf.charAt(i);
 
-			if (esAtomo(c)) {
-				if (c != Operadores.DISYUNCION.charAt(0)) {					
-					if (!atomos.contains(c)) {
-						atomos.add(c);
-					}
-				}
+			if (esAtomo(c) && !atomos.contains(c)) {
+				atomos.add(c);
 			}
 		}
 
-		Collections.sort(atomos);
-		
+		// Collections.sort(atomos);
+
 		this.fbf = fbf;
 	}
-	
+
 	private boolean esAtomo(char c) {
-		return c >= 97 && c <= 122;
+		return Character.isAlphabetic(c) && c != 'v' && c != 'ʌ';
 	}
 
 	public ArrayList<String> getProcedimiento() {
@@ -58,38 +54,87 @@ public class FormulaBienFormada {
 
 			fnc += i < entradas[0].length - 1 ? Operadores.CONJUNCION : "";
 		}
-		
+
 		System.out.println(Arrays.toString(salidas));
-		
+
 		fnc.replace("()", "");
 
 		return fnc;
 	}
-	
+
 	public String toFNC2() {
 		String fnc = "";
 
 		ArbolFormula arbol = new ArbolFormula(fbf);
-		
-		
-		int[][] entradas = tabularEntradas();
-		int[] salidas = evaluarFBF(entradas);
-		
-		
 
-		for (int i = 0; i < entradas[0].length; i++) {
-			int valores[] =entradas[i];
-			
+		int[][] entradas = tabularEntradas();
+		int[][] salidas = new int[entradas.length][entradas[0].length];
+		int cont = 0;
+
+		for (int i = 0; i < entradas.length; i++) {
+			int valores[] = entradas[i];
+			if (resolver(arbol.getRaiz(), valores) == 0) {
+				salidas[cont] = valores;
+				cont++;
+				System.out.print("[");
+				for (int v : valores) {
+					System.out.print(v + ",");
+				}
+				System.out.print("]");
+				System.out.println();
+			}
 		}
 
-		return fnc;
+		return getFormulaSimple(salidas);
 	}
 	
-	private int resolver(Nodo n, int [] valores) {
-		if(n.esAtomo()) {
-			for(char atomo:atomos) {
-				
+	private String getFormulaSimple(int [][] salidas) {
+		String cadena="";
+		for(int i=0;i<salidas.length;i++) {
+			cadena+="(";
+			for(int j=0;j<salidas[0].length;j++) {
+				cadena+="(";
+				if(salidas[i][j]==0) {
+					cadena+=Operadores.NEGACION+atomos.get(j);
+				}else {
+					cadena+=atomos.get(j);
+				}
+				cadena+=")";
+				if(j!=salidas[0].length-1) {
+					cadena+=Operadores.DISYUNCION;
+				}
 			}
+			cadena+=")";
+			if(i!=salidas.length-1) {
+				cadena+=Operadores.CONJUNCION;
+			}
+			
+		}	
+		return cadena;
+	}
+
+	private int resolver(Nodo n, int[] valores) {
+		if (n.esAtomo()) {
+			for (int i = 0; i < atomos.size(); i++) {
+				if (atomos.get(i) == n.getValor()) {
+					return valores[i];
+				}
+			}
+		}
+		if (n.getValor() == Operadores.CONJUNCION.charAt(0)) {
+			return conj(resolver(n.getIzquierdo(), valores), resolver(n.getDerecho(), valores));
+		}
+		if (n.getValor() == Operadores.DISYUNCION.charAt(0)) {
+			return disy(resolver(n.getIzquierdo(), valores), resolver(n.getDerecho(), valores));
+		}
+		if (n.getValor() == Operadores.CONDICIONAL.charAt(0)) {
+			return cond(resolver(n.getIzquierdo(), valores), resolver(n.getDerecho(), valores));
+		}
+		if (n.getValor() == Operadores.EQUIVALENCIA.charAt(0)) {
+			return equi(resolver(n.getIzquierdo(), valores), resolver(n.getDerecho(), valores));
+		}
+		if (n.getValor() == Operadores.NEGACION.charAt(0)) {
+			return negar(resolver(n.getIzquierdo(), valores));
 		}
 		return 0;
 	}
@@ -112,38 +157,44 @@ public class FormulaBienFormada {
 
 	private int valorDeVerdadFBF(int[] entradas, String fbf) {
 		if (esAtomo(fbf)) {
-			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : " + entradas[atomos.indexOf(fbf.charAt(0))]);
+			System.out
+					.println(Arrays.toString(entradas) + " : " + fbf + " : " + entradas[atomos.indexOf(fbf.charAt(0))]);
 			return entradas[atomos.indexOf(fbf.charAt(0))];
 		}
 
 		int indice = indiceDeOperadorPrincipal(fbf);
 
 		if (indice == 0) {
-			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : " + negar(valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
+			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : "
+					+ negar(valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
 			return negar(valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1)));
 		}
 
 		char c = fbf.charAt(indice);
 
 		if (Operadores.CONJUNCION.equals(String.valueOf(c))) {
-			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : " + conj(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
-					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
-			return conj(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
+			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : "
+					+ conj(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
+							valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
+			return conj(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
 					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1)));
 		} else if (Operadores.DISYUNCION.equals(String.valueOf(c))) {
-			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : " + disy(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
-					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
-			return disy(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
+			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : "
+					+ disy(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
+							valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
+			return disy(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
 					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1)));
 		} else if (Operadores.CONDICIONAL.equals(String.valueOf(c))) {
-			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : " + cond(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
-					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
-			return cond(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
+			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : "
+					+ cond(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
+							valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
+			return cond(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
 					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1)));
 		} else {
-			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : " + equi(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
-					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
-			return equi(valorDeVerdadFBF(entradas, fbf.substring(1, indice-1)),
+			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : "
+					+ equi(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
+							valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
+			return equi(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
 					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1)));
 		}
 	}
@@ -188,15 +239,15 @@ public class FormulaBienFormada {
 	}
 
 	private int[][] tabularEntradas() {
-		int[][] tabla = new int[atomos.size()][(int) Math.pow(2, atomos.size())];
+		int[][] tabla = new int[(int) Math.pow(2, atomos.size())][atomos.size()];
 
-		for (int i = 0; i < tabla[0].length; i++) {
+		for (int i = 0; i < tabla.length; i++) {
 			int valor = i;
-			for (int j = 0; j < tabla.length && valor > 0; j++) {
-				int tmp = (int) Math.pow(2, tabla.length - j - 1);
+			for (int j = 0; j < tabla[0].length && valor > 0; j++) {
+				int tmp = (int) Math.pow(2, tabla[0].length - j - 1);
 
 				if (tmp <= valor) {
-					tabla[j][i] = 1;
+					tabla[i][j] = 1;
 					valor -= tmp;
 				}
 			}
@@ -256,7 +307,7 @@ public class FormulaBienFormada {
 	public int indiceDeOperadorPrincipal(String fbf) {
 		int indice = -1;
 
-		if (fbf.startsWith("�")) {
+		if (fbf.startsWith("ï¿½")) {
 			indice = 0;
 		} else {
 			int contParentesis = 0;

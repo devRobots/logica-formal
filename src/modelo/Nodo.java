@@ -11,6 +11,21 @@ public class Nodo {
 		this.valor = valor;
 		fbf = String.valueOf(valor);
 	}
+	
+	public Nodo(Nodo nodo) {
+		super();
+		this.valor = nodo.getValor();
+		this.fbf = nodo.getFbf();
+		this.izquierdo = nodo.getIzquierdo();
+		this.derecho = nodo.getDerecho();
+	}
+	
+	public void resetNodo(Nodo nodo) {
+		this.valor = nodo.getValor();
+		this.fbf = nodo.getFbf();
+		this.izquierdo = nodo.getIzquierdo();
+		this.derecho = nodo.getDerecho();
+	}
 
 	public Nodo(String fbf) {
 		if (fbf.length() == 1) {
@@ -28,6 +43,16 @@ public class Nodo {
 		}
 
 		this.fbf = fbf;
+	}
+
+	public void addNodo(Nodo nodo) {
+		if(esAtomo()) {
+			nodo.setIzquierdo(new Nodo(this));
+			resetNodo(nodo);	
+		}else if(nodo.getValor()==Operadores.CONJUNCION.charAt(0)) {
+			nodo.setIzquierdo(new Nodo(this));
+			resetNodo(nodo);	
+		}
 	}
 
 	private int indiceDeOperadorPrincipal(String fbf) {
@@ -59,20 +84,15 @@ public class Nodo {
 	public boolean esAtomo() {
 		if (valor == Operadores.CONDICIONAL.charAt(0)) {
 			return false;
-		}
-		else if (valor == Operadores.CONJUNCION.charAt(0)) {
+		} else if (valor == Operadores.CONJUNCION.charAt(0)) {
 			return false;
-		}
-		else if (valor == Operadores.DISYUNCION.charAt(0)) {
+		} else if (valor == Operadores.DISYUNCION.charAt(0)) {
 			return false;
-		}
-		else if (valor == Operadores.EQUIVALENCIA.charAt(0)) {
+		} else if (valor == Operadores.EQUIVALENCIA.charAt(0)) {
 			return false;
-		}
-		else if (valor == Operadores.NEGACION.charAt(0)) {
+		} else if (valor == Operadores.NEGACION.charAt(0)) {
 			return false;
-		}
-		else {
+		} else {
 			return true;
 		}
 	}
@@ -149,11 +169,11 @@ public class Nodo {
 			return false;
 		}
 		Nodo other = (Nodo) obj;
-		
+
 		if (!other.fbf.equals(fbf)) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
