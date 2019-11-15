@@ -9,8 +9,6 @@ public class FormulaBienFormada {
 	public ArrayList<Character> atomos;
 	public ArbolFormula arbol;
 	public ArrayList<String> procedimiento;
-	private String fbf;
-	private ArrayList<Character> atomos;
 
 	public FormulaBienFormada(String fbf) {
 		atomos = new ArrayList<>();

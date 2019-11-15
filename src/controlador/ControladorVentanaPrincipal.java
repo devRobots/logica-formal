@@ -223,7 +223,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		textArea.setText(cadena);
 	}
 
-<<<<<<< HEAD
+
 	@FXML
 	void aceptar(ActionEvent event) {
 		stringaArray();
@@ -314,7 +314,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 			return list;
 		}
 	}
-=======
+
 //	@FXML
 //	void aceptar(ActionEvent event) {
 //		stringaArray();
@@ -405,7 +405,6 @@ public class ControladorVentanaPrincipal implements Initializable {
 //			return list;
 //		}
 //	}
->>>>>>> master
 
 	@FXML
 	void seleccionar() {
