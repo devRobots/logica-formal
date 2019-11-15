@@ -86,13 +86,42 @@ public class ArbolFormula {
 		}
 
 		if (nodo.getValor() == Operadores.NEGACION.charAt(0)) {
-			if (nodo.getIzquierdo().getValor() == Operadores.NEGACION.charAt(0)) {
-				return nodo;
+			if (nodo.getIzquierdo() != null) {				
+				if (nodo.getIzquierdo().getValor() == Operadores.NEGACION.charAt(0)) {
+					return nodo;
+				}
 			}
 		}
 		
 		Nodo izq = getNodoNegado(nodo.getIzquierdo());
 		Nodo der = getNodoNegado(nodo.getDerecho());
+
+		if (izq != null) {
+			return izq;
+		} else {
+			return der;
+		}
+	}
+	
+	public Nodo getNodoDuplicado() {
+		return getNodoDuplicado(raiz);
+	}
+	
+	public Nodo getNodoDuplicado(Nodo nodo) {
+		if (nodo == null) {
+			return null;
+		}
+		
+		if (nodo.getIzquierdo() == null) {
+			return null;
+		}
+		
+		if (nodo.getIzquierdo().equals(nodo.getDerecho())) {
+			return nodo;
+		}
+		
+		Nodo izq = getNodoDuplicado(nodo.getIzquierdo());
+		Nodo der = getNodoDuplicado(nodo.getDerecho());
 
 		if (izq != null) {
 			return izq;
