@@ -480,13 +480,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		FormulaBienFormada fbf = new FormulaBienFormada(tableFormulas.getSelectionModel().getSelectedItem().getFormula());
 		String cadena="";
 		if(comboMetodo.getSelectionModel().getSelectedItem().equals("FNC")) {
-			cadena=fbf.toFNC();
-	//		cadena+="\n¿Es FNC?"+fbf.esFNC(cadena)+"\n\n";
-			cadena+="\nProcedimiento:\n";
-			for(String aux:fbf.procedimiento) {
-				cadena+=aux+"\n";
-			}
-			
+			cadena=fbf.toFNC();			
 		}else if(comboMetodo.getSelectionModel().getSelectedItem().equals("FC")) {
 			cadena="";
 		}else if(comboMetodo.getSelectionModel().getSelectedItem().equals("FND")) {

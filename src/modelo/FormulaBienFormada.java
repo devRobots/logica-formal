@@ -65,6 +65,34 @@ public class FormulaBienFormada {
 
 		return fnc;
 	}
+	
+	public String toFNC2() {
+		String fnc = "";
+
+		ArbolFormula arbol = new ArbolFormula(fbf);
+		
+		
+		int[][] entradas = tabularEntradas();
+		int[] salidas = evaluarFBF(entradas);
+		
+		
+
+		for (int i = 0; i < entradas[0].length; i++) {
+			int valores[] =entradas[i];
+			
+		}
+
+		return fnc;
+	}
+	
+	private int resolver(Nodo n, int [] valores) {
+		if(n.esAtomo()) {
+			for(char atomo:atomos) {
+				
+			}
+		}
+		return 0;
+	}
 
 	private int[] evaluarFBF(int[][] entradas) {
 		int[] salidas = new int[(int) Math.pow(2, atomos.size())];
