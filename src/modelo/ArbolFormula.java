@@ -75,6 +75,114 @@ public class ArbolFormula {
 			return der;
 		}
 	}
+	
+	public Nodo getNodoConjuncion() {
+		return getNodoConjuncion(raiz);
+	}
+	
+	private Nodo getNodoConjuncion(Nodo nodo) {
+		if (nodo == null) {
+			return null;
+		}
+		
+		if (nodo.getValor() == Operadores.CONJUNCION.charAt(0)) {
+			if (nodo.getIzquierdo() != null) {				
+				if (nodo.getIzquierdo().getValor() == Operadores.CONJUNCION.charAt(0)) {
+					return nodo;
+				}
+			}
+		}
+		
+		Nodo izq = getNodoConjuncion(nodo.getIzquierdo());
+		Nodo der = getNodoConjuncion(nodo.getDerecho());
+		
+		if (izq != null) {
+			return izq;
+		} else {
+			return der;
+		}
+	}
+	
+	public Nodo getNodoDisyuncion() {
+		return getNodoDisyuncion(raiz);
+	}
+	
+	private Nodo getNodoDisyuncion(Nodo nodo) {
+		if (nodo == null) {
+			return null;
+		}
+		
+		if (nodo.getValor() == Operadores.DISYUNCION.charAt(0)) {
+			if (nodo.getIzquierdo() != null) {				
+				if (nodo.getIzquierdo().getValor() == Operadores.DISYUNCION.charAt(0)) {
+					return nodo;
+				}
+			}
+		}
+		
+		Nodo izq = getNodoDisyuncion(nodo.getIzquierdo());
+		Nodo der = getNodoDisyuncion(nodo.getDerecho());
+		
+		if (izq != null) {
+			return izq;
+		} else {
+			return der;
+		}
+	}
+	
+	public Nodo getNodoConjuncionDisyuncion() {
+		return getNodoConjuncionDisyuncion(raiz);
+	}
+	
+	private Nodo getNodoConjuncionDisyuncion(Nodo nodo) {
+		if (nodo == null) {
+			return null;
+		}
+		
+		if (nodo.getValor() == Operadores.CONJUNCION.charAt(0)) {
+			if (nodo.getIzquierdo() != null) {				
+				if (nodo.getIzquierdo().getValor() == Operadores.DISYUNCION.charAt(0)||nodo.getDerecho().getValor() == Operadores.DISYUNCION.charAt(0)) {
+					return nodo;
+				}
+			}
+		}
+		
+		Nodo izq = getNodoConjuncionDisyuncion(nodo.getIzquierdo());
+		Nodo der = getNodoConjuncionDisyuncion(nodo.getDerecho());
+		
+		if (izq != null) {
+			return izq;
+		} else {
+			return der;
+		}
+	}
+	
+	public Nodo getNodoDisyuncionConjuncion() {
+		return getNodoDisyuncionConjuncion(raiz);
+	}
+	
+	private Nodo getNodoDisyuncionConjuncion(Nodo nodo) {
+		if (nodo == null) {
+			return null;
+		}
+		
+		if (nodo.getValor() == Operadores.DISYUNCION.charAt(0)) {
+			if (nodo.getIzquierdo() != null) {				
+				if (nodo.getIzquierdo().getValor() == Operadores.CONJUNCION.charAt(0)||nodo.getDerecho().getValor() == Operadores.CONJUNCION.charAt(0)) {
+					return nodo;
+				}
+			}
+		}
+		
+		Nodo izq = getNodoDisyuncionConjuncion(nodo.getIzquierdo());
+		Nodo der = getNodoDisyuncionConjuncion(nodo.getDerecho());
+		
+		if (izq != null) {
+			return izq;
+		} else {
+			return der;
+		}
+	}
 
 	public Nodo getNodoNegado() {
 		return getNodoNegado(raiz);

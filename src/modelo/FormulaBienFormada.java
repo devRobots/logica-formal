@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class FormulaBienFormada {
-	private String fbf;
-	private ArrayList<Character> atomos;
-	private ArbolFormula arbol;
+	public String fbf;
+	public ArrayList<Character> atomos;
+	public ArbolFormula arbol;
 
 	public FormulaBienFormada(String fbf) {
 		atomos = new ArrayList<>();
@@ -48,7 +48,46 @@ public class FormulaBienFormada {
 		return fnc;
 	}
 
-	private String axioma4(String fnc) {
+	public String axioma3(String fnc) {
+		String salida = fnc;
+		ArbolFormula arbol = new ArbolFormula(salida);
+
+		Nodo actual = arbol.getNodoDisyuncionConjuncion();
+
+		while (actual != null) {
+			if (actual.getIzquierdo().getValor() == Operadores.CONJUNCION.charAt(0)) {
+				Nodo izq = new Nodo(Operadores.DISYUNCION.charAt(0));
+				izq.setIzquierdo(new Nodo(actual.getIzquierdo().getIzquierdo().getFbf()));
+				izq.setDerecho(actual.getDerecho());
+
+				Nodo der = new Nodo(Operadores.DISYUNCION.charAt(0));
+				der.setIzquierdo(new Nodo(actual.getIzquierdo().getDerecho().getFbf()));
+				der.setDerecho(actual.getDerecho());
+
+				actual.setIzquierdo(izq);
+				actual.setDerecho(der);
+
+			} else {
+				Nodo izq = new Nodo(Operadores.DISYUNCION.charAt(0));
+				izq.setIzquierdo(new Nodo(actual.getDerecho().getIzquierdo().getFbf()));
+				izq.setDerecho(actual.getIzquierdo());
+
+				Nodo der = new Nodo(Operadores.DISYUNCION.charAt(0));
+				der.setIzquierdo(new Nodo(actual.getDerecho().getDerecho().getFbf()));
+				der.setDerecho(actual.getIzquierdo());
+
+				actual.setIzquierdo(izq);
+				actual.setDerecho(der);
+			}
+			actual.setValor(Operadores.CONJUNCION.charAt(0));
+			actual = arbol.getNodoDisyuncionConjuncion();
+		}
+
+		salida = arbol.toString();
+		return salida;
+	}
+
+	public String axioma4(String fnc) {
 		String salida = fnc;
 		ArbolFormula arbol = new ArbolFormula(salida);
 
@@ -58,10 +97,11 @@ public class FormulaBienFormada {
 			actual.setValor(actual.getIzquierdo().getIzquierdo().getValor());
 			actual.setFbf(actual.getIzquierdo().getIzquierdo().getFbf());
 
-			if (!actual.esAtomo()) {;
+			if (!actual.esAtomo()) {
+				;
 				Nodo izq = actual.getIzquierdo().getIzquierdo().getIzquierdo();
 				Nodo der = actual.getIzquierdo().getIzquierdo().getDerecho();
-				
+
 				actual.setIzquierdo(izq);
 				actual.setDerecho(der);
 			} else {
@@ -75,7 +115,7 @@ public class FormulaBienFormada {
 		return salida;
 	}
 
-	private String axioma5(String fnc) {
+	public String axioma5(String fnc) {
 		String salida = fnc;
 		ArbolFormula arbol = new ArbolFormula(salida);
 
@@ -97,13 +137,21 @@ public class FormulaBienFormada {
 		return salida;
 	}
 
-	private String axioma6(String fnc) {
+	public String axioma6(String fnc) {
 		String salida = fnc;
+
+		ArbolFormula arbol = new ArbolFormula(fnc);
+
+		Nodo actual = arbol.getNodoConjuncion();
+
+		while (actual != null) {
+
+		}
 
 		return fnc;
 	}
 
-	private String axioma7(String fnc) {
+	public String axioma7(String fnc) {
 		String salida = fnc;
 		ArbolFormula arbol = new ArbolFormula(fnc);
 
@@ -129,7 +177,7 @@ public class FormulaBienFormada {
 		return salida;
 	}
 
-	private String axioma8(String fnc) {
+	public String axioma8(String fnc) {
 		String salida = fnc;
 		ArbolFormula arbol = new ArbolFormula(fnc);
 
@@ -147,7 +195,7 @@ public class FormulaBienFormada {
 		return salida;
 	}
 
-	private String axioma9(String fnc) {
+	public String axioma9(String fnc) {
 		String salida = fnc;
 		ArbolFormula arbol = new ArbolFormula(fnc);
 
@@ -167,20 +215,37 @@ public class FormulaBienFormada {
 		return salida;
 	}
 
-	private boolean esFNC(String fbf) {
-		boolean flag = false;
+	public boolean esFNC(String fbf) {
+		boolean flag = true;
+		ArbolFormula arbol = new ArbolFormula(fbf);
+		Nodo nodo = arbol.getRaiz();
 
-		int indice = fbf.charAt(indiceDeOperadorPrincipal(fbf));
+		if (nodo.getValor() == Operadores.CONJUNCION.charAt(0)) {
 
-		if (indice != 0) {
-			String operadorPrincipal = fbf.substring(indice, indice + 1);
+			flag = esFNC(nodo, true);
 
-			if (operadorPrincipal == Operadores.CONJUNCION) {
-				flag = true;
-			}
+		} else {
+
+			flag = false;
+
+		}
+		return flag;
+	}
+
+	public boolean esFNC(Nodo nodo, boolean isConjuncion) {
+		if (nodo.esAtomo()) {
+			return true;
+		}
+		if (nodo.getValor() == Operadores.DISYUNCION.charAt(0) && isConjuncion) {
+			isConjuncion = false;
+		} else if (nodo.getValor() == Operadores.CONJUNCION.charAt(0) && !isConjuncion
+				|| nodo.getValor() == Operadores.CONDICIONAL.charAt(0)
+				|| nodo.getValor() == Operadores.EQUIVALENCIA.charAt(0)) {
+			return false;
 		}
 
-		return flag;
+		return esFNC(nodo.getIzquierdo(), isConjuncion) && esFNC(nodo.getDerecho(), isConjuncion);
+
 	}
 
 	public ArrayList<String> toFC() {
@@ -198,7 +263,7 @@ public class FormulaBienFormada {
 		return fcs;
 	}
 
-	private int indiceDeOperadorPrincipal(String fbf) {
+	public int indiceDeOperadorPrincipal(String fbf) {
 		int indice = -1;
 
 		if (fbf.startsWith("¬")) {
