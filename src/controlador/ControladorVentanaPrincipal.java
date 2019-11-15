@@ -3,10 +3,14 @@ package controlador;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,12 +21,17 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -96,7 +105,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		textArea.addEventFilter(KeyEvent.ANY, event -> {
 			KeyCode code = event.getCode();
 			textArea.deselect();
-			if (code == KeyCode.ENTER || code == KeyCode.TAB || code == KeyCode.CONTROL || code == KeyCode.V) {
+			if (code == KeyCode.ENTER || code == KeyCode.TAB || code == KeyCode.X || code == KeyCode.V) {
 				event.consume();
 			} else if (code == KeyCode.BACK_SPACE) {
 				int pos = textArea.getCaretPosition();
@@ -120,7 +129,37 @@ public class ControladorVentanaPrincipal implements Initializable {
 			actualizarHistorial();
 
 		});
+		ContextMenu contextMenu = new ContextMenu();
+		contextMenu.getItems().addAll(createDefaultMenuItems(textArea));
+		textArea.setContextMenu(contextMenu);
 
+	}
+
+	private List<MenuItem> createDefaultMenuItems(TextInputControl t) {
+		MenuItem cut = new MenuItem("Cut");
+		cut.setOnAction(e -> t.cut());
+		MenuItem copy = new MenuItem("Copy");
+		copy.setOnAction(e -> t.copy());
+		MenuItem paste = new MenuItem("Paste");
+		paste.setOnAction(e -> t.paste());
+		MenuItem delete = new MenuItem("Delete");
+		delete.setOnAction(e -> t.deleteText(t.getSelection()));
+		MenuItem selectAll = new MenuItem("Select All");
+		selectAll.setOnAction(e -> t.selectAll());
+
+		BooleanBinding emptySelection = Bindings.createBooleanBinding(() -> t.getSelection().getLength() == 0,
+				t.selectionProperty());
+		
+		BooleanBinding neverSelection = Bindings.createBooleanBinding(() ->
+        true,
+        t.selectionProperty());
+
+		cut.disableProperty().bind(neverSelection);
+		copy.disableProperty().bind(emptySelection);
+		delete.disableProperty().bind(neverSelection);
+		paste.disableProperty().bind(neverSelection);
+
+		return Arrays.asList(cut, copy, paste, delete, new SeparatorMenuItem(), selectAll);
 	}
 
 	@FXML
@@ -221,98 +260,6 @@ public class ControladorVentanaPrincipal implements Initializable {
 			cadena += aux2;
 		}
 		textArea.setText(cadena);
-	}
-
-
-	@FXML
-	void aceptar(ActionEvent event) {
-		stringaArray();
-		ObservableList<Node> list = getFormulaColor(formula);
-		if (list != null) {
-			try {
-				FXMLLoader fxmlLoader = new FXMLLoader();
-				fxmlLoader.setLocation(
-						ControladorVentanaPrincipal.class.getResource("../vista/VentanaConfirmacion.fxml"));
-				Scene scene = new Scene(fxmlLoader.load());
-				Stage stage = new Stage();
-				stage.setTitle("Proyecto");
-				stage.setScene(scene);
-				ControladorConfirmacion con = fxmlLoader.getController();
-				con.setFormula(list, formula, (Stage) textArea.getScene().getWindow());
-				stage.show();
-				((Stage) textArea.getScene().getWindow()).close();
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		FormulaBienFormada fbf = new FormulaBienFormada(textArea.getText());
-
-		System.out.println(fbf.toFNC());
-	}
-
-	public ObservableList<Node> getFormulaColor(ArrayList<String> formula) {
-		boolean par = true;
-		ObservableList<Node> list = FXCollections.observableArrayList();
-		ArrayList<ColorF> atomos = new ArrayList<>();
-		ArrayList<ColorF> parentesis = new ArrayList<>();
-
-		for (int i = 0; i < formula.size(); i++) {
-			if (formula.get(i).equals("(")) {
-				Color color = Color.color(Math.random(), Math.random(), Math.random());
-				parentesis.add(new ColorF(color, i + ""));
-				Text aux = new Text("(");
-				aux.setFont(Font.font("System", FontWeight.BOLD, 24));
-				aux.setFill(color);
-				list.add(aux);
-			} else if (formula.get(i).equals(")")) {
-				if (parentesis.size() - 1 >= 0) {
-					Text aux = new Text(")");
-					aux.setFill(parentesis.get(parentesis.size() - 1).getColor());
-					aux.setFont(Font.font("System", FontWeight.BOLD, 24));
-					parentesis.remove(parentesis.size() - 1);
-					list.add(aux);
-				} else {
-					par = false;
-				}
-			} else if (!formula.get(i).equals(Operadores.NEGACION) && !formula.get(i).equals(Operadores.CONJUNCION)
-					&& !formula.get(i).equals(Operadores.DISYUNCION) && !formula.get(i).equals(Operadores.CONDICIONAL)
-					&& !formula.get(i).equals(Operadores.EQUIVALENCIA)) {
-				boolean ward = true;
-				for (int j = 0; j < atomos.size() && ward; j++) {
-					if (atomos.get(j).getValue().equals(formula.get(i))) {
-						Text aux = new Text(formula.get(i));
-						aux.setFill(atomos.get(j).getColor());
-						aux.setFont(Font.font("System", FontWeight.BOLD, 24));
-						list.add(aux);
-						ward = false;
-					}
-				}
-				if (ward) {
-					Color color = Color.color(Math.random(), Math.random(), Math.random());
-					atomos.add(new ColorF(color, formula.get(i)));
-					Text aux = new Text(formula.get(i));
-					aux.setFill(color);
-					aux.setFont(Font.font("System", FontWeight.BOLD, 24));
-					list.add(aux);
-				}
-			} else {
-				Text aux = new Text(formula.get(i));
-				aux.setFont(Font.font("System", FontWeight.BOLD, 24));
-				list.add(aux);
-			}
-		}
-		if (!par) {
-			JOptionPane.showMessageDialog(null, "Existe error en los parentesis", "Error", JOptionPane.ERROR_MESSAGE);
-			return null;
-		} else if (atomos.size() < 5) {
-			JOptionPane.showMessageDialog(null, "Use minimo 5 atomos distintos por favor.", "Error",
-					JOptionPane.ERROR_MESSAGE);
-			return null;
-		} else {
-			return list;
-		}
 	}
 
 //	@FXML
@@ -436,11 +383,11 @@ public class ControladorVentanaPrincipal implements Initializable {
 //						JOptionPane.ERROR_MESSAGE);
 			ArrayList<Character> list = new ArrayList<Character>();
 			for (char aux : cadena.toCharArray()) {
-				if ((aux=='↔'||aux=='v'||aux=='ʌ'||aux=='¬'||aux=='→')) {
+				if ((aux == '↔' || aux == 'v' || aux == 'ʌ' || aux == '¬' || aux == '→')) {
 					list.add(aux);
 				}
 			}
-			if(list.size() < 3){
+			if (list.size() < 3) {
 				JOptionPane.showMessageDialog(null, "Use minimo 3 fórmulas proposicionales.", "Error",
 						JOptionPane.ERROR_MESSAGE);
 			} else {
@@ -475,7 +422,6 @@ public class ControladorVentanaPrincipal implements Initializable {
 
 	@FXML
 	void atras(ActionEvent event) {
-		System.out.println(historial);
 		if (historial.size() > 2) {
 			textArea.setText(historial.get(historial.size() - 2));
 			historial.remove(historial.size() - 1);
@@ -486,25 +432,26 @@ public class ControladorVentanaPrincipal implements Initializable {
 
 	@FXML
 	void ejecutar(ActionEvent event) {
-		FormulaBienFormada fbf = new FormulaBienFormada(tableFormulas.getSelectionModel().getSelectedItem().getFormula());
-		String cadena="";
-		if(comboMetodo.getSelectionModel().getSelectedItem().equals("FNC")) {
-			cadena=fbf.toFNC2();			
-		}else if(comboMetodo.getSelectionModel().getSelectedItem().equals("FC")) {
-			cadena="";
-		}else if(comboMetodo.getSelectionModel().getSelectedItem().equals("FND")) {
-			cadena="";
+		FormulaBienFormada fbf = new FormulaBienFormada(
+				tableFormulas.getSelectionModel().getSelectedItem().getFormula());
+		String cadena = "";
+		if (comboMetodo.getSelectionModel().getSelectedItem().equals("FNC")) {
+			cadena = fbf.toFNC2();
+		} else if (comboMetodo.getSelectionModel().getSelectedItem().equals("FC")) {
+			cadena = "";
+		} else if (comboMetodo.getSelectionModel().getSelectedItem().equals("FND")) {
+			cadena = "";
 		}
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader();
-			fxmlLoader.setLocation(
-					ControladorVentanaPrincipal.class.getResource("../vista/VentanaOperaciones.fxml"));
+			fxmlLoader.setLocation(ControladorVentanaPrincipal.class.getResource("../vista/VentanaOperaciones.fxml"));
 			Scene scene = new Scene(fxmlLoader.load());
 			Stage stage = new Stage();
 			stage.setTitle("Proyecto");
 			stage.setScene(scene);
 			ControladorOperaciones con = fxmlLoader.getController();
-			con.setFormula(tableFormulas.getSelectionModel().getSelectedItem().getFormula(),cadena, (Stage) textArea.getScene().getWindow());
+			con.setFormula(tableFormulas.getSelectionModel().getSelectedItem().getFormula(), visualizar(cadena),
+					(Stage) textArea.getScene().getWindow());
 			stage.show();
 			((Stage) textArea.getScene().getWindow()).close();
 
@@ -513,7 +460,13 @@ public class ControladorVentanaPrincipal implements Initializable {
 		}
 	}
 
-	
+	private String visualizar(String cadena) {
+		cadena = "\t" + cadena;
+		cadena = cadena.replaceAll(Operadores.CONJUNCION, " " + Operadores.CONJUNCION + "\n\t");
+
+		return cadena;
+
+	}
 
 	private void actualizarHistorial() {
 		if (!textArea.getText().equals(historial.get(historial.size() - 1))) {

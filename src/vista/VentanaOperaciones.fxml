@@ -12,12 +12,12 @@
   </columnConstraints>
   <rowConstraints>
     <RowConstraints maxHeight="194.0" minHeight="10.0" prefHeight="87.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="338.0" minHeight="10.0" prefHeight="313.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="313.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <AnchorPane prefHeight="246.0" prefWidth="663.0" GridPane.rowIndex="1">
          <children>
-            <TextArea fx:id="textFormulaN" layoutX="14.0" layoutY="14.0" prefHeight="292.0" prefWidth="640.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+            <TextArea fx:id="textFormulaN" editable="false" layoutX="14.0" layoutY="14.0" prefHeight="292.0" prefWidth="640.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                <font>
                   <Font size="18.0" />
                </font></TextArea>
@@ -25,8 +25,8 @@
       </AnchorPane>
       <GridPane>
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="327.0" minWidth="10.0" prefWidth="165.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="498.0" minWidth="10.0" prefWidth="498.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="165.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="498.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -42,8 +42,8 @@
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
-                  <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
@@ -57,7 +57,7 @@
                   </AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                      <children>
-                        <TextArea fx:id="textFormulaO" layoutX="108.0" prefHeight="28.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="5.0">
+                        <TextArea fx:id="textFormulaO" editable="false" layoutX="108.0" prefHeight="28.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="5.0">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font></TextArea>
