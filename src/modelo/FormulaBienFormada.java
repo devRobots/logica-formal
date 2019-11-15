@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class FormulaBienFormada {
+	public String fbf;
+	public ArrayList<Character> atomos;
+	public ArbolFormula arbol;
+	public ArrayList<String> procedimiento;
 	private String fbf;
 	private ArrayList<Character> atomos;
 
@@ -30,6 +34,10 @@ public class FormulaBienFormada {
 	
 	private boolean esAtomo(char c) {
 		return c >= 97 && c <= 122;
+	}
+
+	public ArrayList<String> getProcedimiento() {
+		return procedimiento;
 	}
 
 	public String toFNC() {
@@ -171,20 +179,37 @@ public class FormulaBienFormada {
 		return tabla;
 	}
 
-	private boolean esFNC(String fbf) {
-		boolean flag = false;
+	public boolean esFNC(String fbf) {
+		boolean flag = true;
+		ArbolFormula arbol = new ArbolFormula(fbf);
+		Nodo nodo = arbol.getRaiz();
 
-		int indice = fbf.charAt(indiceDeOperadorPrincipal(fbf));
+		if (nodo.getValor() == Operadores.CONJUNCION.charAt(0)) {
 
-		if (indice != 0) {
-			String operadorPrincipal = fbf.substring(indice, indice + 1);
+			flag = esFNC(nodo, true);
 
-			if (operadorPrincipal == Operadores.CONJUNCION) {
-				flag = true;
-			}
+		} else {
+
+			flag = false;
+
+		}
+		return flag;
+	}
+
+	private boolean esFNC(Nodo nodo, boolean isConjuncion) {
+		if (nodo.esAtomo()) {
+			return true;
+		}
+		if (nodo.getValor() == Operadores.DISYUNCION.charAt(0) && isConjuncion) {
+			isConjuncion = false;
+		} else if (nodo.getValor() == Operadores.CONJUNCION.charAt(0) && !isConjuncion
+				|| nodo.getValor() == Operadores.CONDICIONAL.charAt(0)
+				|| nodo.getValor() == Operadores.EQUIVALENCIA.charAt(0)) {
+			return false;
 		}
 
-		return flag;
+		return esFNC(nodo.getIzquierdo(), isConjuncion) && esFNC(nodo.getDerecho(), isConjuncion);
+
 	}
 
 	public ArrayList<String> toFC() {
@@ -202,10 +227,10 @@ public class FormulaBienFormada {
 		return fcs;
 	}
 
-	private int indiceDeOperadorPrincipal(String fbf) {
+	public int indiceDeOperadorPrincipal(String fbf) {
 		int indice = -1;
 
-		if (fbf.startsWith("¬")) {
+		if (fbf.startsWith("ï¿½")) {
 			indice = 0;
 		} else {
 			int contParentesis = 0;

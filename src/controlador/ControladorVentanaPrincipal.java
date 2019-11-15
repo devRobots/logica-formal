@@ -44,9 +44,9 @@ public class ControladorVentanaPrincipal implements Initializable {
 
 	@FXML
 	private TableColumn<TablaFormulas, String> columnFormulas;
-	
+
 	@FXML
-    private TableColumn<TablaFormulas, Button> columnBoton;
+	private TableColumn<TablaFormulas, Button> columnBoton;
 
 	@FXML
 	private ComboBox<String> comboMetodo;
@@ -87,7 +87,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		aux.add("FND");
 		aux.add("FC");
 		comboMetodo.setItems(aux);
-		actualizarTabla();
+		tableFormulas.setItems(formulasTabla);
 		historial.add("");
 		historial.add("");
 		columnFormulas.setCellValueFactory(new PropertyValueFactory<>("formula"));
@@ -95,6 +95,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		tableFormulas.setItems(formulasTabla);
 		textArea.addEventFilter(KeyEvent.ANY, event -> {
 			KeyCode code = event.getCode();
+			textArea.deselect();
 			if (code == KeyCode.ENTER || code == KeyCode.TAB || code == KeyCode.CONTROL || code == KeyCode.V) {
 				event.consume();
 			} else if (code == KeyCode.BACK_SPACE) {
@@ -116,8 +117,6 @@ public class ControladorVentanaPrincipal implements Initializable {
 				}
 
 			}
-//			System.out.println("[" + event.getCharacter() + "] [" + event.getText() + "] [" + event.getCode() + "] ["
-//					+ event.getEventType() + "] [" + event.getSource() + "] [" + event.getTarget() + "]");
 			actualizarHistorial();
 
 		});
@@ -224,6 +223,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		textArea.setText(cadena);
 	}
 
+<<<<<<< HEAD
 	@FXML
 	void aceptar(ActionEvent event) {
 		stringaArray();
@@ -314,6 +314,98 @@ public class ControladorVentanaPrincipal implements Initializable {
 			return list;
 		}
 	}
+=======
+//	@FXML
+//	void aceptar(ActionEvent event) {
+//		stringaArray();
+//		ObservableList<Node> list = getFormulaColor(formula);
+//		if (list != null) {
+//			try {
+//				FXMLLoader fxmlLoader = new FXMLLoader();
+//				fxmlLoader.setLocation(
+//						ControladorVentanaPrincipal.class.getResource("../vista/VentanaConfirmacion.fxml"));
+//				Scene scene = new Scene(fxmlLoader.load());
+//				Stage stage = new Stage();
+//				stage.setTitle("Proyecto");
+//				stage.setScene(scene);
+//				ControladorConfirmacion con = fxmlLoader.getController();
+//				con.setFormula(list, formula, (Stage) textArea.getScene().getWindow());
+//				stage.show();
+//				((Stage) textArea.getScene().getWindow()).close();
+//
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//
+//		FormulaBienFormada fbf = new FormulaBienFormada(textArea.getText());
+//
+//		System.out.println(fbf.getArbol());
+//	}
+
+//	public ObservableList<Node> getFormulaColor(ArrayList<String> formula) {
+//		boolean par = true;
+//		ObservableList<Node> list = FXCollections.observableArrayList();
+//		ArrayList<ColorF> atomos = new ArrayList<>();
+//		ArrayList<ColorF> parentesis = new ArrayList<>();
+//
+//		for (int i = 0; i < formula.size(); i++) {
+//			if (formula.get(i).equals("(")) {
+//				Color color = Color.color(Math.random(), Math.random(), Math.random());
+//				parentesis.add(new ColorF(color, i + ""));
+//				Text aux = new Text("(");
+//				aux.setFont(Font.font("System", FontWeight.BOLD, 24));
+//				aux.setFill(color);
+//				list.add(aux);
+//			} else if (formula.get(i).equals(")")) {
+//				if (parentesis.size() - 1 >= 0) {
+//					Text aux = new Text(")");
+//					aux.setFill(parentesis.get(parentesis.size() - 1).getColor());
+//					aux.setFont(Font.font("System", FontWeight.BOLD, 24));
+//					parentesis.remove(parentesis.size() - 1);
+//					list.add(aux);
+//				} else {
+//					par = false;
+//				}
+//			} else if (!formula.get(i).equals(Operadores.NEGACION) && !formula.get(i).equals(Operadores.CONJUNCION)
+//					&& !formula.get(i).equals(Operadores.DISYUNCION) && !formula.get(i).equals(Operadores.CONDICIONAL)
+//					&& !formula.get(i).equals(Operadores.EQUIVALENCIA)) {
+//				boolean ward = true;
+//				for (int j = 0; j < atomos.size() && ward; j++) {
+//					if (atomos.get(j).getValue().equals(formula.get(i))) {
+//						Text aux = new Text(formula.get(i));
+//						aux.setFill(atomos.get(j).getColor());
+//						aux.setFont(Font.font("System", FontWeight.BOLD, 24));
+//						list.add(aux);
+//						ward = false;
+//					}
+//				}
+//				if (ward) {
+//					Color color = Color.color(Math.random(), Math.random(), Math.random());
+//					atomos.add(new ColorF(color, formula.get(i)));
+//					Text aux = new Text(formula.get(i));
+//					aux.setFill(color);
+//					aux.setFont(Font.font("System", FontWeight.BOLD, 24));
+//					list.add(aux);
+//				}
+//			} else {
+//				Text aux = new Text(formula.get(i));
+//				aux.setFont(Font.font("System", FontWeight.BOLD, 24));
+//				list.add(aux);
+//			}
+//		}
+//		if (!par) {
+//			JOptionPane.showMessageDialog(null, "Existe error en los parentesis", "Error", JOptionPane.ERROR_MESSAGE);
+//			return null;
+//		} else if (atomos.size() < 5) {
+//			JOptionPane.showMessageDialog(null, "Use minimo 5 atomos distintos por favor.", "Error",
+//					JOptionPane.ERROR_MESSAGE);
+//			return null;
+//		} else {
+//			return list;
+//		}
+//	}
+>>>>>>> master
 
 	@FXML
 	void seleccionar() {
@@ -328,11 +420,6 @@ public class ControladorVentanaPrincipal implements Initializable {
 	@FXML
 	void agregarTabla(ActionEvent event) {
 		String cadena = textArea.getText();
-		
-		FormulaBienFormada fbf = new FormulaBienFormada(cadena);
-		textArea.setText(fbf.toFNC());
-
-		
 		if (cadena.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "El campo está vacio", "Error", JOptionPane.ERROR_MESSAGE);
 		} else if (cadena.contains("()")) {
@@ -355,18 +442,19 @@ public class ControladorVentanaPrincipal implements Initializable {
 				historial.add("");
 				Button boton = new Button("Eliminar");
 				boton.setOnAction(this::handleButtonAction);
-				boton.setId(formulasTabla.size()+"");
+				boton.setId(formulasTabla.size() + "");
 				formulasTabla.add(new TablaFormulas(cadena, boton));
 			}
 		}
 
 	}
-	
+
 	private void handleButtonAction(ActionEvent action) {
-		String cadena=((Button)action.getSource()).getId();
-		for(TablaFormulas aux:formulasTabla) {
-			if(aux.getId().equals(cadena)) {
+		String cadena = ((Button) action.getSource()).getId();
+		for (TablaFormulas aux : formulasTabla) {
+			if (aux.getId().equals(cadena)) {
 				formulasTabla.remove(aux);
+				seleccionar();
 				break;
 			}
 		}
@@ -388,9 +476,42 @@ public class ControladorVentanaPrincipal implements Initializable {
 		}
 	}
 
-	public void actualizarTabla() {
-		tableFormulas.setItems(FXCollections.observableArrayList(formulasTabla));
+	@FXML
+	void ejecutar(ActionEvent event) {
+		FormulaBienFormada fbf = new FormulaBienFormada(tableFormulas.getSelectionModel().getSelectedItem().getFormula());
+		String cadena="";
+		if(comboMetodo.getSelectionModel().getSelectedItem().equals("FNC")) {
+			cadena=fbf.toFNC();
+	//		cadena+="\n¿Es FNC?"+fbf.esFNC(cadena)+"\n\n";
+			cadena+="\nProcedimiento:\n";
+			for(String aux:fbf.procedimiento) {
+				cadena+=aux+"\n";
+			}
+			
+		}else if(comboMetodo.getSelectionModel().getSelectedItem().equals("FC")) {
+			cadena="";
+		}else if(comboMetodo.getSelectionModel().getSelectedItem().equals("FND")) {
+			cadena="";
+		}
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader();
+			fxmlLoader.setLocation(
+					ControladorVentanaPrincipal.class.getResource("../vista/VentanaOperaciones.fxml"));
+			Scene scene = new Scene(fxmlLoader.load());
+			Stage stage = new Stage();
+			stage.setTitle("Proyecto");
+			stage.setScene(scene);
+			ControladorOperaciones con = fxmlLoader.getController();
+			con.setFormula(tableFormulas.getSelectionModel().getSelectedItem().getFormula(),cadena, (Stage) textArea.getScene().getWindow());
+			stage.show();
+			((Stage) textArea.getScene().getWindow()).close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
+
+	
 
 	private void actualizarHistorial() {
 		if (!textArea.getText().equals(historial.get(historial.size() - 1))) {
