@@ -425,14 +425,23 @@ public class ControladorVentanaPrincipal implements Initializable {
 			JOptionPane.showMessageDialog(null, "Complete los atomos en la fórmula por favor", "Error",
 					JOptionPane.ERROR_MESSAGE);
 		} else {
+//			ArrayList<Character> list = new ArrayList<Character>();
+//			for (char aux : cadena.toCharArray()) {
+//				if (Character.isAlphabetic(aux) && !list.contains(aux)) {
+//					list.add(aux);
+//				}
+//			}
+//			if (list.size() < 5) {
+//				JOptionPane.showMessageDialog(null, "Use minimo 5 atomos distintos por favor.", "Error",
+//						JOptionPane.ERROR_MESSAGE);
 			ArrayList<Character> list = new ArrayList<Character>();
 			for (char aux : cadena.toCharArray()) {
-				if (Character.isAlphabetic(aux) && !list.contains(aux)) {
+				if ((aux=='↔'||aux=='v'||aux=='ʌ'||aux=='¬'||aux=='→')) {
 					list.add(aux);
 				}
 			}
-			if (list.size() < 5) {
-				JOptionPane.showMessageDialog(null, "Use minimo 5 atomos distintos por favor.", "Error",
+			if(list.size() < 3){
+				JOptionPane.showMessageDialog(null, "Use minimo 3 fórmulas proposicionales.", "Error",
 						JOptionPane.ERROR_MESSAGE);
 			} else {
 				textArea.setText("");

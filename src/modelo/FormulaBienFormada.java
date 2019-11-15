@@ -84,6 +84,8 @@ public class FormulaBienFormada {
 				System.out.println();
 			}
 		}
+		
+		salidas=Arrays.copyOf(salidas, cont);
 
 		return getFormulaSimple(salidas);
 	}
