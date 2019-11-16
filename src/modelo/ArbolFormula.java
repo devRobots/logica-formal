@@ -13,14 +13,20 @@ public class ArbolFormula {
 		raiz=null;
 	}
 
-	public void addNodo(Nodo nodo) {
+	public void addNodo(Nodo nodo, boolean fnc) {
+		char operador;
+		if(fnc) {
+			operador=Operadores.CONJUNCION.charAt(0);
+		}else {
+			operador=Operadores.DISYUNCION.charAt(0);
+		}
 		if (raiz == null) {
 			raiz = nodo;
-		} else if (nodo.getValor()==Operadores.CONJUNCION.charAt(0)) {
+		} else if (nodo.getValor()==operador) {
 			nodo.setIzquierdo(raiz);
 			raiz=nodo;
 		} else  {
-			if(raiz.getValor()==Operadores.CONJUNCION.charAt(0)) {
+			if(raiz.getValor()==operador) {
 				if(raiz.getDerecho()==null){
 					raiz.setDerecho(nodo);
 				}else {

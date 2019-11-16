@@ -63,8 +63,6 @@ public class FormulaBienFormada {
 	}
 
 	public String toFNC2() {
-		String fnc = "";
-
 		ArbolFormula arbol = new ArbolFormula(fbf);
 
 		int[][] entradas = tabularEntradas();
@@ -89,7 +87,35 @@ public class FormulaBienFormada {
 
 		//return getFormulaSimple(salidas);
 		
-		return getFormulaArbol(salidas).toString();
+		return getFormulaArbol(salidas,true).toString();
+	}
+	
+	public String toFND() {
+		ArbolFormula arbol = new ArbolFormula(fbf);
+
+		int[][] entradas = tabularEntradas();
+		int[][] salidas = new int[entradas.length][entradas[0].length];
+		int cont = 0;
+		
+		for (int i = 0; i < entradas.length; i++) {
+			int valores[] = entradas[i];
+			if (resolver(arbol.getRaiz(), valores) == 1) {
+				salidas[cont] = valores;
+				cont++;
+				System.out.print("[");
+				for (int v : valores) {
+					System.out.print(v + ",");
+				}
+				System.out.print("]");
+				System.out.println();
+			}
+		}
+		
+		salidas=Arrays.copyOf(salidas, cont);
+
+		//return getFormulaSimple(salidas);
+		
+		return getFormulaArbol(salidas,false).toString();
 	}
 	
 	private String getFormulaSimple(int [][] salidas) {
@@ -117,27 +143,35 @@ public class FormulaBienFormada {
 		return cadena;
 	}
 	
-	private ArbolFormula getFormulaArbol(int [][] salidas) {
+	private ArbolFormula getFormulaArbol(int [][] salidas, boolean fnc) {
 		ArbolFormula arbol=new ArbolFormula();
+		char op1, op2;
+		if(fnc) {
+			op1=Operadores.DISYUNCION.charAt(0);
+			op2=Operadores.CONJUNCION.charAt(0);
+		}else {
+			op2=Operadores.DISYUNCION.charAt(0);
+			op1=Operadores.CONJUNCION.charAt(0);
+		}
 		for(int i=0;i<salidas.length;i++) {
 			for(int j=0;j<salidas[0].length;j++) {
-				if(salidas[i][j]==1) {
+				if((salidas[i][j]==1&&fnc)||(salidas[i][j]==0&&!fnc)) {
 					Nodo aux=new Nodo(atomos.get(j));
 					Nodo aux2=new Nodo(Operadores.NEGACION.charAt(0));
 					aux2.setIzquierdo(aux);
-					arbol.addNodo(aux2);
+					arbol.addNodo(aux2,fnc);
 				}else {
 					Nodo aux=new Nodo(atomos.get(j));
-					arbol.addNodo(aux);
+					arbol.addNodo(aux,fnc);
 				}
 				if(j!=salidas[0].length-1) {
-					Nodo aux=new Nodo(Operadores.DISYUNCION.charAt(0));
-					arbol.addNodo(aux);
+					Nodo aux=new Nodo(op1);
+					arbol.addNodo(aux,fnc);
 				}
 			}
 			if(i!=salidas.length-1) {
-				Nodo aux=new Nodo(Operadores.CONJUNCION.charAt(0));
-				arbol.addNodo(aux);
+				Nodo aux=new Nodo(op2);
+				arbol.addNodo(aux,fnc);
 			}
 		}
 		return arbol;
