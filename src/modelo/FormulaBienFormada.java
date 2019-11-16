@@ -70,7 +70,7 @@ public class FormulaBienFormada {
 		int[][] entradas = tabularEntradas();
 		int[][] salidas = new int[entradas.length][entradas[0].length];
 		int cont = 0;
-
+		
 		for (int i = 0; i < entradas.length; i++) {
 			int valores[] = entradas[i];
 			if (resolver(arbol.getRaiz(), valores) == 0) {
@@ -87,7 +87,9 @@ public class FormulaBienFormada {
 		
 		salidas=Arrays.copyOf(salidas, cont);
 
-		return getFormulaSimple(salidas);
+		//return getFormulaSimple(salidas);
+		
+		return getFormulaArbol(salidas).toString();
 	}
 	
 	private String getFormulaSimple(int [][] salidas) {
@@ -96,7 +98,7 @@ public class FormulaBienFormada {
 			cadena+="(";
 			for(int j=0;j<salidas[0].length;j++) {
 				cadena+="(";
-				if(salidas[i][j]==0) {
+				if(salidas[i][j]==1) {
 					cadena+=Operadores.NEGACION+atomos.get(j);
 				}else {
 					cadena+=atomos.get(j);
@@ -113,6 +115,32 @@ public class FormulaBienFormada {
 			
 		}	
 		return cadena;
+	}
+	
+	private ArbolFormula getFormulaArbol(int [][] salidas) {
+		ArbolFormula arbol=new ArbolFormula();
+		for(int i=0;i<salidas.length;i++) {
+			for(int j=0;j<salidas[0].length;j++) {
+				if(salidas[i][j]==1) {
+					Nodo aux=new Nodo(atomos.get(j));
+					Nodo aux2=new Nodo(Operadores.NEGACION.charAt(0));
+					aux2.setIzquierdo(aux);
+					arbol.addNodo(aux2);
+				}else {
+					Nodo aux=new Nodo(atomos.get(j));
+					arbol.addNodo(aux);
+				}
+				if(j!=salidas[0].length-1) {
+					Nodo aux=new Nodo(Operadores.DISYUNCION.charAt(0));
+					arbol.addNodo(aux);
+				}
+			}
+			if(i!=salidas.length-1) {
+				Nodo aux=new Nodo(Operadores.CONJUNCION.charAt(0));
+				arbol.addNodo(aux);
+			}
+		}
+		return arbol;
 	}
 
 	private int resolver(Nodo n, int[] valores) {
@@ -262,20 +290,12 @@ public class FormulaBienFormada {
 		boolean flag = true;
 		ArbolFormula arbol = new ArbolFormula(fbf);
 		Nodo nodo = arbol.getRaiz();
-
-		if (nodo.getValor() == Operadores.CONJUNCION.charAt(0)) {
-
-			flag = esFNC(nodo, true);
-
-		} else {
-
-			flag = false;
-
-		}
+		flag = esFNC(nodo, true);
 		return flag;
 	}
 
 	private boolean esFNC(Nodo nodo, boolean isConjuncion) {
+		System.out.println(nodo);
 		if (nodo.esAtomo()) {
 			return true;
 		}

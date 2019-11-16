@@ -8,6 +8,10 @@ public class ArbolFormula {
 	public ArbolFormula(String fbf) {
 		raiz = new Nodo(fbf);
 	}
+	
+	public ArbolFormula() {
+		raiz=null;
+	}
 
 	public void addNodo(Nodo nodo) {
 		if (raiz == null) {

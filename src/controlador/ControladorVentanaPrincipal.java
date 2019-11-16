@@ -450,7 +450,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 			stage.setTitle("Proyecto");
 			stage.setScene(scene);
 			ControladorOperaciones con = fxmlLoader.getController();
-			con.setFormula(tableFormulas.getSelectionModel().getSelectedItem().getFormula(), visualizar(cadena),
+			con.setFormula(tableFormulas.getSelectionModel().getSelectedItem().getFormula(),visualizar(cadena),
 					(Stage) textArea.getScene().getWindow());
 			stage.show();
 			((Stage) textArea.getScene().getWindow()).close();

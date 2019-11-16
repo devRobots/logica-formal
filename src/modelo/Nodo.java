@@ -46,12 +46,11 @@ public class Nodo {
 	}
 
 	public void addNodo(Nodo nodo) {
-		if(esAtomo()) {
+		if((esAtomo()||getValor()==Operadores.NEGACION.charAt(0)||derecho!=null)&&!(nodo.esAtomo()||nodo.getValor()==Operadores.NEGACION.charAt(0))) {
 			nodo.setIzquierdo(new Nodo(this));
 			resetNodo(nodo);	
-		}else if(nodo.getValor()==Operadores.CONJUNCION.charAt(0)) {
-			nodo.setIzquierdo(new Nodo(this));
-			resetNodo(nodo);	
+		}else if(nodo.esAtomo()||nodo.getValor()==Operadores.NEGACION.charAt(0)) {
+			derecho=nodo;	
 		}
 	}
 
