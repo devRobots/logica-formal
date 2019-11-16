@@ -170,11 +170,9 @@ public class ArbolFormula {
 		}
 
 		if (nodo.getValor() == Operadores.CONJUNCION.charAt(0)) {
-			if (nodo.getIzquierdo() != null) {
-				if (nodo.getIzquierdo().getValor() == Operadores.DISYUNCION.charAt(0)
-						|| nodo.getDerecho().getValor() == Operadores.DISYUNCION.charAt(0)) {
+			if ((nodo.getIzquierdo() != null && nodo.getIzquierdo().getValor() == Operadores.DISYUNCION.charAt(0))||
+					(nodo.getDerecho() != null && nodo.getDerecho().getValor() == Operadores.DISYUNCION.charAt(0))	) {
 					return nodo;
-				}
 			}
 		}
 
@@ -198,11 +196,9 @@ public class ArbolFormula {
 		}
 
 		if (nodo.getValor() == Operadores.DISYUNCION.charAt(0)) {
-			if (nodo.getIzquierdo() != null) {
-				if (nodo.getIzquierdo().getValor() == Operadores.CONJUNCION.charAt(0)
-						|| nodo.getDerecho().getValor() == Operadores.CONJUNCION.charAt(0)) {
+			if ((nodo.getIzquierdo() != null && nodo.getIzquierdo().getValor() == Operadores.CONJUNCION.charAt(0))||
+					(nodo.getDerecho() != null && nodo.getDerecho().getValor() == Operadores.CONJUNCION.charAt(0))	) {
 					return nodo;
-				}
 			}
 		}
 
@@ -298,7 +294,7 @@ public class ArbolFormula {
 		if(raiz!=null) {
 			return raiz.toString();
 		}else {
-			return "El árbol está vacio";
+			return "";
 		}
 		
 	}

@@ -34,35 +34,35 @@ public class FormulaBienFormada {
 		return procedimiento;
 	}
 
+//	public String toFNC() {
+//		String fnc = "";
+//
+//		int[][] entradas = tabularEntradas();
+//		int[] salidas = evaluarFBF(entradas);
+//
+//		for (int i = 0; i < entradas[0].length; i++) {
+//			fnc += "(";
+//			for (int j = 0; j < entradas.length; j++) {
+//				if (salidas[i] == 1) {
+//					if (entradas[j][i] == 0) {
+//						fnc += Operadores.NEGACION;
+//					}
+//					fnc += atomos.get(j);
+//				}
+//			}
+//			fnc += ")";
+//
+//			fnc += i < entradas[0].length - 1 ? Operadores.CONJUNCION : "";
+//		}
+//
+//		System.out.println(Arrays.toString(salidas));
+//
+//		fnc.replace("()", "");
+//
+//		return fnc;
+//	}
+
 	public String toFNC() {
-		String fnc = "";
-
-		int[][] entradas = tabularEntradas();
-		int[] salidas = evaluarFBF(entradas);
-
-		for (int i = 0; i < entradas[0].length; i++) {
-			fnc += "(";
-			for (int j = 0; j < entradas.length; j++) {
-				if (salidas[i] == 1) {
-					if (entradas[j][i] == 0) {
-						fnc += Operadores.NEGACION;
-					}
-					fnc += atomos.get(j);
-				}
-			}
-			fnc += ")";
-
-			fnc += i < entradas[0].length - 1 ? Operadores.CONJUNCION : "";
-		}
-
-		System.out.println(Arrays.toString(salidas));
-
-		fnc.replace("()", "");
-
-		return fnc;
-	}
-
-	public String toFNC2() {
 		ArbolFormula arbol = new ArbolFormula(fbf);
 
 		int[][] entradas = tabularEntradas();
@@ -87,7 +87,13 @@ public class FormulaBienFormada {
 
 		//return getFormulaSimple(salidas);
 		
-		return getFormulaArbol(salidas,true).toString();
+		String cadena= getFormulaArbol(salidas,true).toString();
+		if(!cadena.equals("")) {
+			return cadena;
+		}else {
+			cadena=toFND();
+			return axioma3(cadena,true);
+		}
 	}
 	
 	public String toFND() {
@@ -115,7 +121,13 @@ public class FormulaBienFormada {
 
 		//return getFormulaSimple(salidas);
 		
-		return getFormulaArbol(salidas,false).toString();
+		String cadena= getFormulaArbol(salidas,false).toString();
+		if(!cadena.equals("")) {
+			return cadena;
+		}else {
+			cadena= toFNC();
+			return axioma3(cadena,false);
+		}
 	}
 	
 	private String getFormulaSimple(int [][] salidas) {
@@ -143,10 +155,10 @@ public class FormulaBienFormada {
 		return cadena;
 	}
 	
-	private ArbolFormula getFormulaArbol(int [][] salidas, boolean fnc) {
+	private ArbolFormula getFormulaArbol(int [][] salidas, boolean esFNC) {
 		ArbolFormula arbol=new ArbolFormula();
 		char op1, op2;
-		if(fnc) {
+		if(esFNC) {
 			op1=Operadores.DISYUNCION.charAt(0);
 			op2=Operadores.CONJUNCION.charAt(0);
 		}else {
@@ -155,23 +167,23 @@ public class FormulaBienFormada {
 		}
 		for(int i=0;i<salidas.length;i++) {
 			for(int j=0;j<salidas[0].length;j++) {
-				if((salidas[i][j]==1&&fnc)||(salidas[i][j]==0&&!fnc)) {
+				if((salidas[i][j]==1&&esFNC)||(salidas[i][j]==0&&!esFNC)) {
 					Nodo aux=new Nodo(atomos.get(j));
 					Nodo aux2=new Nodo(Operadores.NEGACION.charAt(0));
 					aux2.setIzquierdo(aux);
-					arbol.addNodo(aux2,fnc);
+					arbol.addNodo(aux2,esFNC);
 				}else {
 					Nodo aux=new Nodo(atomos.get(j));
-					arbol.addNodo(aux,fnc);
+					arbol.addNodo(aux,esFNC);
 				}
 				if(j!=salidas[0].length-1) {
 					Nodo aux=new Nodo(op1);
-					arbol.addNodo(aux,fnc);
+					arbol.addNodo(aux,esFNC);
 				}
 			}
 			if(i!=salidas.length-1) {
 				Nodo aux=new Nodo(op2);
-				arbol.addNodo(aux,fnc);
+				arbol.addNodo(aux,esFNC);
 			}
 		}
 		return arbol;
@@ -318,6 +330,59 @@ public class FormulaBienFormada {
 		}
 
 		return tabla;
+	}
+	
+	public String axioma3(String fbf, boolean esFNC) {
+		String salida = fbf;
+		System.out.println(fbf.length());
+		ArbolFormula arbol = new ArbolFormula(salida);
+		char op1,op2;
+		Nodo actual;
+		if(esFNC) {
+			op1=Operadores.CONJUNCION.charAt(0);
+			op2=Operadores.DISYUNCION.charAt(0);
+			actual = arbol.getNodoDisyuncionConjuncion();
+		}else{
+			op2=Operadores.CONJUNCION.charAt(0);
+			op1=Operadores.DISYUNCION.charAt(0);
+			actual = arbol.getNodoConjuncionDisyuncion();
+		}
+		while (actual != null) {
+			if (actual.getIzquierdo().getValor() == op1) {
+				Nodo izq = new Nodo(op2);
+				izq.setIzquierdo(actual.getIzquierdo().getIzquierdo());
+				izq.setDerecho(actual.getDerecho());
+
+				Nodo der = new Nodo(op2);
+				der.setIzquierdo(actual.getIzquierdo().getDerecho());
+				der.setDerecho(actual.getDerecho());
+				
+				actual.getIzquierdo().setIzquierdo(izq);
+				actual.getIzquierdo().setDerecho(der);
+				actual.resetNodo(actual.getIzquierdo());
+
+			} else {
+				Nodo izq = new Nodo(op2);
+				izq.setIzquierdo(actual.getDerecho().getIzquierdo());
+				izq.setDerecho(actual.getIzquierdo());
+
+				Nodo der = new Nodo(op2);
+				der.setIzquierdo(actual.getDerecho().getDerecho());
+				der.setDerecho(actual.getIzquierdo());
+
+				actual.getDerecho().setIzquierdo(izq);
+				actual.getDerecho().setDerecho(der);
+				actual.resetNodo(actual.getDerecho());
+			}
+			if(esFNC) {
+				actual = arbol.getNodoDisyuncionConjuncion();
+			}else {
+				actual = arbol.getNodoConjuncionDisyuncion();
+			}
+		}
+
+		salida = arbol.toString();
+		return salida;
 	}
 
 	public boolean esFNC(String fbf) {

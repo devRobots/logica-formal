@@ -30,7 +30,7 @@ public class Nodo {
 	public Nodo(String fbf) {
 		if (fbf.length() == 1) {
 			valor = fbf.charAt(0);
-		} else {
+		} else if(fbf.length()!=0){
 			int indice = indiceDeOperadorPrincipal(fbf);
 			valor = fbf.charAt(indice);
 
@@ -108,6 +108,7 @@ public class Nodo {
 	 */
 	public void setValor(char valor) {
 		this.valor = valor;
+		fbf=toString();
 	}
 
 	/**
@@ -122,6 +123,7 @@ public class Nodo {
 	 */
 	public void setIzquierdo(Nodo izquierdo) {
 		this.izquierdo = izquierdo;
+		fbf=toString();
 	}
 
 	/**
@@ -136,6 +138,7 @@ public class Nodo {
 	 */
 	public void setDerecho(Nodo derecho) {
 		this.derecho = derecho;
+		fbf=toString();
 	}
 
 	public String getFbf() {

@@ -436,7 +436,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 				tableFormulas.getSelectionModel().getSelectedItem().getFormula());
 		String cadena = "";
 		if (comboMetodo.getSelectionModel().getSelectedItem().equals("FNC")) {
-			cadena = visualizarFNC(fbf.toFNC2());
+			cadena = visualizarFNC(fbf.toFNC());
 		} else if (comboMetodo.getSelectionModel().getSelectedItem().equals("FC")) {
 			cadena = "";
 		} else if (comboMetodo.getSelectionModel().getSelectedItem().equals("FND")) {
