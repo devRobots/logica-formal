@@ -295,7 +295,12 @@ public class ArbolFormula {
 
 	@Override
 	public String toString() {
-		return raiz.toString();
+		if(raiz!=null) {
+			return raiz.toString();
+		}else {
+			return "El árbol está vacio";
+		}
+		
 	}
 
 	/**
