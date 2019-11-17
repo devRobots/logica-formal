@@ -367,10 +367,6 @@ public class ControladorVentanaPrincipal implements Initializable {
 	@FXML
 	void agregarTabla(ActionEvent event) {
 		String cadena = textArea.getText();
-		FormulaBienFormada fbf = new FormulaBienFormada(cadena);
-		ArrayList<String> fcs = fbf.toFC();
-		fbf.hallarSatisfacibilidad(fcs);
-		System.out.println(fcs);
 		
 		if (cadena.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "El campo está vacio", "Error", JOptionPane.ERROR_MESSAGE);
