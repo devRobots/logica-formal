@@ -157,10 +157,13 @@ public class FormulaBienFormada {
 		return arbol;
 	}
 
-	public void hallarSatisfacibilidad(ArrayList<String> fcs) {
+	public ArrayList<String> hallarSatisfacibilidad(ArrayList<String> fcs) {
+		ArrayList<String> op=new ArrayList<String>();
+		for(int i=0;i<fcs.size();i++) {
+			op.add("Hipotesis");
+		}
 		boolean flag = true;
 		int cont = 0;
-
 		while (flag) {
 			for (int i = 0; i < fcs.size() && !fcs.contains(""); i++) {
 				for (int j = 0; j < fcs.size() - 1 && !fcs.contains(""); j++) {
@@ -174,6 +177,7 @@ public class FormulaBienFormada {
 							if (res != null) {
 								if (!fcs.contains(res.toString())) {
 									fcs.add(res.toString());
+									op.add("Res("+atomo+"):("+fcs.get(i)+","+fcs.get(j)+")");
 									cont = 0;
 								} else {
 									cont++;
@@ -188,6 +192,12 @@ public class FormulaBienFormada {
 
 			flag = !fcs.contains("") && cont < Math.pow(fcs.size(), 2);
 		}
+		
+		ArrayList<String> aux=new ArrayList<String>();
+		for(int i=0;i<fcs.size();i++) {
+			aux.add("{"+fcs.get(i)+"}\t\t"+op.get(i)+"|");
+		}
+		return aux;
 	}
 	
 	private int resolver(Nodo n, int[] valores) {

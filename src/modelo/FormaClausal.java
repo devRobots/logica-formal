@@ -60,7 +60,6 @@ public class FormaClausal {
 		}
 		
 		if (mod) {			
-			System.err.println(fc1.toString() + fc2.toString());
 			fc = new FormaClausal(fc1.toString() + fc2.toString());
 		}
 		

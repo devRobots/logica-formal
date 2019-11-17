@@ -416,32 +416,21 @@ public class ControladorVentanaPrincipal implements Initializable {
 				titulo = "FND de";
 			}
 		} else {
-			if (formulasSeleccionadas.size() == 3) {
-				FormulaBienFormada fbf1 = new FormulaBienFormada(formulasSeleccionadas.get(0));
-				FormulaBienFormada fbf2 = new FormulaBienFormada(formulasSeleccionadas.get(1));
-				FormulaBienFormada fbf3 = new FormulaBienFormada(formulasSeleccionadas.get(2));
+			if (formulasSeleccionadas.size() >= 3) {
 				ArrayList<String> fcs = new ArrayList<String>();
-				for (String fc : fbf1.toFC()) {
-					if (!fcs.contains(fc)) {
-					}
-						fcs.add(fc);
-				}
-				for (String fc : fbf2.toFC()) {
-					if (!fcs.contains(fc)) {
-						fcs.add(fc);
+				for(String aux:formulasSeleccionadas) {
+					FormulaBienFormada fbfAux = new FormulaBienFormada(aux);
+					for (String fc : fbfAux.toFC()) {
+						if (!fcs.contains(fc)) {
+						}
+							fcs.add(fc);
 					}
 				}
-				for (String fc : fbf3.toFC()) {
-					if (!fcs.contains(fc)) {
-						fcs.add(fc);
-					}
-				}
-				fbf.hallarSatisfacibilidad(fcs);
-				cadena = visualizarResolucion(fcs.toString());
+				cadena = visualizarResolucion(fbf.hallarSatisfacibilidad(fcs).toString());
 				if(fcs.contains("")) {
-					cadena+="\nInsatisfacible";
+					cadena+="\n\tInsatisfacible";
 				}else {
-					cadena+="\nSatisfacible";
+					cadena+="\n\tSatisfacible";
 				}
 				titulo = "Satisfacibilidad";
 				formulaL=formulasSeleccionadas.toString();
@@ -496,7 +485,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 	private String visualizarResolucion(String cadena) {
 		cadena = cadena.substring(1, cadena.length() - 1);
 		cadena = "\t" + cadena;
-		cadena = cadena.replaceAll(",", ",\n\t");
+		cadena = cadena.replace("|,", ",\n\t");
 
 		return cadena;
 
