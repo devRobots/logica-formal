@@ -21,6 +21,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -55,6 +56,9 @@ public class ControladorVentanaPrincipal implements Initializable {
 	private TableColumn<TablaFormulas, Button> columnBoton;
 
 	@FXML
+	private TableColumn<TablaFormulas, CheckBox> columnSeleccionar;
+
+	@FXML
 	private ComboBox<String> comboMetodo;
 
 	@FXML
@@ -63,6 +67,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 	@FXML
 	private TextArea textArea;
 	private ArrayList<String> formula = new ArrayList<>();
+	private ArrayList<String> formulasSeleccionadas = new ArrayList<>();
 
 	@FXML
 	private ObservableList<TablaFormulas> formulasTabla = FXCollections.observableArrayList();
@@ -99,6 +104,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		historial.add("");
 		columnFormulas.setCellValueFactory(new PropertyValueFactory<>("formula"));
 		columnBoton.setCellValueFactory(new PropertyValueFactory<>("boton"));
+		columnSeleccionar.setCellValueFactory(new PropertyValueFactory<>("check"));
 		tableFormulas.setItems(formulasTabla);
 		textArea.addEventFilter(KeyEvent.ANY, event -> {
 			KeyCode code = event.getCode();
@@ -167,7 +173,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 	void agregarAtomo(KeyEvent event) {
 		char c = event.getCharacter().charAt(0);
 		boolean ward = true;
-		
+
 		if (!Character.isLetter(c) || c == 'v' || c == 'ʌ' || c == 'V') {
 			event.consume();
 			ward = false;
@@ -357,9 +363,17 @@ public class ControladorVentanaPrincipal implements Initializable {
 
 	@FXML
 	void seleccionar() {
+		formulasSeleccionadas = new ArrayList<String>();
+		tableFormulas.getSelectionModel().clearSelection();
+		for (TablaFormulas aux : formulasTabla) {
+			if (aux.getCheck().isSelected()) {
+				formulasSeleccionadas.add(aux.formula);
+				tableFormulas.getSelectionModel().select(aux);
+			}
+		}	
 		if (comboMetodo.getSelectionModel().getSelectedIndex() != -1
 				&& tableFormulas.getSelectionModel().getSelectedIndex() != -1) {
-			btnEjecutar.setDisable(false);
+				btnEjecutar.setDisable(false);
 		} else {
 			btnEjecutar.setDisable(true);
 		}
@@ -368,7 +382,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 	@FXML
 	void agregarTabla(ActionEvent event) {
 		String cadena = textArea.getText();
-		
+
 		if (cadena.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "El campo está vacio", "Error", JOptionPane.ERROR_MESSAGE);
 		} else if (cadena.contains("()")) {
@@ -384,18 +398,33 @@ public class ControladorVentanaPrincipal implements Initializable {
 //			if (list.size() < 5) {
 //				JOptionPane.showMessageDialog(null, "Use minimo 5 atomos distintos por favor.", "Error",
 //						JOptionPane.ERROR_MESSAGE);
-			
-				textArea.setText("");
-				historial = new ArrayList<String>();
-				historial.add("");
-				historial.add("");
-				Button boton = new Button("Eliminar");
-				boton.setOnAction(this::handleButtonAction);
-				boton.setId(formulasTabla.size() + "");
-				formulasTabla.add(new TablaFormulas(cadena, boton));
-			
+
+			textArea.setText("");
+			historial = new ArrayList<String>();
+			historial.add("");
+			historial.add("");
+			Button boton = new Button("Eliminar");
+			boton.setOnAction(this::handleButtonAction);
+			boton.setId(formulasTabla.size() + "");
+			CheckBox check = new CheckBox();
+			check.setId(formulasTabla.size() + "");
+			check.setOnAction(this::handleCheckAction);
+			formulasTabla.add(new TablaFormulas(cadena, boton, check));
+
 		}
 
+	}
+
+	private void handleCheckAction(ActionEvent action) {
+		String cadena = ((CheckBox) action.getSource()).getId();
+		for (TablaFormulas aux : formulasTabla) {
+			if (aux.getId().equals(cadena)) {
+				tableFormulas.getSelectionModel().select(aux);
+				seleccionar();
+				break;
+			}
+		}
+		
 	}
 
 	private void handleButtonAction(ActionEvent action) {
@@ -483,62 +512,81 @@ public class ControladorVentanaPrincipal implements Initializable {
 		FormulaBienFormada fbf = new FormulaBienFormada(
 				tableFormulas.getSelectionModel().getSelectedItem().getFormula());
 		String cadena = "";
-		String titulo="";
+		String titulo = "";
 		if (comboMetodo.getSelectionModel().getSelectedItem().equals("FNC")) {
-			cadena = visualizarFNC(fbf.toFNC());
-			titulo="FNC de";
+			if(formulasSeleccionadas.size()!=1) {
+				JOptionPane.showMessageDialog(null, "Seleccione solo una fórmula proposicional.", "Error",
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}else {
+				cadena = visualizarFNC(fbf.toFNC());
+				titulo = "FNC de";
+			}
 		} else if (comboMetodo.getSelectionModel().getSelectedItem().equals("FC")) {
-			cadena = visualizarFC(fbf.toFC().toString());
-			titulo="FC de";
+			if(formulasSeleccionadas.size()!=1) {
+				JOptionPane.showMessageDialog(null, "Seleccione solo una fórmula proposicional.", "Error",
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}else {
+				cadena = visualizarFC(fbf.toFC().toString());
+				titulo = "FC de";
+			}		
 		} else if (comboMetodo.getSelectionModel().getSelectedItem().equals("FND")) {
-			cadena = visualizarFND(fbf.toFND());
-			titulo="FND de";
-		}else {
-			if(formulasTabla.size()>=3) {
-				FormulaBienFormada fbf1 = new FormulaBienFormada(formulasTabla.get(0).getFormula());
-				FormulaBienFormada fbf2 = new FormulaBienFormada(formulasTabla.get(1).getFormula());
-				FormulaBienFormada fbf3 = new FormulaBienFormada(formulasTabla.get(2).getFormula());
-				ArrayList<String> fcs=new ArrayList<String>();
+			if(formulasSeleccionadas.size()!=1) {
+				JOptionPane.showMessageDialog(null, "Seleccione solo una fórmula proposicional.", "Error",
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}else {
+				cadena = visualizarFND(fbf.toFND());
+				titulo = "FND de";
+			}
+		} else {
+			if (formulasSeleccionadas.size() == 3) {
+				FormulaBienFormada fbf1 = new FormulaBienFormada(formulasSeleccionadas.get(0));
+				FormulaBienFormada fbf2 = new FormulaBienFormada(formulasSeleccionadas.get(1));
+				FormulaBienFormada fbf3 = new FormulaBienFormada(formulasSeleccionadas.get(2));
+				ArrayList<String> fcs = new ArrayList<String>();
 				for (String fc : fbf1.toFC()) {
 					if (!fcs.contains(fc)) {
-						fcs.add(fc);
 					}
+						fcs.add(fc);
 				}
 				for (String fc : fbf2.toFC()) {
 					if (!fcs.contains(fc)) {
 						fcs.add(fc);
 					}
-				}
 				for (String fc : fbf3.toFC()) {
+				}
 					if (!fcs.contains(fc)) {
 						fcs.add(fc);
 					}
 				}
 				fbf.hallarSatisfacibilidad(fcs);
 				cadena = visualizarResolucion(fcs.toString());
-				titulo="Satisfacibilidad de";
-			}else {
+				titulo = "Satisfacibilidad de";
+			} else {
 				JOptionPane.showMessageDialog(null, "Use minimo 3 fórmulas proposicionales.", "Error",
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 		}
-		try {
-			FXMLLoader fxmlLoader = new FXMLLoader();
-			fxmlLoader.setLocation(ControladorVentanaPrincipal.class.getResource("../vista/VentanaOperaciones.fxml"));
-			Scene scene = new Scene(fxmlLoader.load());
-			Stage stage = new Stage();
-			stage.setTitle("Proyecto");
-			stage.setScene(scene);
-			ControladorOperaciones con = fxmlLoader.getController();
-			con.setFormula(tableFormulas.getSelectionModel().getSelectedItem().getFormula(), cadena,
-					(Stage) textArea.getScene().getWindow(),titulo);
-			stage.show();
-			((Stage) textArea.getScene().getWindow()).close();
+			try {
+				FXMLLoader fxmlLoader = new FXMLLoader();
+				fxmlLoader.setLocation(ControladorVentanaPrincipal.class.getResource("../vista/VentanaOperaciones.fxml"));
+				Scene scene = new Scene(fxmlLoader.load());
+				Stage stage = new Stage();
+				stage.setTitle("Proyecto");
+				stage.setScene(scene);
+				ControladorOperaciones con = fxmlLoader.getController();
+				con.setFormula(tableFormulas.getSelectionModel().getSelectedItem().getFormula(), cadena,
+						(Stage) textArea.getScene().getWindow(), titulo);
+				stage.show();
+				((Stage) textArea.getScene().getWindow()).close();
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		
 	}
 
 	private String visualizarFNC(String cadena) {
@@ -564,12 +612,11 @@ public class ControladorVentanaPrincipal implements Initializable {
 		return cadena;
 
 	}
-	
+
 	private String visualizarResolucion(String cadena) {
-		cadena = cadena.substring(1,cadena.length()-1);
+		cadena = cadena.substring(1, cadena.length() - 1);
 		cadena = "\t" + cadena;
 		cadena = cadena.replaceAll(",", ",\n\t");
-		
 
 		return cadena;
 
