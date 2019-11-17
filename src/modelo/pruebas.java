@@ -38,8 +38,8 @@ public class pruebas {
 		String cadena=Operadores.NEGACION+"aabca";
 	//	System.out.println(cadena.substring(1, 3));
 		
-		String cadena1="HOLAMUNDO";
-		String cadena2="HOLAMUNDO1";
+		String cadena1="HOLA";
+		String cadena2="ALOH";
 
 		System.out.println(cadena1.compareTo(cadena2));
 		

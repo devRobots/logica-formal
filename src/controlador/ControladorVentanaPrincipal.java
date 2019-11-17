@@ -370,10 +370,10 @@ public class ControladorVentanaPrincipal implements Initializable {
 				formulasSeleccionadas.add(aux.formula);
 				tableFormulas.getSelectionModel().select(aux);
 			}
-		}	
+		}
 		if (comboMetodo.getSelectionModel().getSelectedIndex() != -1
 				&& tableFormulas.getSelectionModel().getSelectedIndex() != -1) {
-				btnEjecutar.setDisable(false);
+			btnEjecutar.setDisable(false);
 		} else {
 			btnEjecutar.setDisable(true);
 		}
@@ -424,7 +424,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 				break;
 			}
 		}
-		
+
 	}
 
 	private void handleButtonAction(ActionEvent action) {
@@ -481,10 +481,10 @@ public class ControladorVentanaPrincipal implements Initializable {
 			textArea.setText("");
 
 			ArrayList<String> fcs = new ArrayList<>();
-			
+
 			FormulaBienFormada fbf1 = new FormulaBienFormada("((p)ʌ(q))v(r)");
 			FormulaBienFormada fbf2 = new FormulaBienFormada("((r)v(p))→(q)");
-			FormulaBienFormada fbf3 = new FormulaBienFormada("(¬((q)v(p)))↔(r)"); 
+			FormulaBienFormada fbf3 = new FormulaBienFormada("(¬((q)v(p)))↔(r)");
 
 			for (String fc : fbf1.toFC()) {
 				if (!fcs.contains(fc)) {
@@ -501,7 +501,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 					fcs.add(fc);
 				}
 			}
-			
+
 			fbf1.hallarSatisfacibilidad(fcs);
 			System.out.println(fcs);
 		}
@@ -513,6 +513,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 				tableFormulas.getSelectionModel().getSelectedItem().getFormula());
 		String cadena = "";
 		String titulo = "";
+		String formulaL = tableFormulas.getSelectionModel().getSelectedItem().getFormula();
 		if (comboMetodo.getSelectionModel().getSelectedItem().equals("FNC")) {
 			if(formulasSeleccionadas.size()!=1) {
 				JOptionPane.showMessageDialog(null, "Seleccione solo una fórmula proposicional.", "Error",
@@ -563,7 +564,13 @@ public class ControladorVentanaPrincipal implements Initializable {
 				}
 				fbf.hallarSatisfacibilidad(fcs);
 				cadena = visualizarResolucion(fcs.toString());
-				titulo = "Satisfacibilidad de";
+				if(fcs.contains("")) {
+					cadena+="\nInsatisfacible";
+				}else {
+					cadena+="\nSatisfacible";
+				}
+				titulo = "Satisfacibilidad";
+				formulaL=formulasSeleccionadas.toString();
 			} else {
 				JOptionPane.showMessageDialog(null, "Use minimo 3 fórmulas proposicionales.", "Error",
 						JOptionPane.ERROR_MESSAGE);
@@ -578,8 +585,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 				stage.setTitle("Proyecto");
 				stage.setScene(scene);
 				ControladorOperaciones con = fxmlLoader.getController();
-				con.setFormula(tableFormulas.getSelectionModel().getSelectedItem().getFormula(), cadena,
-						(Stage) textArea.getScene().getWindow(), titulo);
+				con.setFormula(formulaL, cadena, (Stage) textArea.getScene().getWindow(), titulo);
 				stage.show();
 				((Stage) textArea.getScene().getWindow()).close();
 

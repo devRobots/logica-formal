@@ -132,6 +132,7 @@ public class FormulaBienFormada {
 		}
 		for (int i = 0; i < fc.size(); i++) {
 			String c1 = fc.get(i);
+			String nuevo="";
 			boolean comp = false;
 			System.out.println("----calusula" + c1);
 			for (int j = 0; j < c1.length() && !comp; j++) {
@@ -144,16 +145,34 @@ public class FormulaBienFormada {
 					String c2 = fc.get(k);
 					if(atomo.length()==1) {
 						if(indexOf(Operadores.NEGACION+atomo, c2)!=-1) {
-							
+							String aux1=eliminarAtomo(atomo, c1, true);
+							String aux2=eliminarAtomo(atomo, c2, false);
+							nuevo=aux1+aux2;
+							op.add("Res("+atomo+"):("+c1+","+c2+")");
+							comp=true;
+						}
+					}else {
+						if(indexOf(String.valueOf(atomo.charAt(1)), c2)!=-1) {
+							String aux1=eliminarAtomo(atomo, c1, true);
+							String aux2=eliminarAtomo(atomo, c2, false);
+							nuevo=aux1+aux2;
+							op.add("Res("+atomo+"):("+c1+","+c2+")");
+							comp=true;
 						}
 					}
 				}
 			}
 			if (comp) {
-				i = 0;
+				if(!existeEnArray(nuevo, fc)) {
+					fc.add(nuevo);
+					i = 0;
+				}else {
+					op.remove(i+1);
+				}
 				if (fc.contains("")) {
 					break;
 				}
+				comp=false;
 			}
 		}
 		ArrayList<String> resolucion = new ArrayList<String>();
@@ -168,7 +187,32 @@ public class FormulaBienFormada {
 			}
 		}
 		return resolucion;
-
+	}
+	
+	private boolean existeEnArray(String clausula, ArrayList<String> fc) {
+		HashSet<HashSet<String>> set = new HashSet<HashSet<String>>();
+		for (int i = 0; i < fc.size(); i++) {
+			set.add(new HashSet<String>());
+			String c1 = fc.get(i);
+			HashSet<String> aux = new HashSet<String>();
+			for (int j = 0; j < c1.length(); j++) {
+				String atomo = String.valueOf(c1.charAt(j));
+				if (atomo.equals(Operadores.NEGACION)) {
+					atomo += String.valueOf(c1.charAt(++j));
+				}
+				aux.add(atomo);
+			}
+			set.add(aux);
+		}
+		HashSet<String> aux = new HashSet<String>();
+		for (int j = 0; j < clausula.length(); j++) {
+			String atomo = String.valueOf(clausula.charAt(j));
+			if (atomo.equals(Operadores.NEGACION)) {
+				atomo += String.valueOf(clausula.charAt(++j));
+			}
+			aux.add(atomo);
+		}
+		return set.contains(aux);
 	}
 
 	private String eliminarAtomo(String atomo, String clausula, boolean igual) {
