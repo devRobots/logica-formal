@@ -125,9 +125,9 @@ public class FormulaBienFormada {
 	}
 
 	public ArrayList<String> resolucion2() {
-		ArrayList<String> fc = toFC();
-		ArrayList<String> op = new ArrayList<String>();
-		for (String aux : fc) {
+		ArrayList<String> fc=toFC();
+		ArrayList<String> op=new ArrayList<String>();
+		for(String aux:fc) {
 			op.add("Hipotesis");
 		}
 		for (int i = 0; i < fc.size(); i++) {
@@ -139,41 +139,41 @@ public class FormulaBienFormada {
 				if (atomo.equals(Operadores.NEGACION)) {
 					atomo += String.valueOf(c1.charAt(++j));
 				}
-				System.out.println("atomo" + atomo);
-				for (int k = i + 1; k < fc.size() && !comp; k++) {
-					String c2 = c1;
-					int index = indexContraparte(atomo, fc.get(k));
-					System.out.println("comparacion " + atomo + "," + fc.get(k) + "   " + index);
-					if (index != -1) {
-						if (atomo.length() == 1) {
-							c2 = c1.replace(Operadores.NEGACION + atomo, "");
-							System.out.println("cambio1 " + c2);
-						} else {
-							if (c1.length() == 2) {
-								c2 = "";
-								System.out.println("cambio2 " + c2);
-							} else if (index == c1.length() - 2) {
-								c2 = c1.substring(0, index);
-								System.out.println("cambio3 " + c2);
-							} else if (index == 0) {
-								c2 = c1.substring(2, c1.length());
-								System.out.println("cambio4 " + c2);
-							} else {
-								String aux = c1.substring(0, index);
-								aux += c1.substring(index + 2);
-								c2 = aux;
-								System.out.println("cambio5 " + c2);
+				System.out.println("atomo"+atomo);
+				for(int k=i+1;k<fc.size()&&!comp;k++) {
+					String c2=c1;
+					int index=indexContraparte(atomo, fc.get(k));
+					System.out.println("comparacion "+atomo+","+fc.get(k)+"   "+index);
+					if(index!=-1) {
+						if(atomo.length()==1) {
+							c2=c1.replace(Operadores.NEGACION+atomo, "");
+							System.out.println("cambio1 "+c2);
+						}else {
+							if(c1.length()==2) {
+								c2="";
+								System.out.println("cambio2 "+c2);
+							}else if(index==c1.length()-2) {
+								c2=c1.substring(0,index);
+								System.out.println("cambio3 "+c2);
+							}else if(index==0) {
+								c2=c1.substring(2,c1.length());
+								System.out.println("cambio4 "+c2);
+							}else {
+								String aux=c1.substring(0,index);
+								aux+=c1.substring(index+2);
+								c2=aux;
+								System.out.println("cambio5 "+c2);
 							}
 						}
-						System.out.println("cambiado por " + c2);
-						if (!fc.contains(c2)) {
-							op.add("Res(" + atomo + "):(" + fc.get(i) + "," + fc.get(k) + ")");
+						System.out.println("cambiado por "+c2);
+						if(!fc.contains(c2)) {
+							op.add("Res("+atomo+"):("+fc.get(i)+","+fc.get(k)+")");
 							fc.add(c2);
-							comp = true;
+							comp=true;
 							System.out.println("reemplazo");
-						}
+						}	
 					}
-				}
+				}		
 			}
 			if (comp) {
 				i = 0;
@@ -197,15 +197,53 @@ public class FormulaBienFormada {
 
 	}
 
-	private int indexContraparte(String atomo, String clausula) {
-		if (atomo.length() == 1) {
-			return clausula.indexOf(Operadores.NEGACION + atomo);
+	private String eliminarAtomo(String atomo, String clausula, boolean igual) {
+		if (clausula.length() == atomo.length()) {
+			return "";
+		}
+		if (igual) {
+			if (atomo.length() == 2) {
+				return clausula.replace(atomo, "");
+			} else {
+				int index = indexOf(atomo, clausula);
+				if (index == clausula.length() - 1) {
+					return clausula.substring(0, index);
+				} else if (index == 0) {
+					return clausula.substring(1, clausula.length());
+				} else {
+					String aux = clausula.substring(0, index);
+					aux += clausula.substring(index + 1);
+					return aux;
+				}
+			}
+		} else {
+			if (atomo.length() == 1) {
+				return clausula.replace(Operadores.NEGACION + atomo, "");
+			} else {
+				atomo = String.valueOf(atomo.charAt(1));
+				int index = indexOf(atomo, clausula);
+				if (index == clausula.length() - 1) {
+					return clausula.substring(0, index);
+				} else if (index == 0) {
+					return clausula.substring(1, clausula.length());
+				} else {
+					String aux = clausula.substring(0, index);
+					aux += clausula.substring(index + 1);
+					return aux;
+				}
+			}
+		}
+	}
+
+	private int indexOf(String atomo, String clausula) {
+		if (atomo.length() == 2) {
+			return clausula.indexOf(atomo);
 		} else {
 			int first = clausula.indexOf(atomo);
 			int last = clausula.lastIndexOf(atomo);
-			if (first > 0 && clausula.charAt(first - 1) == Operadores.NEGACION.charAt(0)) {
+			if (first > 0 && clausula.charAt(first - 1) == Operadores.NEGACION.charAt(0)){
 				return first;
-			} else if (last > 0 && clausula.charAt(last - 1) == Operadores.NEGACION.charAt(0)) {
+			}else if(last > 0 && clausula.charAt(last - 1) == Operadores.NEGACION.charAt(0)) {
 				return last;
 			} else {
 				return -1;
@@ -279,7 +317,7 @@ public class FormulaBienFormada {
 			flag = !fcs.contains("") || cont >= Math.pow(fcs.size(), 2);
 		}
 	}
-
+	
 	private int resolver(Nodo n, int[] valores) {
 		if (n.esAtomo()) {
 			for (int i = 0; i < atomos.size(); i++) {

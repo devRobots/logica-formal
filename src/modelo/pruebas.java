@@ -35,10 +35,10 @@ public class pruebas {
 //		}
 //		System.out.println(aux);
 //		
-		String cadena="holaMundo";
+		String cadena=Operadores.NEGACION+"aabca";
 	//	System.out.println(cadena.substring(1, 3));
 		
-		System.out.println(cadena.indexOf("h"));
+		System.out.println(cadena.replace(Operadores.NEGACION+"a", ""));
 		
 	}
 	
