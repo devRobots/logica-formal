@@ -123,93 +123,103 @@ public class FormulaBienFormada {
 		}
 		return fcs;
 	}
-	
+
 	public ArrayList<String> resolucion2() {
-		ArrayList<String> fc=toFC();
-		ArrayList<String> op=new ArrayList<String>();
-		for(String aux:fc) {
+		ArrayList<String> fc = toFC();
+		ArrayList<HashSet<String>>fc2=new ArrayList<HashSet<String>>();
+		ArrayList<String> op = new ArrayList<String>();
+		for (String aux : fc) {
 			op.add("Hipotesis");
 		}
 		for (int i = 0; i < fc.size(); i++) {
 			String c1 = fc.get(i);
-			boolean comp=false;
-			System.out.println("----calusula"+c1);
-			for (int j = 0; j < c1.length()&&!comp; j++) {
+			boolean comp = false;
+			System.out.println("----calusula" + c1);
+			for (int j = 0; j < c1.length() && !comp; j++) {
 				String atomo = String.valueOf(c1.charAt(j));
 				if (atomo.equals(Operadores.NEGACION)) {
 					atomo += String.valueOf(c1.charAt(++j));
 				}
-				System.out.println("atomo"+atomo);
-				for(int k=i+1;k<fc.size()&&!comp;k++) {
-					String c2=c1;
-					int index=indexContraparte(atomo, fc.get(k));
-					System.out.println("comparacion "+atomo+","+fc.get(k)+"   "+index);
-					if(index!=-1) {
-						if(atomo.length()==1) {
-							c2=c1.replace(Operadores.NEGACION+atomo, "");
-							System.out.println("cambio1 "+c2);
-						}else {
-							if(c1.length()==2) {
-								c2="";
-								System.out.println("cambio2 "+c2);
-							}else if(index==c1.length()-2) {
-								c2=c1.substring(0,index);
-								System.out.println("cambio3 "+c2);
-							}else if(index==0) {
-								c2=c1.substring(2,c1.length());
-								System.out.println("cambio4 "+c2);
-							}else {
-								String aux=c1.substring(0,index);
-								aux+=c1.substring(index+2);
-								c2=aux;
-								System.out.println("cambio5 "+c2);
-							}
-						}
-						System.out.println("cambiado por "+c2);
-						if(!fc.contains(c2)) {
-							op.add("Res("+atomo+"):("+fc.get(i)+","+fc.get(k)+")");
-							fc.add(c2);
-							comp=true;
-							System.out.println("reemplazo");
-						}	
-					}
-				}		
+				System.out.println("atomo" + atomo);
+				for (int k = i + 1; k < fc.size() && !comp; k++) {
+					String c2 = c1;
+				}
 			}
-			if(comp) {
-				i=0;
-				if(fc.contains("")) {
+			if (comp) {
+				i = 0;
+				if (fc.contains("")) {
 					break;
 				}
 			}
 		}
-		ArrayList<String> resolucion=new ArrayList<String>();
-		for(int i=0;i<fc.size();i++) {
-			resolucion.add("{"+fc.get(i)+"}..."+op.get(i));
-			if(i==fc.size()-1) {
-				if(fc.get(i).isEmpty()) {
+		ArrayList<String> resolucion = new ArrayList<String>();
+		for (int i = 0; i < fc.size(); i++) {
+			resolucion.add("{" + fc.get(i) + "}..." + op.get(i));
+			if (i == fc.size() - 1) {
+				if (fc.get(i).isEmpty()) {
 					resolucion.add("Insatisfacible");
-				}else {
+				} else {
 					resolucion.add("Satisfacible");
 				}
 			}
 		}
 		return resolucion;
-		
+
 	}
 
-	private int indexContraparte(String atomo, String clausula) {
-		if (atomo.length() == 1) {
-			return clausula.indexOf(Operadores.NEGACION + atomo);
+	private String eliminarAtomo(String atomo, String clausula, boolean igual) {
+		if (clausula.length() == atomo.length()) {
+			return "";
+		}
+		if (igual) {
+			if (atomo.length() == 2) {
+				return clausula.replace(atomo, "");
+			} else {
+				int index = indexOf(atomo, clausula);
+				if (index == clausula.length() - 1) {
+					return clausula.substring(0, index);
+				} else if (index == 0) {
+					return clausula.substring(1, clausula.length());
+				} else {
+					String aux = clausula.substring(0, index);
+					aux += clausula.substring(index + 1);
+					return aux;
+				}
+			}
+		} else {
+			if (atomo.length() == 1) {
+				return clausula.replace(Operadores.NEGACION + atomo, "");
+			} else {
+				atomo = String.valueOf(atomo.charAt(1));
+				int index = indexOf(atomo, clausula);
+				if (index == clausula.length() - 1) {
+					return clausula.substring(0, index);
+				} else if (index == 0) {
+					return clausula.substring(1, clausula.length());
+				} else {
+					String aux = clausula.substring(0, index);
+					aux += clausula.substring(index + 1);
+					return aux;
+				}
+			}
+		}
+	}
+
+	private int indexOf(String atomo, String clausula) {
+		if (atomo.length() == 2) {
+			return clausula.indexOf(atomo);
 		} else {
 			int first = clausula.indexOf(atomo);
 			int last = clausula.lastIndexOf(atomo);
-			if (first > 0 && clausula.charAt(first - 1) == Operadores.NEGACION.charAt(0)){
+			if (first == 0) {
 				return first;
-			}else if(last > 0 && clausula.charAt(last - 1) == Operadores.NEGACION.charAt(0)) {
+			} else if (first > 0 && clausula.charAt(first - 1) != Operadores.NEGACION.charAt(0)) {
+				return first;
+			} else if (last > 0 && clausula.charAt(last - 1) != Operadores.NEGACION.charAt(0)) {
 				return last;
-			}else {
+			} else {
 				return -1;
-			}	
+			}
 		}
 	}
 
@@ -257,7 +267,7 @@ public class FormulaBienFormada {
 							String fc2 = fcs.get(j);
 							if (fc1.contains(String.valueOf(atomo)) && fc2.contains(String.valueOf(atomo))) {
 								String res = resolucion(atomo, fc1, fc2);
-								
+
 								if (!fcs.contains(res)) {
 									fcs.add(res);
 								}
@@ -268,14 +278,14 @@ public class FormulaBienFormada {
 			}
 		}
 	}
-	
+
 	private boolean esSatisfacible(ArrayList<String> fcs) {
 		for (String fc : fcs) {
 			if (esSatisfacible(fc)) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -283,10 +293,10 @@ public class FormulaBienFormada {
 		if (fc.equals("")) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	public String resolucion(char atomo, String fc1, String fc2) {
 		if (contieneNegacion(fc1, atomo)) {
 			if (contieneSoloAtomo(fc2, atomo)) {
@@ -312,22 +322,21 @@ public class FormulaBienFormada {
 				return fc1 + fc2;
 			}
 		}
-		
+
 		return fc1;
 	}
-	
+
 	private boolean contieneNegacion(String fc, char atomo) {
 		return fc.contains(Operadores.NEGACION + atomo);
 	}
 
-	
 	private boolean contieneSoloAtomo(String fc, char atomo) {
 		for (int i = 1; i < fc.length(); i++) {
-			if (fc.charAt(i) == atomo && fc.charAt(i-1) != Operadores.NEGACION.charAt(0)) {
+			if (fc.charAt(i) == atomo && fc.charAt(i - 1) != Operadores.NEGACION.charAt(0)) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
