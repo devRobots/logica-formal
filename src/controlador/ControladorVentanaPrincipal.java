@@ -384,16 +384,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 //			if (list.size() < 5) {
 //				JOptionPane.showMessageDialog(null, "Use minimo 5 atomos distintos por favor.", "Error",
 //						JOptionPane.ERROR_MESSAGE);
-			ArrayList<Character> list = new ArrayList<Character>();
-			for (char aux : cadena.toCharArray()) {
-				if ((aux == '↔' || aux == 'v' || aux == 'ʌ' || aux == '¬' || aux == '→')) {
-					list.add(aux);
-				}
-			}
-			if (list.size() < 3) {
-				JOptionPane.showMessageDialog(null, "Use minimo 3 fórmulas proposicionales.", "Error",
-						JOptionPane.ERROR_MESSAGE);
-			} else {
+			
 				textArea.setText("");
 				historial = new ArrayList<String>();
 				historial.add("");
@@ -402,7 +393,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 				boton.setOnAction(this::handleButtonAction);
 				boton.setId(formulasTabla.size() + "");
 				formulasTabla.add(new TablaFormulas(cadena, boton));
-			}
+			
 		}
 
 	}
@@ -478,8 +469,22 @@ public class ControladorVentanaPrincipal implements Initializable {
 			cadena = visualizarFND(fbf.toFND());
 			titulo="FND de";
 		}else {
-			cadena = visualizarResolucion(fbf.resolucion2().toString());
-			titulo="Satisfacibilidad de";
+			if(formulasTabla.size()>=3) {
+				FormulaBienFormada fbf1 = new FormulaBienFormada(formulasTabla.get(0).getFormula());
+				FormulaBienFormada fbf2 = new FormulaBienFormada(formulasTabla.get(1).getFormula());
+				FormulaBienFormada fbf3 = new FormulaBienFormada(formulasTabla.get(2).getFormula());
+				ArrayList<String> fcs=new ArrayList<String>();
+				fcs.addAll(fbf1.toFC());
+				fcs.addAll(fbf2.toFC());
+				fcs.addAll(fbf3.toFC());
+				fbf.hallarSatisfacibilidad(fcs);
+				cadena = visualizarResolucion(fcs.toString());
+				titulo="Satisfacibilidad de";
+			}else {
+				JOptionPane.showMessageDialog(null, "Use minimo 3 fórmulas proposicionales.", "Error",
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 		}
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader();
