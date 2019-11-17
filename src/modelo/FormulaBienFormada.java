@@ -314,8 +314,6 @@ public class FormulaBienFormada {
 						for (Character atomo : atomos) {
 							FormaClausal fc1 = new FormaClausal(fcs.get(i));
 							FormaClausal fc2 = new FormaClausal(fcs.get(j));
-							
-							System.err.println(fc1 + " : " + fc2);
 
 							FormaClausal res = FormaClausal.resolucion(atomo, fc1, fc2);
 
@@ -334,7 +332,7 @@ public class FormulaBienFormada {
 				}
 			}
 
-			flag = !fcs.contains("") && cont <= Math.pow(fcs.size(), 3);
+			flag = !fcs.contains("") && cont < Math.pow(fcs.size(), 2);
 		}
 	}
 	

@@ -482,7 +482,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 
 			ArrayList<String> fcs = new ArrayList<>();
 
-			FormulaBienFormada fbf1 = new FormulaBienFormada("(a)ʌ(¬(a))");
+			FormulaBienFormada fbf1 = new FormulaBienFormada("(a)v(¬(a))");
 			FormulaBienFormada fbf2 = new FormulaBienFormada("(a)ʌ(b)");
 			FormulaBienFormada fbf3 = new FormulaBienFormada("(a)ʌ(c)");
 
