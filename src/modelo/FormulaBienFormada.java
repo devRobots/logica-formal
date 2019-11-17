@@ -38,7 +38,7 @@ public class FormulaBienFormada {
 		int[][] entradas = tabularEntradas();
 		int[][] salidas = new int[entradas.length][entradas[0].length];
 		int cont = 0;
-		
+
 		for (int i = 0; i < entradas.length; i++) {
 			int valores[] = entradas[i];
 			if (resolver(arbol.getRaiz(), valores) == 0) {
@@ -46,25 +46,25 @@ public class FormulaBienFormada {
 				cont++;
 			}
 		}
-		
-		salidas=Arrays.copyOf(salidas, cont);
-		
-		String cadena= getFormulaArbol(salidas,true).toString();
-		if(!cadena.equals("")) {
+
+		salidas = Arrays.copyOf(salidas, cont);
+
+		String cadena = getFormulaArbol(salidas, true).toString();
+		if (!cadena.equals("")) {
 			return cadena;
-		}else {
-			cadena=toFND();
-			return axioma5(axioma3(cadena,true));
+		} else {
+			cadena = toFND();
+			return axioma5(axioma3(cadena, true));
 		}
 	}
-	
+
 	public String toFND() {
 		ArbolFormula arbol = new ArbolFormula(fbf);
 
 		int[][] entradas = tabularEntradas();
 		int[][] salidas = new int[entradas.length][entradas[0].length];
 		int cont = 0;
-		
+
 		for (int i = 0; i < entradas.length; i++) {
 			int valores[] = entradas[i];
 			if (resolver(arbol.getRaiz(), valores) == 1) {
@@ -72,22 +72,22 @@ public class FormulaBienFormada {
 				cont++;
 			}
 		}
-		
-		salidas=Arrays.copyOf(salidas, cont);
-		
-		String cadena= getFormulaArbol(salidas,false).toString();
-		if(!cadena.equals("")) {
+
+		salidas = Arrays.copyOf(salidas, cont);
+
+		String cadena = getFormulaArbol(salidas, false).toString();
+		if (!cadena.equals("")) {
 			return cadena;
-		}else {
-			cadena= toFNC();
-			return axioma5(axioma3(cadena,false));
+		} else {
+			cadena = toFNC();
+			return axioma5(axioma3(cadena, false));
 		}
 	}
-	
+
 	public ArrayList<String> toFC() {
 		ArrayList<String> fcs = new ArrayList<>();
 		String[] fds = toFNC().split(Operadores.CONJUNCION);
-	
+
 		for (String fd : fds) {
 			String fc = fd.replace(Operadores.DISYUNCION, "");
 			fc = fc.replace("(", "");
@@ -96,63 +96,152 @@ public class FormulaBienFormada {
 			fcs.add(fc);
 		}
 		System.out.println(fcs.toString());
-		HashSet<HashSet<String>> set=new HashSet<HashSet<String>>();
-		for(int i=0;i<fcs.size();i++) {
+		HashSet<HashSet<String>> set = new HashSet<HashSet<String>>();
+		for (int i = 0; i < fcs.size(); i++) {
 			set.add(new HashSet<String>());
-			String c1=fcs.get(i);
-			HashSet<String> aux= new HashSet<String>();
-			for(int j=0;j<c1.length();j++) {
-				String atomo=String.valueOf(c1.charAt(j));
-				if(atomo.equals(Operadores.NEGACION)) {
-					atomo+=String.valueOf(c1.charAt(++j));
+			String c1 = fcs.get(i);
+			HashSet<String> aux = new HashSet<String>();
+			for (int j = 0; j < c1.length(); j++) {
+				String atomo = String.valueOf(c1.charAt(j));
+				if (atomo.equals(Operadores.NEGACION)) {
+					atomo += String.valueOf(c1.charAt(++j));
 				}
 				aux.add(atomo);
 			}
 			set.add(aux);
 		}
-		fcs=new ArrayList<String>();
-		for(HashSet<String> aux:set) {
-			String cadena="";
-			for(String aux2:aux) {
-				cadena+=aux2;
+		fcs = new ArrayList<String>();
+		for (HashSet<String> aux : set) {
+			String cadena = "";
+			for (String aux2 : aux) {
+				cadena += aux2;
 			}
-			if(!cadena.isEmpty()) {
+			if (!cadena.isEmpty()) {
 				fcs.add(cadena);
 			}
-			
+
 		}
 		return fcs;
 	}
 	
-	private ArbolFormula getFormulaArbol(int [][] salidas, boolean esFNC) {
-		ArbolFormula arbol=new ArbolFormula();
-		char op1, op2;
-		if(esFNC) {
-			op1=Operadores.DISYUNCION.charAt(0);
-			op2=Operadores.CONJUNCION.charAt(0);
-		}else {
-			op2=Operadores.DISYUNCION.charAt(0);
-			op1=Operadores.CONJUNCION.charAt(0);
+	public ArrayList<String> resolucion2() {
+		ArrayList<String> fc=toFC();
+		ArrayList<String> op=new ArrayList<String>();
+		for(String aux:fc) {
+			op.add("Hipotesis");
 		}
-		for(int i=0;i<salidas.length;i++) {
-			for(int j=0;j<salidas[0].length;j++) {
-				if((salidas[i][j]==1&&esFNC)||(salidas[i][j]==0&&!esFNC)) {
-					Nodo aux=new Nodo(atomos.get(j));
-					Nodo aux2=new Nodo(Operadores.NEGACION.charAt(0));
-					aux2.setIzquierdo(aux);
-					arbol.addNodo(aux2,esFNC);
-				}else {
-					Nodo aux=new Nodo(atomos.get(j));
-					arbol.addNodo(aux,esFNC);
+		for (int i = 0; i < fc.size(); i++) {
+			String c1 = fc.get(i);
+			boolean comp=false;
+			System.out.println("----calusula"+c1);
+			for (int j = 0; j < c1.length()&&!comp; j++) {
+				String atomo = String.valueOf(c1.charAt(j));
+				if (atomo.equals(Operadores.NEGACION)) {
+					atomo += String.valueOf(c1.charAt(++j));
 				}
-				if(j!=salidas[0].length-1) {
-					Nodo aux=new Nodo(op1);
-					arbol.addNodo(aux,esFNC);
+				System.out.println("atomo"+atomo);
+				for(int k=i+1;k<fc.size()&&!comp;k++) {
+					String c2=c1;
+					int index=indexContraparte(atomo, fc.get(k));
+					System.out.println("comparacion "+atomo+","+fc.get(k)+"   "+index);
+					if(index!=-1) {
+						if(atomo.length()==1) {
+							c2=c1.replace(Operadores.NEGACION+atomo, "");
+							System.out.println("cambio1 "+c2);
+						}else {
+							if(c1.length()==2) {
+								c2="";
+								System.out.println("cambio2 "+c2);
+							}else if(index==c1.length()-2) {
+								c2=c1.substring(0,index);
+								System.out.println("cambio3 "+c2);
+							}else if(index==0) {
+								c2=c1.substring(2,c1.length());
+								System.out.println("cambio4 "+c2);
+							}else {
+								String aux=c1.substring(0,index);
+								aux+=c1.substring(index+2);
+								c2=aux;
+								System.out.println("cambio5 "+c2);
+							}
+						}
+						System.out.println("cambiado por "+c2);
+						if(!fc.contains(c2)) {
+							op.add("Res("+atomo+"):("+fc.get(i)+","+fc.get(k)+")");
+							fc.add(c2);
+							comp=true;
+							System.out.println("reemplazo");
+						}	
+					}
+				}		
+			}
+			if(comp) {
+				i=0;
+				if(fc.contains("")) {
+					break;
 				}
 			}
-			if(i!=salidas.length-1) {
-				Nodo aux=new Nodo(op2);
-				arbol.addNodo(aux,esFNC);
+		}
+		ArrayList<String> resolucion=new ArrayList<String>();
+		for(int i=0;i<fc.size();i++) {
+			resolucion.add("{"+fc.get(i)+"}..."+op.get(i));
+			if(i==fc.size()-1) {
+				if(fc.get(i).isEmpty()) {
+					resolucion.add("Insatisfacible");
+				}else {
+					resolucion.add("Satisfacible");
+				}
+			}
+		}
+		return resolucion;
+		
+	}
+
+	private int indexContraparte(String atomo, String clausula) {
+		if (atomo.length() == 1) {
+			return clausula.indexOf(Operadores.NEGACION + atomo);
+		} else {
+			int first = clausula.indexOf(atomo);
+			int last = clausula.lastIndexOf(atomo);
+			if (first > 0 && clausula.charAt(first - 1) == Operadores.NEGACION.charAt(0)){
+				return first;
+			}else if(last > 0 && clausula.charAt(last - 1) == Operadores.NEGACION.charAt(0)) {
+				return last;
+			}else {
+				return -1;
+			}	
+		}
+	}
+
+	private ArbolFormula getFormulaArbol(int[][] salidas, boolean esFNC) {
+		ArbolFormula arbol = new ArbolFormula();
+		char op1, op2;
+		if (esFNC) {
+			op1 = Operadores.DISYUNCION.charAt(0);
+			op2 = Operadores.CONJUNCION.charAt(0);
+		} else {
+			op2 = Operadores.DISYUNCION.charAt(0);
+			op1 = Operadores.CONJUNCION.charAt(0);
+		}
+		for (int i = 0; i < salidas.length; i++) {
+			for (int j = 0; j < salidas[0].length; j++) {
+				if ((salidas[i][j] == 1 && esFNC) || (salidas[i][j] == 0 && !esFNC)) {
+					Nodo aux = new Nodo(atomos.get(j));
+					Nodo aux2 = new Nodo(Operadores.NEGACION.charAt(0));
+					aux2.setIzquierdo(aux);
+					arbol.addNodo(aux2, esFNC);
+				} else {
+					Nodo aux = new Nodo(atomos.get(j));
+					arbol.addNodo(aux, esFNC);
+				}
+				if (j != salidas[0].length - 1) {
+					Nodo aux = new Nodo(op1);
+					arbol.addNodo(aux, esFNC);
+				}
+			}
+			if (i != salidas.length - 1) {
+				Nodo aux = new Nodo(op2);
+				arbol.addNodo(aux, esFNC);
 			}
 		}
 		return arbol;
@@ -236,7 +325,7 @@ public class FormulaBienFormada {
 
 		return tabla;
 	}
-	
+
 	public String axioma5(String fnc) {
 		String salida = fnc;
 		ArbolFormula arbol = new ArbolFormula(salida);
@@ -258,19 +347,19 @@ public class FormulaBienFormada {
 		salida = arbol.toString();
 		return salida;
 	}
-	
+
 	public String axioma3(String fbf, boolean esFNC) {
 		String salida = fbf;
 		ArbolFormula arbol = new ArbolFormula(salida);
-		char op1,op2;
+		char op1, op2;
 		Nodo actual;
-		if(esFNC) {
-			op1=Operadores.CONJUNCION.charAt(0);
-			op2=Operadores.DISYUNCION.charAt(0);
+		if (esFNC) {
+			op1 = Operadores.CONJUNCION.charAt(0);
+			op2 = Operadores.DISYUNCION.charAt(0);
 			actual = arbol.getNodoDisyuncionConjuncion();
-		}else{
-			op2=Operadores.CONJUNCION.charAt(0);
-			op1=Operadores.DISYUNCION.charAt(0);
+		} else {
+			op2 = Operadores.CONJUNCION.charAt(0);
+			op1 = Operadores.DISYUNCION.charAt(0);
 			actual = arbol.getNodoConjuncionDisyuncion();
 		}
 		while (actual != null) {
@@ -282,7 +371,7 @@ public class FormulaBienFormada {
 				Nodo der = new Nodo(op2);
 				der.setIzquierdo(actual.getIzquierdo().getDerecho());
 				der.setDerecho(actual.getDerecho());
-				
+
 				actual.getIzquierdo().setIzquierdo(izq);
 				actual.getIzquierdo().setDerecho(der);
 				actual.resetNodo(actual.getIzquierdo());
@@ -300,9 +389,9 @@ public class FormulaBienFormada {
 				actual.getDerecho().setDerecho(der);
 				actual.resetNodo(actual.getDerecho());
 			}
-			if(esFNC) {
+			if (esFNC) {
 				actual = arbol.getNodoDisyuncionConjuncion();
-			}else {
+			} else {
 				actual = arbol.getNodoConjuncionDisyuncion();
 			}
 		}

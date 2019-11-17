@@ -92,6 +92,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		aux.add("FNC");
 		aux.add("FND");
 		aux.add("FC");
+		aux.add("Satisfacibilidad");
 		comboMetodo.setItems(aux);
 		tableFormulas.setItems(formulasTabla);
 		historial.add("");
@@ -474,6 +475,9 @@ public class ControladorVentanaPrincipal implements Initializable {
 		} else if (comboMetodo.getSelectionModel().getSelectedItem().equals("FND")) {
 			cadena = visualizarFND(fbf.toFND());
 			titulo="FND de";
+		}else {
+			cadena = visualizarResolucion(fbf.resolucion2().toString());
+			titulo="Satisfacibilidad de";
 		}
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader();
@@ -512,6 +516,16 @@ public class ControladorVentanaPrincipal implements Initializable {
 	private String visualizarFC(String cadena) {
 		cadena = "\t" + cadena;
 		cadena = cadena.replaceAll(",", ",\n\t");
+
+		return cadena;
+
+	}
+	
+	private String visualizarResolucion(String cadena) {
+		cadena = cadena.substring(1,cadena.length()-1);
+		cadena = "\t" + cadena;
+		cadena = cadena.replaceAll(",", ",\n\t");
+		
 
 		return cadena;
 

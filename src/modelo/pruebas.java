@@ -35,8 +35,10 @@ public class pruebas {
 //		}
 //		System.out.println(aux);
 //		
-//		String cadena="hol";
-//		System.out.println(cadena.substring(1, 3));
+		String cadena="holaMundo";
+	//	System.out.println(cadena.substring(1, 3));
+		
+		System.out.println(cadena.indexOf("h"));
 		
 	}
 	
