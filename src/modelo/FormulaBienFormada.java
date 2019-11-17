@@ -126,7 +126,6 @@ public class FormulaBienFormada {
 
 	public ArrayList<String> resolucion2() {
 		ArrayList<String> fc = toFC();
-		ArrayList<HashSet<String>>fc2=new ArrayList<HashSet<String>>();
 		ArrayList<String> op = new ArrayList<String>();
 		for (String aux : fc) {
 			op.add("Hipotesis");
@@ -142,7 +141,12 @@ public class FormulaBienFormada {
 				}
 				System.out.println("atomo" + atomo);
 				for (int k = i + 1; k < fc.size() && !comp; k++) {
-					String c2 = c1;
+					String c2 = fc.get(k);
+					if(atomo.length()==1) {
+						if(indexOf(Operadores.NEGACION+atomo, c2)!=-1) {
+							
+						}
+					}
 				}
 			}
 			if (comp) {
