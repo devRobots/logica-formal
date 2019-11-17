@@ -95,7 +95,6 @@ public class FormulaBienFormada {
 
 			fcs.add(fc);
 		}
-		System.out.println(fcs.toString());
 		HashSet<HashSet<String>> set = new HashSet<HashSet<String>>();
 		for (int i = 0; i < fcs.size(); i++) {
 			set.add(new HashSet<String>());
@@ -122,151 +121,6 @@ public class FormulaBienFormada {
 
 		}
 		return fcs;
-	}
-
-	public ArrayList<String> resolucion2() {
-		ArrayList<String> fc = toFC();
-		ArrayList<String> op = new ArrayList<String>();
-		for (String aux : fc) {
-			op.add("Hipotesis");
-		}
-		for (int i = 0; i < fc.size(); i++) {
-			String c1 = fc.get(i);
-			String nuevo="";
-			boolean comp = false;
-			System.out.println("----calusula" + c1);
-			for (int j = 0; j < c1.length() && !comp; j++) {
-				String atomo = String.valueOf(c1.charAt(j));
-				if (atomo.equals(Operadores.NEGACION)) {
-					atomo += String.valueOf(c1.charAt(++j));
-				}
-				System.out.println("atomo" + atomo);
-				for (int k = i + 1; k < fc.size() && !comp; k++) {
-					String c2 = fc.get(k);
-					if(atomo.length()==1) {
-						if(indexOf(Operadores.NEGACION+atomo, c2)!=-1) {
-							String aux1=eliminarAtomo(atomo, c1, true);
-							String aux2=eliminarAtomo(atomo, c2, false);
-							nuevo=aux1+aux2;
-							op.add("Res("+atomo+"):("+c1+","+c2+")");
-							comp=true;
-						}
-					}else {
-						if(indexOf(String.valueOf(atomo.charAt(1)), c2)!=-1) {
-							String aux1=eliminarAtomo(atomo, c1, true);
-							String aux2=eliminarAtomo(atomo, c2, false);
-							nuevo=aux1+aux2;
-							op.add("Res("+atomo+"):("+c1+","+c2+")");
-							comp=true;
-						}
-					}
-				}
-			}
-			if (comp) {
-				if(!existeEnArray(nuevo, fc)) {
-					fc.add(nuevo);
-					i = 0;
-				}else {
-					op.remove(i+1);
-				}
-				if (fc.contains("")) {
-					break;
-				}
-				comp=false;
-			}
-		}
-		ArrayList<String> resolucion = new ArrayList<String>();
-		for (int i = 0; i < fc.size(); i++) {
-			resolucion.add("{" + fc.get(i) + "}..." + op.get(i));
-			if (i == fc.size() - 1) {
-				if (fc.get(i).isEmpty()) {
-					resolucion.add("Insatisfacible");
-				} else {
-					resolucion.add("Satisfacible");
-				}
-			}
-		}
-		return resolucion;
-	}
-	
-	private boolean existeEnArray(String clausula, ArrayList<String> fc) {
-		HashSet<HashSet<String>> set = new HashSet<HashSet<String>>();
-		for (int i = 0; i < fc.size(); i++) {
-			set.add(new HashSet<String>());
-			String c1 = fc.get(i);
-			HashSet<String> aux = new HashSet<String>();
-			for (int j = 0; j < c1.length(); j++) {
-				String atomo = String.valueOf(c1.charAt(j));
-				if (atomo.equals(Operadores.NEGACION)) {
-					atomo += String.valueOf(c1.charAt(++j));
-				}
-				aux.add(atomo);
-			}
-			set.add(aux);
-		}
-		HashSet<String> aux = new HashSet<String>();
-		for (int j = 0; j < clausula.length(); j++) {
-			String atomo = String.valueOf(clausula.charAt(j));
-			if (atomo.equals(Operadores.NEGACION)) {
-				atomo += String.valueOf(clausula.charAt(++j));
-			}
-			aux.add(atomo);
-		}
-		return set.contains(aux);
-	}
-
-	private String eliminarAtomo(String atomo, String clausula, boolean igual) {
-		if (clausula.length() == atomo.length()) {
-			return "";
-		}
-		if (igual) {
-			if (atomo.length() == 2) {
-				return clausula.replace(atomo, "");
-			} else {
-				int index = indexOf(atomo, clausula);
-				if (index == clausula.length() - 1) {
-					return clausula.substring(0, index);
-				} else if (index == 0) {
-					return clausula.substring(1, clausula.length());
-				} else {
-					String aux = clausula.substring(0, index);
-					aux += clausula.substring(index + 1);
-					return aux;
-				}
-			}
-		} else {
-			if (atomo.length() == 1) {
-				return clausula.replace(Operadores.NEGACION + atomo, "");
-			} else {
-				atomo = String.valueOf(atomo.charAt(1));
-				int index = indexOf(atomo, clausula);
-				if (index == clausula.length() - 1) {
-					return clausula.substring(0, index);
-				} else if (index == 0) {
-					return clausula.substring(1, clausula.length());
-				} else {
-					String aux = clausula.substring(0, index);
-					aux += clausula.substring(index + 1);
-					return aux;
-				}
-			}
-		}
-	}
-
-	private int indexOf(String atomo, String clausula) {
-		if (atomo.length() == 2) {
-			return clausula.indexOf(atomo);
-		} else {
-			int first = clausula.indexOf(atomo);
-			int last = clausula.lastIndexOf(atomo);
-			if (first > 0 && clausula.charAt(first - 1) == Operadores.NEGACION.charAt(0)){
-				return first;
-			}else if(last > 0 && clausula.charAt(last - 1) == Operadores.NEGACION.charAt(0)) {
-				return last;
-			} else {
-				return -1;
-			}
-		}
 	}
 
 	private ArbolFormula getFormulaArbol(int[][] salidas, boolean esFNC) {
@@ -498,7 +352,6 @@ public class FormulaBienFormada {
 	}
 
 	private boolean esFNC(Nodo nodo, boolean isConjuncion) {
-		System.out.println(nodo);
 		if (nodo.esAtomo()) {
 			return true;
 		}

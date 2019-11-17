@@ -1,5 +1,8 @@
 package controlador;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -35,6 +38,26 @@ public class ControladorOperaciones implements Initializable {
 		primaryStage.show();
 		Stage aux = (Stage) textFormulaO.getScene().getWindow();
 		aux.close();
+	}
+	
+
+	@FXML
+	void cerrar(ActionEvent event) {
+		((Stage) textFormulaN.getScene().getWindow()).close();
+	}
+
+	@FXML
+	void abrirGuia(ActionEvent event) {
+		try {
+			File objetofile = new File("src/vista/guia.txt");
+			Desktop.getDesktop().open(objetofile);
+
+		} catch (IOException ex) {
+
+			System.out.println(ex);
+
+		}
+
 	}
 
 	public void setFormula(String formulaAntigua, String formulaNueva, Stage primaryStage, String titulo) {

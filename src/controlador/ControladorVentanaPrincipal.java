@@ -97,7 +97,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		aux.add("FNC");
 		aux.add("FND");
 		aux.add("FC");
-		aux.add("Satisfacibilidad");
+		aux.add("SATISFACIBILIDAD");
 		comboMetodo.setItems(aux);
 		tableFormulas.setItems(formulasTabla);
 		historial.add("");
@@ -270,97 +270,6 @@ public class ControladorVentanaPrincipal implements Initializable {
 		textArea.setText(cadena);
 	}
 
-//	@FXML
-//	void aceptar(ActionEvent event) {
-//		stringaArray();
-//		ObservableList<Node> list = getFormulaColor(formula);
-//		if (list != null) {
-//			try {
-//				FXMLLoader fxmlLoader = new FXMLLoader();
-//				fxmlLoader.setLocation(
-//						ControladorVentanaPrincipal.class.getResource("../vista/VentanaConfirmacion.fxml"));
-//				Scene scene = new Scene(fxmlLoader.load());
-//				Stage stage = new Stage();
-//				stage.setTitle("Proyecto");
-//				stage.setScene(scene);
-//				ControladorConfirmacion con = fxmlLoader.getController();
-//				con.setFormula(list, formula, (Stage) textArea.getScene().getWindow());
-//				stage.show();
-//				((Stage) textArea.getScene().getWindow()).close();
-//
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//
-//		FormulaBienFormada fbf = new FormulaBienFormada(textArea.getText());
-//
-//		System.out.println(fbf.getArbol());
-//	}
-
-//	public ObservableList<Node> getFormulaColor(ArrayList<String> formula) {
-//		boolean par = true;
-//		ObservableList<Node> list = FXCollections.observableArrayList();
-//		ArrayList<ColorF> atomos = new ArrayList<>();
-//		ArrayList<ColorF> parentesis = new ArrayList<>();
-//
-//		for (int i = 0; i < formula.size(); i++) {
-//			if (formula.get(i).equals("(")) {
-//				Color color = Color.color(Math.random(), Math.random(), Math.random());
-//				parentesis.add(new ColorF(color, i + ""));
-//				Text aux = new Text("(");
-//				aux.setFont(Font.font("System", FontWeight.BOLD, 24));
-//				aux.setFill(color);
-//				list.add(aux);
-//			} else if (formula.get(i).equals(")")) {
-//				if (parentesis.size() - 1 >= 0) {
-//					Text aux = new Text(")");
-//					aux.setFill(parentesis.get(parentesis.size() - 1).getColor());
-//					aux.setFont(Font.font("System", FontWeight.BOLD, 24));
-//					parentesis.remove(parentesis.size() - 1);
-//					list.add(aux);
-//				} else {
-//					par = false;
-//				}
-//			} else if (!formula.get(i).equals(Operadores.NEGACION) && !formula.get(i).equals(Operadores.CONJUNCION)
-//					&& !formula.get(i).equals(Operadores.DISYUNCION) && !formula.get(i).equals(Operadores.CONDICIONAL)
-//					&& !formula.get(i).equals(Operadores.EQUIVALENCIA)) {
-//				boolean ward = true;
-//				for (int j = 0; j < atomos.size() && ward; j++) {
-//					if (atomos.get(j).getValue().equals(formula.get(i))) {
-//						Text aux = new Text(formula.get(i));
-//						aux.setFill(atomos.get(j).getColor());
-//						aux.setFont(Font.font("System", FontWeight.BOLD, 24));
-//						list.add(aux);
-//						ward = false;
-//					}
-//				}
-//				if (ward) {
-//					Color color = Color.color(Math.random(), Math.random(), Math.random());
-//					atomos.add(new ColorF(color, formula.get(i)));
-//					Text aux = new Text(formula.get(i));
-//					aux.setFill(color);
-//					aux.setFont(Font.font("System", FontWeight.BOLD, 24));
-//					list.add(aux);
-//				}
-//			} else {
-//				Text aux = new Text(formula.get(i));
-//				aux.setFont(Font.font("System", FontWeight.BOLD, 24));
-//				list.add(aux);
-//			}
-//		}
-//		if (!par) {
-//			JOptionPane.showMessageDialog(null, "Existe error en los parentesis", "Error", JOptionPane.ERROR_MESSAGE);
-//			return null;
-//		} else if (atomos.size() < 5) {
-//			JOptionPane.showMessageDialog(null, "Use minimo 5 atomos distintos por favor.", "Error",
-//					JOptionPane.ERROR_MESSAGE);
-//			return null;
-//		} else {
-//			return list;
-//		}
-//	}
-
 	@FXML
 	void seleccionar() {
 		formulasSeleccionadas = new ArrayList<String>();
@@ -389,16 +298,6 @@ public class ControladorVentanaPrincipal implements Initializable {
 			JOptionPane.showMessageDialog(null, "Complete los atomos en la fórmula por favor", "Error",
 					JOptionPane.ERROR_MESSAGE);
 		} else {
-//			ArrayList<Character> list = new ArrayList<Character>();
-//			for (char aux : cadena.toCharArray()) {
-//				if (Character.isAlphabetic(aux) && !list.contains(aux)) {
-//					list.add(aux);
-//				}
-//			}
-//			if (list.size() < 5) {
-//				JOptionPane.showMessageDialog(null, "Use minimo 5 atomos distintos por favor.", "Error",
-//						JOptionPane.ERROR_MESSAGE);
-
 			textArea.setText("");
 			historial = new ArrayList<String>();
 			historial.add("");
@@ -479,31 +378,6 @@ public class ControladorVentanaPrincipal implements Initializable {
 			historial.remove(historial.size() - 1);
 		} else {
 			textArea.setText("");
-
-			ArrayList<String> fcs = new ArrayList<>();
-
-			FormulaBienFormada fbf1 = new FormulaBienFormada("(a)v(¬(a))");
-			FormulaBienFormada fbf2 = new FormulaBienFormada("(a)ʌ(b)");
-			FormulaBienFormada fbf3 = new FormulaBienFormada("(a)ʌ(c)");
-
-			for (String fc : fbf1.toFC()) {
-				if (!fcs.contains(fc)) {
-					fcs.add(fc);
-				}
-			}
-			for (String fc : fbf2.toFC()) {
-				if (!fcs.contains(fc)) {
-					fcs.add(fc);
-				}
-			}
-			for (String fc : fbf3.toFC()) {
-				if (!fcs.contains(fc)) {
-					fcs.add(fc);
-				}
-			}
-
-			fbf1.hallarSatisfacibilidad(fcs);
-			System.out.println(fcs);
 		}
 	}
 
