@@ -215,11 +215,9 @@ public class FormulaBienFormada {
 		} else {
 			int first = clausula.indexOf(atomo);
 			int last = clausula.lastIndexOf(atomo);
-			if (first == 0) {
+			if (first > 0 && clausula.charAt(first - 1) == Operadores.NEGACION.charAt(0)){
 				return first;
-			} else if (first > 0 && clausula.charAt(first - 1) != Operadores.NEGACION.charAt(0)) {
-				return first;
-			} else if (last > 0 && clausula.charAt(last - 1) != Operadores.NEGACION.charAt(0)) {
+			}else if(last > 0 && clausula.charAt(last - 1) == Operadores.NEGACION.charAt(0)) {
 				return last;
 			} else {
 				return -1;
@@ -262,91 +260,38 @@ public class FormulaBienFormada {
 	}
 
 	public void hallarSatisfacibilidad(ArrayList<String> fcs) {
-		
-		while (!fcs.contains("")) {
+		boolean flag = false;
+		int cont = 0;
+
+		while (flag) {
 			for (int i = 0; i < fcs.size(); i++) {
 				for (int j = 0; j < fcs.size() - 1; j++) {
 					if (i != j) {
 						for (Character atomo : atomos) {
 							FormaClausal fc1 = new FormaClausal(fcs.get(i));
 							FormaClausal fc2 = new FormaClausal(fcs.get(j));
-							
+
 							FormaClausal res = FormaClausal.resolucion(atomo, fc1, fc2);
-							
+
 							if (res != null) {
 								if (!fcs.contains(res.toString())) {
 									fcs.add(res.toString());
+									cont = 0;
+								} else {
+									cont++;
 								}
+							} else {
+								cont++;
 							}
 						}
 					}
 				}
 			}
-		}
-	}
-	
-	private boolean esSatisfacible(ArrayList<String> fcs) {
-		for (String fc : fcs) {
-			if (esSatisfacible(fc)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
 
-	private boolean esSatisfacible(String fc) {
-		if (fc.equals("")) {
-			return true;
+			flag = !fcs.contains("") || cont >= Math.pow(fcs.size(), 2);
 		}
-		
-		return false;
 	}
 	
-	public String resolucion(char atomo, String fc1, String fc2) {
-		if (contieneNegacion(fc1, atomo)) {
-			if (contieneSoloAtomo(fc2, atomo)) {
-				fc1 = fc1.replace(Operadores.NEGACION + atomo, "");
-				fc2 = fc2.replace(String.valueOf(atomo), "");
-				return fc1 + fc2;
-			}
-			if (contieneSoloAtomo(fc1, atomo)) {
-				fc1 = fc1.replace(String.valueOf(atomo), "");
-				fc2 = fc2.replace(Operadores.NEGACION + atomo, "");
-				return fc1 + fc2;
-			}
-		}
-		if (contieneNegacion(fc2, atomo)) {
-			if (contieneSoloAtomo(fc1, atomo)) {
-				fc1 = fc1.replace(String.valueOf(atomo), "");
-				fc2 = fc2.replace(Operadores.NEGACION + atomo, "");
-				return fc1 + fc2;
-			}
-			if (contieneSoloAtomo(fc2, atomo)) {
-				fc1 = fc1.replace(Operadores.NEGACION + atomo, "");
-				fc2 = fc2.replace(String.valueOf(atomo), "");
-				return fc1 + fc2;
-			}
-		}
-		
-		return fc1;
-	}
-	
-	private boolean contieneNegacion(String fc, char atomo) {
-		return fc.contains(Operadores.NEGACION + atomo);
-	}
-
-	
-	private boolean contieneSoloAtomo(String fc, char atomo) {
-		for (int i = 1; i < fc.length(); i++) {
-			if (fc.charAt(i) == atomo && fc.charAt(i-1) != Operadores.NEGACION.charAt(0)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
 	private int resolver(Nodo n, int[] valores) {
 		if (n.esAtomo()) {
 			for (int i = 0; i < atomos.size(); i++) {
