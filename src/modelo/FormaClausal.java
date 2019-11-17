@@ -37,7 +37,7 @@ public class FormaClausal {
 		if (contieneNegacion(fc1, atomo)) {
 			if (contieneAtomo(fc2, atomo)) {
 				fc1.formas = eliminarNegacion(fc1, atomo);
-				fc2.formas =eliminarAtomo(fc2, atomo);
+				fc2.formas = eliminarAtomo(fc2, atomo);
 				mod = true;
 			}
 			if (contieneAtomo(fc1, atomo)) {
@@ -60,6 +60,7 @@ public class FormaClausal {
 		}
 		
 		if (mod) {			
+			System.err.println(fc1.toString() + fc2.toString());
 			fc = new FormaClausal(fc1.toString() + fc2.toString());
 		}
 		
@@ -79,7 +80,6 @@ public class FormaClausal {
 	private static boolean contieneNegacion(FormaClausal fc, char atomo) {
 		return fc.formas.contains(Operadores.NEGACION + String.valueOf(atomo));
 	}
-
 	
 	private static boolean contieneAtomo(FormaClausal fc, char atomo) {
 		return fc.formas.contains(String.valueOf(atomo));
@@ -97,6 +97,5 @@ public class FormaClausal {
 	public void setFormas(ArrayList<String> formas) {
 		this.formas = formas;
 	}
-	
-	
+
 }

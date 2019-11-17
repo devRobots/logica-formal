@@ -304,16 +304,18 @@ public class FormulaBienFormada {
 	}
 
 	public void hallarSatisfacibilidad(ArrayList<String> fcs) {
-		boolean flag = false;
+		boolean flag = true;
 		int cont = 0;
 
 		while (flag) {
-			for (int i = 0; i < fcs.size(); i++) {
-				for (int j = 0; j < fcs.size() - 1; j++) {
+			for (int i = 0; i < fcs.size() && !fcs.contains(""); i++) {
+				for (int j = 0; j < fcs.size() - 1 && !fcs.contains(""); j++) {
 					if (i != j) {
 						for (Character atomo : atomos) {
 							FormaClausal fc1 = new FormaClausal(fcs.get(i));
 							FormaClausal fc2 = new FormaClausal(fcs.get(j));
+							
+							System.err.println(fc1 + " : " + fc2);
 
 							FormaClausal res = FormaClausal.resolucion(atomo, fc1, fc2);
 
@@ -332,7 +334,7 @@ public class FormulaBienFormada {
 				}
 			}
 
-			flag = !fcs.contains("") || cont >= Math.pow(fcs.size(), 2);
+			flag = !fcs.contains("") && cont <= Math.pow(fcs.size(), 3);
 		}
 	}
 	
