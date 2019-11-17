@@ -258,18 +258,20 @@ public class FormulaBienFormada {
 	}
 
 	public void hallarSatisfacibilidad(ArrayList<String> fcs) {
-		while (!esSatisfacible(fcs)) {
+		
+		while (!fcs.contains("")) {
 			for (int i = 0; i < fcs.size(); i++) {
 				for (int j = 0; j < fcs.size() - 1; j++) {
 					if (i != j) {
 						for (Character atomo : atomos) {
-							String fc1 = fcs.get(i);
-							String fc2 = fcs.get(j);
-							if (fc1.contains(String.valueOf(atomo)) && fc2.contains(String.valueOf(atomo))) {
-								String res = resolucion(atomo, fc1, fc2);
-
-								if (!fcs.contains(res)) {
-									fcs.add(res);
+							FormaClausal fc1 = new FormaClausal(fcs.get(i));
+							FormaClausal fc2 = new FormaClausal(fcs.get(j));
+							
+							FormaClausal res = FormaClausal.resolucion(atomo, fc1, fc2);
+							
+							if (res != null) {
+								if (!fcs.contains(res.toString())) {
+									fcs.add(res.toString());
 								}
 							}
 						}
@@ -278,14 +280,14 @@ public class FormulaBienFormada {
 			}
 		}
 	}
-
+	
 	private boolean esSatisfacible(ArrayList<String> fcs) {
 		for (String fc : fcs) {
 			if (esSatisfacible(fc)) {
 				return true;
 			}
 		}
-
+		
 		return false;
 	}
 
@@ -293,10 +295,10 @@ public class FormulaBienFormada {
 		if (fc.equals("")) {
 			return true;
 		}
-
+		
 		return false;
 	}
-
+	
 	public String resolucion(char atomo, String fc1, String fc2) {
 		if (contieneNegacion(fc1, atomo)) {
 			if (contieneSoloAtomo(fc2, atomo)) {
@@ -322,21 +324,22 @@ public class FormulaBienFormada {
 				return fc1 + fc2;
 			}
 		}
-
+		
 		return fc1;
 	}
-
+	
 	private boolean contieneNegacion(String fc, char atomo) {
 		return fc.contains(Operadores.NEGACION + atomo);
 	}
 
+	
 	private boolean contieneSoloAtomo(String fc, char atomo) {
 		for (int i = 1; i < fc.length(); i++) {
-			if (fc.charAt(i) == atomo && fc.charAt(i - 1) != Operadores.NEGACION.charAt(0)) {
+			if (fc.charAt(i) == atomo && fc.charAt(i-1) != Operadores.NEGACION.charAt(0)) {
 				return true;
 			}
 		}
-
+		
 		return false;
 	}
 

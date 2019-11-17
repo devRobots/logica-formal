@@ -479,6 +479,31 @@ public class ControladorVentanaPrincipal implements Initializable {
 			historial.remove(historial.size() - 1);
 		} else {
 			textArea.setText("");
+
+			ArrayList<String> fcs = new ArrayList<>();
+			
+			FormulaBienFormada fbf1 = new FormulaBienFormada("((p)ʌ(q))v(r)");
+			FormulaBienFormada fbf2 = new FormulaBienFormada("((r)v(p))→(q)");
+			FormulaBienFormada fbf3 = new FormulaBienFormada("(¬((q)v(p)))↔(r)"); 
+
+			for (String fc : fbf1.toFC()) {
+				if (!fcs.contains(fc)) {
+					fcs.add(fc);
+				}
+			}
+			for (String fc : fbf2.toFC()) {
+				if (!fcs.contains(fc)) {
+					fcs.add(fc);
+				}
+			}
+			for (String fc : fbf3.toFC()) {
+				if (!fcs.contains(fc)) {
+					fcs.add(fc);
+				}
+			}
+			
+			fbf1.hallarSatisfacibilidad(fcs);
+			System.out.println(fcs);
 		}
 	}
 
@@ -521,9 +546,21 @@ public class ControladorVentanaPrincipal implements Initializable {
 				FormulaBienFormada fbf2 = new FormulaBienFormada(formulasSeleccionadas.get(1));
 				FormulaBienFormada fbf3 = new FormulaBienFormada(formulasSeleccionadas.get(2));
 				ArrayList<String> fcs = new ArrayList<String>();
-				fcs.addAll(fbf1.toFC());
-				fcs.addAll(fbf2.toFC());
-				fcs.addAll(fbf3.toFC());
+				for (String fc : fbf1.toFC()) {
+					if (!fcs.contains(fc)) {
+					}
+						fcs.add(fc);
+				}
+				for (String fc : fbf2.toFC()) {
+					if (!fcs.contains(fc)) {
+						fcs.add(fc);
+					}
+				for (String fc : fbf3.toFC()) {
+				}
+					if (!fcs.contains(fc)) {
+						fcs.add(fc);
+					}
+				}
 				fbf.hallarSatisfacibilidad(fcs);
 				cadena = visualizarResolucion(fcs.toString());
 				titulo = "Satisfacibilidad de";
