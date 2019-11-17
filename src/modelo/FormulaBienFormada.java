@@ -3,10 +3,6 @@ package modelo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
-
-import javax.swing.text.html.HTMLDocument.Iterator;
-//import java.util.Collections;
 
 public class FormulaBienFormada {
 	public String fbf;
@@ -25,8 +21,6 @@ public class FormulaBienFormada {
 			}
 		}
 
-		// Collections.sort(atomos);
-
 		this.fbf = fbf;
 	}
 
@@ -37,34 +31,6 @@ public class FormulaBienFormada {
 	public ArrayList<String> getProcedimiento() {
 		return procedimiento;
 	}
-
-//	public String toFNC() {
-//		String fnc = "";
-//
-//		int[][] entradas = tabularEntradas();
-//		int[] salidas = evaluarFBF(entradas);
-//
-//		for (int i = 0; i < entradas[0].length; i++) {
-//			fnc += "(";
-//			for (int j = 0; j < entradas.length; j++) {
-//				if (salidas[i] == 1) {
-//					if (entradas[j][i] == 0) {
-//						fnc += Operadores.NEGACION;
-//					}
-//					fnc += atomos.get(j);
-//				}
-//			}
-//			fnc += ")";
-//
-//			fnc += i < entradas[0].length - 1 ? Operadores.CONJUNCION : "";
-//		}
-//
-//		System.out.println(Arrays.toString(salidas));
-//
-//		fnc.replace("()", "");
-//
-//		return fnc;
-//	}
 
 	public String toFNC() {
 		ArbolFormula arbol = new ArbolFormula(fbf);
@@ -82,8 +48,6 @@ public class FormulaBienFormada {
 		}
 		
 		salidas=Arrays.copyOf(salidas, cont);
-
-		//return getFormulaSimple(salidas);
 		
 		String cadena= getFormulaArbol(salidas,true).toString();
 		if(!cadena.equals("")) {
@@ -110,8 +74,6 @@ public class FormulaBienFormada {
 		}
 		
 		salidas=Arrays.copyOf(salidas, cont);
-
-		//return getFormulaSimple(salidas);
 		
 		String cadena= getFormulaArbol(salidas,false).toString();
 		if(!cadena.equals("")) {
@@ -147,30 +109,6 @@ public class FormulaBienFormada {
 				aux.add(atomo);
 			}
 			set.add(aux);
-//			String c1=fcs.get(i);
-//			System.out.println("----------clausula :"+c1);
-//			for(int j=0;j<fcs.size();j++) {
-//				if(j!=i&&c1.equals(fcs.get(j))) {
-//					fcs.remove(j);
-//				}
-//			}
-//			ArrayList<String> aux=new ArrayList<String>();
-//			for(int j=0;j<c1.length();j++) {
-//				String atomo=String.valueOf(c1.charAt(j));
-//				if(atomo.equals(Operadores.NEGACION)) {
-//					atomo=c1.substring(j,j+2);
-//					j++;
-//				}
-//				if(!aux.contains(atomo)) {
-//					aux.add(atomo);
-//				}
-//			}
-//			c1="";
-//			for(String conc:aux) {
-//				c1+=conc;
-//			}
-//			fcs.remove(i);
-//			fcs.add(i, c1);
 		}
 		fcs=new ArrayList<String>();
 		for(HashSet<String> aux:set) {
@@ -184,32 +122,6 @@ public class FormulaBienFormada {
 			
 		}
 		return fcs;
-	}
-
-	
-	private String getFormulaSimple(int [][] salidas) {
-		String cadena="";
-		for(int i=0;i<salidas.length;i++) {
-			cadena+="(";
-			for(int j=0;j<salidas[0].length;j++) {
-				cadena+="(";
-				if(salidas[i][j]==1) {
-					cadena+=Operadores.NEGACION+atomos.get(j);
-				}else {
-					cadena+=atomos.get(j);
-				}
-				cadena+=")";
-				if(j!=salidas[0].length-1) {
-					cadena+=Operadores.DISYUNCION;
-				}
-			}
-			cadena+=")";
-			if(i!=salidas.length-1) {
-				cadena+=Operadores.CONJUNCION;
-			}
-			
-		}	
-		return cadena;
 	}
 	
 	private ArbolFormula getFormulaArbol(int [][] salidas, boolean esFNC) {
@@ -270,70 +182,6 @@ public class FormulaBienFormada {
 			return negar(resolver(n.getIzquierdo(), valores));
 		}
 		return 0;
-	}
-
-	private int[] evaluarFBF(int[][] entradas) {
-		int[] salidas = new int[(int) Math.pow(2, atomos.size())];
-
-		for (int i = 0; i < entradas[0].length; i++) {
-			int[] entradaTmp = new int[atomos.size()];
-
-			for (int j = 0; j < entradas.length; j++) {
-				entradaTmp[j] = entradas[j][i];
-			}
-
-			salidas[i] = valorDeVerdadFBF(entradaTmp, fbf);
-		}
-
-		return salidas;
-	}
-
-	private int valorDeVerdadFBF(int[] entradas, String fbf) {
-		if (esAtomo(fbf)) {
-			System.out
-					.println(Arrays.toString(entradas) + " : " + fbf + " : " + entradas[atomos.indexOf(fbf.charAt(0))]);
-			return entradas[atomos.indexOf(fbf.charAt(0))];
-		}
-
-		int indice = indiceDeOperadorPrincipal(fbf);
-
-		if (indice == 0) {
-			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : "
-					+ negar(valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
-			return negar(valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1)));
-		}
-
-		char c = fbf.charAt(indice);
-
-		if (Operadores.CONJUNCION.equals(String.valueOf(c))) {
-			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : "
-					+ conj(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
-							valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
-			return conj(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
-					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1)));
-		} else if (Operadores.DISYUNCION.equals(String.valueOf(c))) {
-			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : "
-					+ disy(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
-							valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
-			return disy(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
-					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1)));
-		} else if (Operadores.CONDICIONAL.equals(String.valueOf(c))) {
-			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : "
-					+ cond(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
-							valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
-			return cond(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
-					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1)));
-		} else {
-			System.out.println(Arrays.toString(entradas) + " : " + fbf + " : "
-					+ equi(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
-							valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1))));
-			return equi(valorDeVerdadFBF(entradas, fbf.substring(1, indice - 1)),
-					valorDeVerdadFBF(entradas, fbf.substring(indice + 2, fbf.length() - 1)));
-		}
-	}
-
-	private boolean esAtomo(String fbf) {
-		return fbf.length() == 1;
 	}
 
 	private int conj(int a, int b) {

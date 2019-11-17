@@ -1,5 +1,7 @@
 package controlador;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,7 +19,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -32,11 +33,6 @@ import javafx.scene.control.TextInputControl;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import modelo.FormulaBienFormada;
 import modelo.Operadores;
@@ -112,10 +108,10 @@ public class ControladorVentanaPrincipal implements Initializable {
 				int pos = textArea.getCaretPosition();
 				if (pos > 0) {
 					char c = textArea.getText().charAt(pos - 1);
-					if (!Character.isAlphabetic(c) || c == 'v' || c == 'ʌ' || c=='V') {
+					if (!Character.isAlphabetic(c) || c == 'v' || c == 'ʌ' || c == 'V') {
 						event.consume();
 					}
-					
+
 				}
 
 			} else if (code == KeyCode.DELETE) {
@@ -135,8 +131,8 @@ public class ControladorVentanaPrincipal implements Initializable {
 		contextMenu.getItems().addAll(createDefaultMenuItems(textArea));
 		textArea.setContextMenu(contextMenu);
 		textArea.setTextFormatter(new TextFormatter<>((change) -> {
-		    change.setText(change.getText().toLowerCase());
-		    return change;
+			change.setText(change.getText().toLowerCase());
+			return change;
 		}));
 
 	}
@@ -155,10 +151,8 @@ public class ControladorVentanaPrincipal implements Initializable {
 
 		BooleanBinding emptySelection = Bindings.createBooleanBinding(() -> t.getSelection().getLength() == 0,
 				t.selectionProperty());
-		
-		BooleanBinding neverSelection = Bindings.createBooleanBinding(() ->
-        true,
-        t.selectionProperty());
+
+		BooleanBinding neverSelection = Bindings.createBooleanBinding(() -> true, t.selectionProperty());
 
 		cut.disableProperty().bind(neverSelection);
 		copy.disableProperty().bind(emptySelection);
@@ -172,7 +166,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 	void agregarAtomo(KeyEvent event) {
 		char c = event.getCharacter().charAt(0);
 		boolean ward = true;
-		if (!Character.isAlphabetic(c) || c == 'v' || c == 'ʌ' || c=='V') {
+		if (!Character.isAlphabetic(c) || c == 'v' || c == 'ʌ' || c == 'V') {
 			event.consume();
 			ward = false;
 		}
@@ -420,12 +414,39 @@ public class ControladorVentanaPrincipal implements Initializable {
 			}
 		}
 	}
-	
-	
 
 	@FXML
 	void limpiar(ActionEvent event) {
 		textArea.setText("");
+	}
+
+	@FXML
+	void limpiarTodo(ActionEvent event) {
+		textArea.setText("");
+		formulasTabla.clear();
+		historial = new ArrayList<String>();
+		historial.add("");
+		historial.add("");
+
+	}
+
+	@FXML
+	void cerrar(ActionEvent event) {
+		((Stage) textArea.getScene().getWindow()).close();
+	}
+
+	@FXML
+	void abrirGuia(ActionEvent event) {
+		try {
+			File objetofile = new File("src/vista/guia.txt");
+			Desktop.getDesktop().open(objetofile);
+
+		} catch (IOException ex) {
+
+			System.out.println(ex);
+
+		}
+
 	}
 
 	@FXML
@@ -443,12 +464,16 @@ public class ControladorVentanaPrincipal implements Initializable {
 		FormulaBienFormada fbf = new FormulaBienFormada(
 				tableFormulas.getSelectionModel().getSelectedItem().getFormula());
 		String cadena = "";
+		String titulo="";
 		if (comboMetodo.getSelectionModel().getSelectedItem().equals("FNC")) {
 			cadena = visualizarFNC(fbf.toFNC());
+			titulo="FNC de";
 		} else if (comboMetodo.getSelectionModel().getSelectedItem().equals("FC")) {
 			cadena = visualizarFC(fbf.toFC().toString());
+			titulo="FC de";
 		} else if (comboMetodo.getSelectionModel().getSelectedItem().equals("FND")) {
 			cadena = visualizarFND(fbf.toFND());
+			titulo="FND de";
 		}
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader();
@@ -458,8 +483,8 @@ public class ControladorVentanaPrincipal implements Initializable {
 			stage.setTitle("Proyecto");
 			stage.setScene(scene);
 			ControladorOperaciones con = fxmlLoader.getController();
-			con.setFormula(tableFormulas.getSelectionModel().getSelectedItem().getFormula(),cadena,
-					(Stage) textArea.getScene().getWindow());
+			con.setFormula(tableFormulas.getSelectionModel().getSelectedItem().getFormula(), cadena,
+					(Stage) textArea.getScene().getWindow(),titulo);
 			stage.show();
 			((Stage) textArea.getScene().getWindow()).close();
 
@@ -475,7 +500,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		return cadena;
 
 	}
-	
+
 	private String visualizarFND(String cadena) {
 		cadena = "\t" + cadena;
 		cadena = cadena.replaceAll(Operadores.DISYUNCION, " " + Operadores.DISYUNCION + "\n\t");
@@ -483,7 +508,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		return cadena;
 
 	}
-	
+
 	private String visualizarFC(String cadena) {
 		cadena = "\t" + cadena;
 		cadena = cadena.replaceAll(",", ",\n\t");
