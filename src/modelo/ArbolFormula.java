@@ -175,7 +175,6 @@ public class ArbolFormula {
 					return nodo;
 			}
 		}
-
 		Nodo izq = getNodoConjuncionDisyuncion(nodo.getIzquierdo());
 		Nodo der = getNodoConjuncionDisyuncion(nodo.getDerecho());
 
@@ -265,7 +264,7 @@ public class ArbolFormula {
 			return der;
 		}
 	}
-
+	
 	public boolean contains(char valor) {
 		return contains(raiz, valor);
 	}

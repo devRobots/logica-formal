@@ -27,6 +27,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
@@ -111,9 +112,10 @@ public class ControladorVentanaPrincipal implements Initializable {
 				int pos = textArea.getCaretPosition();
 				if (pos > 0) {
 					char c = textArea.getText().charAt(pos - 1);
-					if (!Character.isAlphabetic(c) || c == 'v' || c == 'ʌ') {
+					if (!Character.isAlphabetic(c) || c == 'v' || c == 'ʌ' || c=='V') {
 						event.consume();
 					}
+					
 				}
 
 			} else if (code == KeyCode.DELETE) {
@@ -132,6 +134,10 @@ public class ControladorVentanaPrincipal implements Initializable {
 		ContextMenu contextMenu = new ContextMenu();
 		contextMenu.getItems().addAll(createDefaultMenuItems(textArea));
 		textArea.setContextMenu(contextMenu);
+		textArea.setTextFormatter(new TextFormatter<>((change) -> {
+		    change.setText(change.getText().toLowerCase());
+		    return change;
+		}));
 
 	}
 
@@ -166,7 +172,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 	void agregarAtomo(KeyEvent event) {
 		char c = event.getCharacter().charAt(0);
 		boolean ward = true;
-		if (!Character.isAlphabetic(c) || c == 'v' || c == 'ʌ') {
+		if (!Character.isAlphabetic(c) || c == 'v' || c == 'ʌ' || c=='V') {
 			event.consume();
 			ward = false;
 		}
@@ -414,6 +420,8 @@ public class ControladorVentanaPrincipal implements Initializable {
 			}
 		}
 	}
+	
+	
 
 	@FXML
 	void limpiar(ActionEvent event) {
@@ -438,7 +446,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		if (comboMetodo.getSelectionModel().getSelectedItem().equals("FNC")) {
 			cadena = visualizarFNC(fbf.toFNC());
 		} else if (comboMetodo.getSelectionModel().getSelectedItem().equals("FC")) {
-			cadena = "";
+			cadena = visualizarFC(fbf.toFC().toString());
 		} else if (comboMetodo.getSelectionModel().getSelectedItem().equals("FND")) {
 			cadena = visualizarFND(fbf.toFND());
 		}
@@ -471,6 +479,14 @@ public class ControladorVentanaPrincipal implements Initializable {
 	private String visualizarFND(String cadena) {
 		cadena = "\t" + cadena;
 		cadena = cadena.replaceAll(Operadores.DISYUNCION, " " + Operadores.DISYUNCION + "\n\t");
+
+		return cadena;
+
+	}
+	
+	private String visualizarFC(String cadena) {
+		cadena = "\t" + cadena;
+		cadena = cadena.replaceAll(",", ",\n\t");
 
 		return cadena;
 

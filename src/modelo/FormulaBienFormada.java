@@ -2,6 +2,10 @@ package modelo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.swing.text.html.HTMLDocument.Iterator;
 //import java.util.Collections;
 
 public class FormulaBienFormada {
@@ -74,12 +78,6 @@ public class FormulaBienFormada {
 			if (resolver(arbol.getRaiz(), valores) == 0) {
 				salidas[cont] = valores;
 				cont++;
-				System.out.print("[");
-				for (int v : valores) {
-					System.out.print(v + ",");
-				}
-				System.out.print("]");
-				System.out.println();
 			}
 		}
 		
@@ -92,7 +90,7 @@ public class FormulaBienFormada {
 			return cadena;
 		}else {
 			cadena=toFND();
-			return axioma3(cadena,true);
+			return axioma5(axioma3(cadena,true));
 		}
 	}
 	
@@ -108,12 +106,6 @@ public class FormulaBienFormada {
 			if (resolver(arbol.getRaiz(), valores) == 1) {
 				salidas[cont] = valores;
 				cont++;
-				System.out.print("[");
-				for (int v : valores) {
-					System.out.print(v + ",");
-				}
-				System.out.print("]");
-				System.out.println();
 			}
 		}
 		
@@ -126,9 +118,74 @@ public class FormulaBienFormada {
 			return cadena;
 		}else {
 			cadena= toFNC();
-			return axioma3(cadena,false);
+			return axioma5(axioma3(cadena,false));
 		}
 	}
+	
+	public ArrayList<String> toFC() {
+		ArrayList<String> fcs = new ArrayList<>();
+		String[] fds = toFNC().split(Operadores.CONJUNCION);
+	
+		for (String fd : fds) {
+			String fc = fd.replace(Operadores.DISYUNCION, "");
+			fc = fc.replace("(", "");
+			fc = fc.replace(")", "");
+
+			fcs.add(fc);
+		}
+		System.out.println(fcs.toString());
+		HashSet<HashSet<String>> set=new HashSet<HashSet<String>>();
+		for(int i=0;i<fcs.size();i++) {
+			set.add(new HashSet<String>());
+			String c1=fcs.get(i);
+			HashSet<String> aux= new HashSet<String>();
+			for(int j=0;j<c1.length();j++) {
+				String atomo=String.valueOf(c1.charAt(j));
+				if(atomo.equals(Operadores.NEGACION)) {
+					atomo+=String.valueOf(c1.charAt(++j));
+				}
+				aux.add(atomo);
+			}
+			set.add(aux);
+//			String c1=fcs.get(i);
+//			System.out.println("----------clausula :"+c1);
+//			for(int j=0;j<fcs.size();j++) {
+//				if(j!=i&&c1.equals(fcs.get(j))) {
+//					fcs.remove(j);
+//				}
+//			}
+//			ArrayList<String> aux=new ArrayList<String>();
+//			for(int j=0;j<c1.length();j++) {
+//				String atomo=String.valueOf(c1.charAt(j));
+//				if(atomo.equals(Operadores.NEGACION)) {
+//					atomo=c1.substring(j,j+2);
+//					j++;
+//				}
+//				if(!aux.contains(atomo)) {
+//					aux.add(atomo);
+//				}
+//			}
+//			c1="";
+//			for(String conc:aux) {
+//				c1+=conc;
+//			}
+//			fcs.remove(i);
+//			fcs.add(i, c1);
+		}
+		fcs=new ArrayList<String>();
+		for(HashSet<String> aux:set) {
+			String cadena="";
+			for(String aux2:aux) {
+				cadena+=aux2;
+			}
+			if(!cadena.isEmpty()) {
+				fcs.add(cadena);
+			}
+			
+		}
+		return fcs;
+	}
+
 	
 	private String getFormulaSimple(int [][] salidas) {
 		String cadena="";
@@ -332,9 +389,30 @@ public class FormulaBienFormada {
 		return tabla;
 	}
 	
+	public String axioma5(String fnc) {
+		String salida = fnc;
+		ArbolFormula arbol = new ArbolFormula(salida);
+
+		Nodo actual = arbol.getNodoDuplicado();
+
+		while (actual != null) {
+			actual.setValor(actual.getIzquierdo().getValor());
+
+			Nodo phi = actual.getIzquierdo().getIzquierdo();
+			Nodo psi = actual.getIzquierdo().getDerecho();
+
+			actual.setIzquierdo(phi);
+			actual.setDerecho(psi);
+
+			actual = arbol.getNodoDuplicado();
+		}
+
+		salida = arbol.toString();
+		return salida;
+	}
+	
 	public String axioma3(String fbf, boolean esFNC) {
 		String salida = fbf;
-		System.out.println(fbf.length());
 		ArbolFormula arbol = new ArbolFormula(salida);
 		char op1,op2;
 		Nodo actual;
@@ -408,21 +486,6 @@ public class FormulaBienFormada {
 
 		return esFNC(nodo.getIzquierdo(), isConjuncion) && esFNC(nodo.getDerecho(), isConjuncion);
 
-	}
-
-	public ArrayList<String> toFC() {
-		ArrayList<String> fcs = new ArrayList<>();
-		String[] fds = toFNC().split(Operadores.CONJUNCION);
-
-		for (String fd : fds) {
-			String fc = fd.replace(Operadores.DISYUNCION, "");
-			fc = fc.replace("(", "");
-			fc = fc.replace(")", "");
-
-			fcs.add(fc);
-		}
-
-		return fcs;
 	}
 
 	public int indiceDeOperadorPrincipal(String fbf) {
