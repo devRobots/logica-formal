@@ -555,8 +555,8 @@ public class ControladorVentanaPrincipal implements Initializable {
 					if (!fcs.contains(fc)) {
 						fcs.add(fc);
 					}
-				for (String fc : fbf3.toFC()) {
 				}
+				for (String fc : fbf3.toFC()) {
 					if (!fcs.contains(fc)) {
 						fcs.add(fc);
 					}
