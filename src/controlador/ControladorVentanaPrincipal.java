@@ -166,7 +166,8 @@ public class ControladorVentanaPrincipal implements Initializable {
 	void agregarAtomo(KeyEvent event) {
 		char c = event.getCharacter().charAt(0);
 		boolean ward = true;
-		if (!Character.isAlphabetic(c) || c == 'v' || c == 'ʌ' || c == 'V') {
+		
+		if (!Character.isLetter(c) || c == 'v' || c == 'ʌ' || c == 'V') {
 			event.consume();
 			ward = false;
 		}
@@ -366,6 +367,11 @@ public class ControladorVentanaPrincipal implements Initializable {
 	@FXML
 	void agregarTabla(ActionEvent event) {
 		String cadena = textArea.getText();
+		FormulaBienFormada fbf = new FormulaBienFormada(cadena);
+		ArrayList<String> fcs = fbf.toFC();
+		fbf.hallarSatisfacibilidad(fcs);
+		System.out.println(fcs);
+		
 		if (cadena.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "El campo está vacio", "Error", JOptionPane.ERROR_MESSAGE);
 		} else if (cadena.contains("()")) {

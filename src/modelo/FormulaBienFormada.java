@@ -158,6 +158,90 @@ public class FormulaBienFormada {
 		return arbol;
 	}
 
+	public void hallarSatisfacibilidad(ArrayList<String> fcs) {
+		while (!esSatisfacible(fcs)) {
+			for (int i = 0; i < fcs.size(); i++) {
+				for (int j = 0; j < fcs.size() - 1; j++) {
+					if (i != j) {
+						for (Character atomo : atomos) {
+							String fc1 = fcs.get(i);
+							String fc2 = fcs.get(j);
+							if (fc1.contains(String.valueOf(atomo)) && fc2.contains(String.valueOf(atomo))) {
+								String res = resolucion(atomo, fc1, fc2);
+								
+								if (!fcs.contains(res)) {
+									fcs.add(res);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	private boolean esSatisfacible(ArrayList<String> fcs) {
+		for (String fc : fcs) {
+			if (esSatisfacible(fc)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	private boolean esSatisfacible(String fc) {
+		if (fc.equals("")) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public String resolucion(char atomo, String fc1, String fc2) {
+		if (contieneNegacion(fc1, atomo)) {
+			if (contieneSoloAtomo(fc2, atomo)) {
+				fc1 = fc1.replace(Operadores.NEGACION + atomo, "");
+				fc2 = fc2.replace(String.valueOf(atomo), "");
+				return fc1 + fc2;
+			}
+			if (contieneSoloAtomo(fc1, atomo)) {
+				fc1 = fc1.replace(String.valueOf(atomo), "");
+				fc2 = fc2.replace(Operadores.NEGACION + atomo, "");
+				return fc1 + fc2;
+			}
+		}
+		if (contieneNegacion(fc2, atomo)) {
+			if (contieneSoloAtomo(fc1, atomo)) {
+				fc1 = fc1.replace(String.valueOf(atomo), "");
+				fc2 = fc2.replace(Operadores.NEGACION + atomo, "");
+				return fc1 + fc2;
+			}
+			if (contieneSoloAtomo(fc2, atomo)) {
+				fc1 = fc1.replace(Operadores.NEGACION + atomo, "");
+				fc2 = fc2.replace(String.valueOf(atomo), "");
+				return fc1 + fc2;
+			}
+		}
+		
+		return fc1;
+	}
+	
+	private boolean contieneNegacion(String fc, char atomo) {
+		return fc.contains(Operadores.NEGACION + atomo);
+	}
+
+	
+	private boolean contieneSoloAtomo(String fc, char atomo) {
+		for (int i = 1; i < fc.length(); i++) {
+			if (fc.charAt(i) == atomo && fc.charAt(i-1) != Operadores.NEGACION.charAt(0)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	private int resolver(Nodo n, int[] valores) {
 		if (n.esAtomo()) {
 			for (int i = 0; i < atomos.size(); i++) {
