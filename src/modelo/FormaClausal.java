@@ -33,16 +33,13 @@ public class FormaClausal {
 	public static FormaClausal resolucion(char atomo, FormaClausal fc1, FormaClausal fc2) {
 		FormaClausal fc = null;
 		boolean mod = false;
+		boolean prueba=false;
 		
 		if (contieneNegacion(fc1, atomo)) {
 			if (contieneAtomo(fc2, atomo)) {
+				
 				fc1.formas = eliminarNegacion(fc1, atomo);
 				fc2.formas = eliminarAtomo(fc2, atomo);
-				mod = true;
-			}
-			if (contieneAtomo(fc1, atomo)) {
-				fc2.formas = eliminarNegacion(fc2, atomo);
-				fc1.formas = eliminarAtomo(fc1, atomo);
 				mod = true;
 			}
 		}
@@ -50,11 +47,6 @@ public class FormaClausal {
 			if (contieneAtomo(fc1, atomo)) {
 				fc1.formas = eliminarAtomo(fc1, atomo);
 				fc2.formas = eliminarNegacion(fc2, atomo);
-				mod = true;
-			}
-			if (contieneAtomo(fc2, atomo)) {
-				fc1.formas = eliminarNegacion(fc1, atomo);
-				fc2.formas = eliminarAtomo(fc2, atomo);
 				mod = true;
 			}
 		}
