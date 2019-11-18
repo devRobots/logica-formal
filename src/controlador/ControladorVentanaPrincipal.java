@@ -487,6 +487,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		cadena = cadena.substring(1, cadena.length() - 1);
 		cadena = "\t" + cadena;
 		cadena = cadena.replace("|,", ",\n\t");
+		cadena = cadena.replace("|", "");
 
 		return cadena;
 
