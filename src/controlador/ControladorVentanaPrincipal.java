@@ -37,6 +37,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import modelo.FormulaBienFormada;
 import modelo.Operadores;
+import vista.TablaFormulas;
 
 public class ControladorVentanaPrincipal implements Initializable {
 
@@ -276,7 +277,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		tableFormulas.getSelectionModel().clearSelection();
 		for (TablaFormulas aux : formulasTabla) {
 			if (aux.getCheck().isSelected()) {
-				formulasSeleccionadas.add(aux.formula);
+				formulasSeleccionadas.add(aux.getFormula());
 				tableFormulas.getSelectionModel().select(aux);
 			}
 		}
@@ -442,7 +443,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		}
 			try {
 				FXMLLoader fxmlLoader = new FXMLLoader();
-				fxmlLoader.setLocation(ControladorVentanaPrincipal.class.getResource("../vista/VentanaOperaciones.fxml"));
+				fxmlLoader.setLocation(TablaFormulas.class.getResource("VentanaOperaciones.fxml"));
 				Scene scene = new Scene(fxmlLoader.load());
 				Stage stage = new Stage();
 				stage.setTitle("Proyecto");

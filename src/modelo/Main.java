@@ -2,11 +2,11 @@ package modelo;
 
 import java.io.IOException;
 
-import controlador.ControladorVentanaPrincipal;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import vista.TablaFormulas;
 
 public class Main extends Application {
 
@@ -14,7 +14,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader();
-			fxmlLoader.setLocation(ControladorVentanaPrincipal.class.getResource("../vista/VentanaPrincipal.fxml"));
+			fxmlLoader.setLocation(TablaFormulas.class.getResource("VentanaPrincipal.fxml"));
 			Scene scene = new Scene(fxmlLoader.load());
 			Stage stage = new Stage();
 			stage.setTitle("Proyecto");
