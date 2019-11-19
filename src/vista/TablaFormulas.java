@@ -20,6 +20,12 @@ public class TablaFormulas {
 	Button boton;
 	CheckBox check;
 
+	/**
+	 * constructor de tabla de formulas
+	 * @param formula
+	 * @param boton
+	 * @param check
+	 */
 	public TablaFormulas(String formula, Button boton, CheckBox check) {
 		super();
 		this.formula = formula;

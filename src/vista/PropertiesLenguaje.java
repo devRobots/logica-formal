@@ -31,7 +31,7 @@ public class PropertiesLenguaje {
 			prop.load(is);
 		} catch(IOException e) {		
 			try {
-				is = new FileInputStream(new File("src/vista/ES.properties"));
+				is = new FileInputStream(new File("src/vista/lib/ES.properties"));
 				prop.load(is);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -48,7 +48,7 @@ public class PropertiesLenguaje {
 			prop.load(is);
 		} catch(IOException e) {
 			try {
-				is = new FileInputStream(new File("src/vista/EN.properties"));
+				is = new FileInputStream(new File("src/vista/lib/EN.properties"));
 				prop.load(is);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
