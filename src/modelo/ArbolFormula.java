@@ -5,6 +5,10 @@ import java.util.ArrayList;
 public class ArbolFormula {
 	private Nodo raiz;
 
+	/**
+	 * Constructor
+	 * @param fbf
+	 */
 	public ArbolFormula(String fbf) {
 		raiz = new Nodo(fbf);
 	}
@@ -13,6 +17,11 @@ public class ArbolFormula {
 		raiz=null;
 	}
 
+	/**
+	 * Agrega un nodo
+	 * @param nodo
+	 * @param fnc
+	 */
 	public void addNodo(Nodo nodo, boolean fnc) {
 		char operador;
 		if(fnc) {

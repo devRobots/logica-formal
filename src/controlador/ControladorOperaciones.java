@@ -80,7 +80,11 @@ public class ControladorOperaciones implements Initializable {
 				// TODO Auto-generated catch block
 				Alert alert=new Alert(AlertType.WARNING);
 				alert.setTitle("Error");
+
 				alert.setHeaderText(PropertiesLenguaje.prop.getProperty("error"));
+
+				alert.setHeaderText("No se pudo realizar la acción");
+
 				alert.setContentText(PropertiesLenguaje.prop.getProperty("errorGuia"));
 				alert.show();
 			}
