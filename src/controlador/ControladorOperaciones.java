@@ -85,7 +85,7 @@ public class ControladorOperaciones implements Initializable {
 			Desktop.getDesktop().open(objetofile);
 		} catch (Exception ex) {
 			try {
-				File objetofile = new File("src/vista/guia.txt");
+				File objetofile = new File("src/vista/lib/instrucciones.pdf");
 				Desktop.getDesktop().open(objetofile);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
