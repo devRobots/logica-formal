@@ -399,22 +399,16 @@ public class ControladorVentanaPrincipal implements Initializable {
 	@FXML
 	void abrirGuia(ActionEvent event) {
 		try {
-			File objetofile = new File("lib/guia.txt");
+			File objetofile = new File("src/vista/guia.txt");
 			Desktop.getDesktop().open(objetofile);
-		} catch (Exception ex) {
+
+		} catch (IOException ex) {
 			try {
-				File objetofile = new File("src/vista/guia.txt");
+				File objetofile = new File("lib/guia.txt");
 				Desktop.getDesktop().open(objetofile);
-			} catch (Exception e) {
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				try {
-					File objetofile = new File(TablaFormulas.class.getResource("guia.txt")+"");
-					Desktop.getDesktop().open(objetofile);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorGuia"));
-				}
-				
+				JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorGuia"));
 			}
 
 		}
