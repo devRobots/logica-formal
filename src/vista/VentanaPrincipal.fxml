@@ -73,7 +73,7 @@
 								</VBox>
 								<AnchorPane GridPane.rowIndex="1">
                            <children>
-                              <TextArea fx:id="textArea" layoutX="102.0" layoutY="-62.0" onKeyTyped="#agregarAtomo" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                              <TextArea fx:id="textArea" layoutX="102.0" layoutY="-62.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                                  <font>
                                     <Font name="System Bold" size="15.0" />
                                  </font>

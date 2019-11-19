@@ -1,3 +1,14 @@
+/** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * $Id$
+ * Universidad del Quindío (Armenia - Colombia)
+ * Programa de Ingeniería de Sistemas y Computación
+ *
+ * Asignatura: Logica Formal
+ * Ejercicio: Programa FNC, FND, Reslución
+ * @author : Brayan Tabares Hidalgo - Yesid Rosas Toro - Samara Rincón Montaña
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
 package vista;
 
 import java.io.File;

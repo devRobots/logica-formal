@@ -1,3 +1,14 @@
+/** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * $Id$
+ * Universidad del Quindío (Armenia - Colombia)
+ * Programa de Ingeniería de Sistemas y Computación
+ *
+ * Asignatura: Logica Formal
+ * Ejercicio: Programa FNC, FND, Reslución
+ * @author : Brayan Tabares Hidalgo - Yesid Rosas Toro - Samara Rincón Montaña
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
 package controlador;
 
 import java.awt.Desktop;
@@ -70,7 +81,7 @@ public class ControladorOperaciones implements Initializable {
 	@FXML
 	void abrirGuia(ActionEvent event) {
 		try {
-			File objetofile = new File("lib/guia.txt");
+			File objetofile = new File("lib/manual de instrucciones.pdf");
 			Desktop.getDesktop().open(objetofile);
 		} catch (Exception ex) {
 			try {

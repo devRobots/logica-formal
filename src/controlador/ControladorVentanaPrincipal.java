@@ -1,3 +1,14 @@
+/** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * $Id$
+ * Universidad del Quindío (Armenia - Colombia)
+ * Programa de Ingeniería de Sistemas y Computación
+ *
+ * Asignatura: Logica Formal
+ * Ejercicio: Programa FNC, FND, Reslución
+ * @author : Brayan Tabares Hidalgo - Yesid Rosas Toro - Samara Rincón Montaña
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
 package controlador;
 
 import java.awt.Desktop;
@@ -233,25 +244,6 @@ public class ControladorVentanaPrincipal implements Initializable {
 	}
 
 	@FXML
-	void agregarAtomo(KeyEvent event) {
-//		char c = event.getCharacter().charAt(0);
-//		boolean ward = true;
-//
-//		if (!Character.isLetter(c) || c == 'v' || c == 'ʌ' || c == 'V') {
-//			event.consume();
-//			ward = false;
-//		}
-//		if (!esPosicionValida(textArea.getCaretPosition())) {
-//			event.consume();
-//			ward = false;v
-//		}
-//		if (ward) {
-//			actualizarHistorial();
-//		}
-
-	}
-
-	@FXML
 	void agregarNegacion(ActionEvent event) {
 		int pos = textArea.getCaretPosition();
 		if (esPosicionValida(pos)) {
@@ -436,7 +428,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 	@FXML
 	void abrirGuia(ActionEvent event) {
 		try {
-			File objetofile = new File("lib/guia.txt");
+			File objetofile = new File("lib/manual de instrucciones.pdf");
 			Desktop.getDesktop().open(objetofile);
 		} catch (Exception ex) {
 			try {
