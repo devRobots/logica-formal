@@ -64,43 +64,42 @@ public class ControladorVentanaPrincipal implements Initializable {
 
 	@FXML
 	private Button btnEjecutar;
-	
+
 	@FXML
-    private Menu menuAyuda;
+	private Menu menuAyuda;
 
-    @FXML
-    private Menu menuArchivo;
+	@FXML
+	private Menu menuArchivo;
 
-    @FXML
-    private MenuItem submenuReset;
+	@FXML
+	private MenuItem submenuReset;
 
-    @FXML
-    private Label labelEnunciado;
+	@FXML
+	private Label labelEnunciado;
 
-    @FXML
-    private MenuItem submenuCerrar;
+	@FXML
+	private MenuItem submenuCerrar;
 
-    @FXML
-    private Button btnLimpiar;
+	@FXML
+	private Button btnLimpiar;
 
-    @FXML
-    private Button btnAgregar;
+	@FXML
+	private Button btnAgregar;
 
-    @FXML
-    private Menu menuEditar;
-    
-    @FXML
-    private MenuItem submenuCambiar;
+	@FXML
+	private Menu menuEditar;
 
-    @FXML
-    private MenuItem submenuGuia;
-    
-    @FXML
-    private Label labelPrograma;
+	@FXML
+	private MenuItem submenuCambiar;
 
-    @FXML
-    private Label labelHallar;
-    
+	@FXML
+	private MenuItem submenuGuia;
+
+	@FXML
+	private Label labelPrograma;
+
+	@FXML
+	private Label labelHallar;
 
 	@FXML
 	private TextArea textArea;
@@ -180,7 +179,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 			return change;
 		}));
 		cambiarIdioma();
-		
+
 	}
 
 	private List<MenuItem> createDefaultMenuItems(TextInputControl t) {
@@ -332,7 +331,8 @@ public class ControladorVentanaPrincipal implements Initializable {
 		String cadena = textArea.getText();
 
 		if (cadena.isEmpty()) {
-			JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorVacio"), "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorVacio"), "Error",
+					JOptionPane.ERROR_MESSAGE);
 		} else if (cadena.contains("()")) {
 			JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorAtomo"), "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -399,14 +399,13 @@ public class ControladorVentanaPrincipal implements Initializable {
 	@FXML
 	void abrirGuia(ActionEvent event) {
 		try {
-			File objetofile = new File("src/vista/guia.txt");
+			File objetofile = new File("lib/guia.txt");
 			Desktop.getDesktop().open(objetofile);
-
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 			try {
-				File objetofile = new File("lib/guia.txt");
+				File objetofile = new File("src/vista/guia.txt");
 				Desktop.getDesktop().open(objetofile);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorGuia"));
 			}
@@ -433,73 +432,73 @@ public class ControladorVentanaPrincipal implements Initializable {
 		String titulo = "";
 		String formulaL = tableFormulas.getSelectionModel().getSelectedItem().getFormula();
 		if (comboMetodo.getSelectionModel().getSelectedItem().equals("FNC")) {
-			if(formulasSeleccionadas.size()!=1) {
+			if (formulasSeleccionadas.size() != 1) {
 				JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorSeleccionar"), "Error",
 						JOptionPane.ERROR_MESSAGE);
 				return;
-			}else {
+			} else {
 				cadena = visualizarFNC(fbf.toFNC());
 				titulo = "FNC";
 			}
 		} else if (comboMetodo.getSelectionModel().getSelectedItem().equals("FC")) {
-			if(formulasSeleccionadas.size()!=1) {
+			if (formulasSeleccionadas.size() != 1) {
 				JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorSeleccionar"), "Error",
 						JOptionPane.ERROR_MESSAGE);
 				return;
-			}else {
+			} else {
 				cadena = visualizarFC(fbf.toFC().toString());
 				titulo = "FC";
-			}		
+			}
 		} else if (comboMetodo.getSelectionModel().getSelectedItem().equals("FND")) {
-			if(formulasSeleccionadas.size()!=1) {
+			if (formulasSeleccionadas.size() != 1) {
 				JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorSeleccionar"), "Error",
 						JOptionPane.ERROR_MESSAGE);
 				return;
-			}else {
+			} else {
 				cadena = visualizarFND(fbf.toFND());
 				titulo = "FND";
 			}
 		} else {
 			if (formulasSeleccionadas.size() >= 3) {
 				ArrayList<String> fcs = new ArrayList<String>();
-				for(String aux:formulasSeleccionadas) {
+				for (String aux : formulasSeleccionadas) {
 					FormulaBienFormada fbfAux = new FormulaBienFormada(aux);
 					for (String fc : fbfAux.toFC()) {
 						if (!fcs.contains(fc)) {
 						}
-							fcs.add(fc);
+						fcs.add(fc);
 					}
 				}
 				cadena = visualizarResolucion(fbf.hallarSatisfacibilidad(fcs).toString());
-				if(fcs.contains("")) {
-					cadena+="\n\t"+PropertiesLenguaje.prop.getProperty("satisF");
-				}else {
-					cadena+="\n\t"+PropertiesLenguaje.prop.getProperty("satisV");
+				if (fcs.contains("")) {
+					cadena += "\n\t" + PropertiesLenguaje.prop.getProperty("satisF");
+				} else {
+					cadena += "\n\t" + PropertiesLenguaje.prop.getProperty("satisV");
 				}
 				titulo = PropertiesLenguaje.prop.getProperty("satis");
-				formulaL=formulasSeleccionadas.toString();
+				formulaL = formulasSeleccionadas.toString();
 			} else {
 				JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorResolucion"), "Error",
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 		}
-			try {
-				FXMLLoader fxmlLoader = new FXMLLoader();
-				fxmlLoader.setLocation(TablaFormulas.class.getResource("VentanaOperaciones.fxml"));
-				Scene scene = new Scene(fxmlLoader.load());
-				Stage stage = new Stage();
-				stage.setTitle(PropertiesLenguaje.prop.getProperty("proyecto"));
-				stage.setScene(scene);
-				ControladorOperaciones con = fxmlLoader.getController();
-				con.setFormula(formulaL, cadena, (Stage) textArea.getScene().getWindow(), titulo);
-				stage.show();
-				((Stage) textArea.getScene().getWindow()).close();
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader();
+			fxmlLoader.setLocation(TablaFormulas.class.getResource("VentanaOperaciones.fxml"));
+			Scene scene = new Scene(fxmlLoader.load());
+			Stage stage = new Stage();
+			stage.setTitle(PropertiesLenguaje.prop.getProperty("proyecto"));
+			stage.setScene(scene);
+			ControladorOperaciones con = fxmlLoader.getController();
+			con.setFormula(formulaL, cadena, (Stage) textArea.getScene().getWindow(), titulo);
+			stage.show();
+			((Stage) textArea.getScene().getWindow()).close();
 
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	private String visualizarFNC(String cadena) {
@@ -541,16 +540,16 @@ public class ControladorVentanaPrincipal implements Initializable {
 			historial.add(textArea.getText());
 		}
 	}
-	
+
 	@FXML
-    public void cambiarIdioma(ActionEvent event) {
+	public void cambiarIdioma(ActionEvent event) {
 		((Stage) textArea.getScene().getWindow()).close();
-		if(PropertiesLenguaje.idioma) {
+		if (PropertiesLenguaje.idioma) {
 			PropertiesLenguaje.setIngles();
-			PropertiesLenguaje.idioma=false;
-		}else {
+			PropertiesLenguaje.idioma = false;
+		} else {
 			PropertiesLenguaje.setEspanol();
-			PropertiesLenguaje.idioma=true;
+			PropertiesLenguaje.idioma = true;
 		}
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader();
@@ -564,8 +563,8 @@ public class ControladorVentanaPrincipal implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
-	public void cambiarIdioma() {	
+
+	public void cambiarIdioma() {
 		btnAtras.setText(PropertiesLenguaje.prop.getProperty("atras"));
 		columnFormulas.setText(PropertiesLenguaje.prop.getProperty("tablaFormulas"));
 		columnBoton.setText(PropertiesLenguaje.prop.getProperty("tablaBoton"));
@@ -584,7 +583,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		labelPrograma.setText(PropertiesLenguaje.prop.getProperty("programa"));
 		labelHallar.setText(PropertiesLenguaje.prop.getProperty("hallar"));
 		tableFormulas.setPlaceholder(new Label(PropertiesLenguaje.prop.getProperty("tabla")));
-		
+
 	}
 
 }

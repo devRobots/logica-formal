@@ -71,14 +71,13 @@ public class ControladorOperaciones implements Initializable {
 	@FXML
 	void abrirGuia(ActionEvent event) {
 		try {
-			File objetofile = new File("src/vista/guia.txt");
+			File objetofile = new File("lib/guia.txt");
 			Desktop.getDesktop().open(objetofile);
-
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 			try {
-				File objetofile = new File("lib/guia.txt");
+				File objetofile = new File("src/vista/guia.txt");
 				Desktop.getDesktop().open(objetofile);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorGuia"));
 			}
