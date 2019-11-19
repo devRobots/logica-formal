@@ -159,7 +159,7 @@ public class FormulaBienFormada {
 		return arbol;
 	}
 
-	public ArrayList<String> hallarSatisfacibilidad(ArrayList<String> fcs) {
+	public ArrayList<String> hallarSatisfacibilidad(ArrayList<String> fcs, ArrayList<Character> atomos) {
 		ArrayList<String> op=new ArrayList<String>();
 		for(int i=0;i<fcs.size();i++) {
 			op.add(PropertiesLenguaje.prop.getProperty("hipotesis"));

@@ -460,16 +460,26 @@ public class ControladorVentanaPrincipal implements Initializable {
 			}
 		} else {
 			if (formulasSeleccionadas.size() >= 3) {
-				ArrayList<String> fcs = new ArrayList<String>();
+				ArrayList<String> fcs = new ArrayList<>();
+				ArrayList<Character> atomos = new ArrayList<>();
+				
 				for (String aux : formulasSeleccionadas) {
 					FormulaBienFormada fbfAux = new FormulaBienFormada(aux);
 					for (String fc : fbfAux.toFC()) {
 						if (!fcs.contains(fc)) {
+							fcs.add(fc);
+							for (Character atomo : fc.toCharArray()) {
+								if (atomo != Operadores.NEGACION.charAt(0)) {
+									if (!atomos.contains(atomo)) {
+										atomos.add(atomo);
+									}
+								}
+							}
 						}
-						fcs.add(fc);
 					}
 				}
-				cadena = visualizarResolucion(fbf.hallarSatisfacibilidad(fcs).toString());
+				
+				cadena = visualizarResolucion(fbf.hallarSatisfacibilidad(fcs, atomos).toString());
 				if (fcs.contains("")) {
 					cadena += "\n\t" + PropertiesLenguaje.prop.getProperty("satisF");
 				} else {
