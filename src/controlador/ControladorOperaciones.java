@@ -76,7 +76,7 @@ public class ControladorOperaciones implements Initializable {
 
 		} catch (IOException ex) {
 			try {
-				File objetofile = new File("Aplicacion_lib/guia.txt");
+				File objetofile = new File("lib/guia.txt");
 				Desktop.getDesktop().open(objetofile);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

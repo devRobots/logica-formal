@@ -404,7 +404,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 
 		} catch (IOException ex) {
 			try {
-				File objetofile = new File("Aplicacion_lib/guia.txt");
+				File objetofile = new File("lib/guia.txt");
 				Desktop.getDesktop().open(objetofile);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -583,6 +583,7 @@ public class ControladorVentanaPrincipal implements Initializable {
 		submenuGuia.setText(PropertiesLenguaje.prop.getProperty("guia"));
 		labelPrograma.setText(PropertiesLenguaje.prop.getProperty("programa"));
 		labelHallar.setText(PropertiesLenguaje.prop.getProperty("hallar"));
+		tableFormulas.setPlaceholder(new Label(PropertiesLenguaje.prop.getProperty("tabla")));
 		
 	}
 

@@ -16,7 +16,7 @@ public class PropertiesLenguaje {
 	public static void setEspanol() {
 		InputStream is = null;	
 		try {
-			is = new FileInputStream(new File("Aplicacion_lib/ES.properties"));
+			is = new FileInputStream(new File("lib/ES.properties"));
 			prop.load(is);
 		} catch(IOException e) {		
 			try {
@@ -25,6 +25,7 @@ public class PropertiesLenguaje {
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(null, "No se pudo cargar el archivo de español.");
+				System.exit(0);
 			}
 		}
 	}
@@ -32,7 +33,7 @@ public class PropertiesLenguaje {
 	public static void setIngles() {
 		InputStream is = null;	
 		try {
-			is = new FileInputStream(new File("Aplicacion_lib/EN.properties"));
+			is = new FileInputStream(new File("lib/EN.properties"));
 			prop.load(is);
 		} catch(IOException e) {
 			try {
@@ -41,6 +42,7 @@ public class PropertiesLenguaje {
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(null, "No se pudo cargar el archivo de inglés.");
+				System.exit(0);
 			}
 		}
 	}
