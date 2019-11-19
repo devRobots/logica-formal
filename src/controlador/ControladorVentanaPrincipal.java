@@ -148,8 +148,8 @@ public class ControladorVentanaPrincipal implements Initializable {
 			textArea.deselect();
 			if(code==KeyCode.OPEN_BRACKET ||code==KeyCode.QUOTE ||code==KeyCode.CLOSE_BRACKET||code==KeyCode.MINUS||code==KeyCode.DEAD_ACUTE) {
 				if (historial.size() > 2) {
-					textArea.setText(historial.get(historial.size() - 1));
 					int pos = textArea.getCaretPosition();
+					textArea.setText(historial.get(historial.size() - 1));	
 					if (pos < textArea.getText().length()&&pos>=0) {
 						textArea.positionCaret(pos);
 					}
