@@ -44,4 +44,25 @@ public class TablaFormulas {
 		this.check = check;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((formula == null) ? 0 : formula.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		TablaFormulas other = (TablaFormulas) obj;
+		if (formula == null) {
+			if (other.formula != null)
+				return false;
+		} else if (!formula.equals(other.formula))
+			return false;
+		return true;
+	}
+	
+	
+
 }

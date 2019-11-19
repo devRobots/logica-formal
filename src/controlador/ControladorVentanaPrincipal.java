@@ -348,7 +348,10 @@ public class ControladorVentanaPrincipal implements Initializable {
 		} else if (cadena.contains("()")) {
 			JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorAtomo"), "Error",
 					JOptionPane.ERROR_MESSAGE);
-		} else {
+		} else if(formulasTabla.contains(new TablaFormulas(cadena, null, null))) {
+			JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorFormula"), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}	else {
 			textArea.setText("");
 			historial = new ArrayList<String>();
 			historial.add("");
