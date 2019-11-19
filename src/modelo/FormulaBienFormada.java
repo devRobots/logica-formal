@@ -23,6 +23,10 @@ public class FormulaBienFormada {
 	public ArbolFormula arbol;
 	public ArrayList<String> procedimiento;
 
+	/**
+	 * constructor para crear una formula bien formada
+	 * @param fbf
+	 */
 	public FormulaBienFormada(String fbf) {
 		atomos = new ArrayList<>();
 
@@ -36,7 +40,12 @@ public class FormulaBienFormada {
 
 		this.fbf = fbf;
 	}
-
+	
+	/**
+	 * Verifica si es un atomo
+	 * @param c, atomo 
+	 * @return true 
+	 */
 	private boolean esAtomo(char c) {
 		return Character.isAlphabetic(c) && c != 'v' && c != 'ʌ';
 	}
@@ -45,6 +54,10 @@ public class FormulaBienFormada {
 		return procedimiento;
 	}
 
+	/**
+	 * Tranfroma la fbf a formas normales conjuntivas 
+	 * @return FNC
+	 */
 	public String toFNC() {
 		ArbolFormula arbol = new ArbolFormula(fbf);
 
@@ -70,7 +83,11 @@ public class FormulaBienFormada {
 			return axioma5(axioma3(cadena, true));
 		}
 	}
-
+	
+	/**
+	 * transforma la fbf a una forma normal disyuntiva
+	 * @return FND
+	 */
 	public String toFND() {
 		ArbolFormula arbol = new ArbolFormula(fbf);
 
@@ -97,6 +114,10 @@ public class FormulaBienFormada {
 		}
 	}
 
+	/**
+	 * Llenar un arreglo con formas clausales a partir del FNC
+	 * @return FC
+	 */
 	public ArrayList<String> toFC() {
 		ArrayList<String> fcs = new ArrayList<>();
 		String[] fds = toFNC().split(Operadores.CONJUNCION);
@@ -135,7 +156,13 @@ public class FormulaBienFormada {
 		}
 		return fcs;
 	}
-
+	
+	/**
+	 * obtiene las formulas del arbol
+	 * @param salidas, variable auxiliar 
+	 * @param esFNC, true si es FNC
+	 * @return arbol con las formula en FNC
+	 */
 	private ArbolFormula getFormulaArbol(int[][] salidas, boolean esFNC) {
 		ArbolFormula arbol = new ArbolFormula();
 		char op1, op2;
@@ -169,7 +196,13 @@ public class FormulaBienFormada {
 		}
 		return arbol;
 	}
-
+	
+	/**
+	 * Encuentra la satisfacibilidad
+	 * @param fcs, todas las formas clausales
+	 * @param atomos, literales
+	 * @return lista con todas las posibles soluciones
+	 */
 	public ArrayList<String> hallarSatisfacibilidad(ArrayList<String> fcs, ArrayList<Character> atomos) {
 		ArrayList<String> op=new ArrayList<String>();
 		for(int i=0;i<fcs.size();i++) {
@@ -213,6 +246,12 @@ public class FormulaBienFormada {
 		return aux;
 	}
 	
+	/**
+	 * Resuelve la formula haciendo uso de tablas de verdad
+	 * @param n, nodo
+	 * @param valores
+	 * @return valor de la operacion
+	 */
 	private int resolver(Nodo n, int[] valores) {
 		if (n.esAtomo()) {
 			for (int i = 0; i < atomos.size(); i++) {
@@ -238,7 +277,13 @@ public class FormulaBienFormada {
 		}
 		return 0;
 	}
-
+	
+	/**
+	 * realiza la conjuncion
+	 * @param a, resultado 1
+	 * @param b, resultado 2
+	 * @return, valor de la operacion
+	 */
 	private int conj(int a, int b) {
 		if (a == 1 && b == 1) {
 			return 1;
@@ -246,13 +291,25 @@ public class FormulaBienFormada {
 		return 0;
 	}
 
+	/**
+	 * Realiza la disyunción
+	 * @param a, resultado 1
+	 * @param b, resultado 2
+	 * @return valor de la operación
+	 */
 	private int disy(int a, int b) {
 		if (a == 1 || b == 1) {
 			return 1;
 		}
 		return 0;
 	}
-
+	
+	/**
+	 * Realiza la condición
+	 * @param a, resultado 1
+	 * @param b, resultado 2
+	 * @return valor de la operacion
+	 */
 	private int cond(int a, int b) {
 		if (a == 1 && b == 0) {
 			return 0;
@@ -260,13 +317,24 @@ public class FormulaBienFormada {
 		return 1;
 	}
 
+	/**
+	 * Realiza la equivalencia 
+	 * @param a, resultado 1
+	 * @param b, resultado 2
+	 * @return valor de la operacion
+	 */
 	private int equi(int a, int b) {
 		if (a == b) {
 			return 1;
 		}
 		return 0;
 	}
-
+	
+	/**
+	 * Realiza la negación
+	 * @param val, valor a negar
+	 * @return valor de la operacion
+	 */
 	private int negar(int val) {
 		if (val == 0) {
 			return 1;
@@ -274,6 +342,10 @@ public class FormulaBienFormada {
 		return 0;
 	}
 
+	/**
+	 * Tabula los resultados de la tabla de verdad
+	 * @return arreglo con los resultados de las operaciones
+	 */
 	private int[][] tabularEntradas() {
 		int[][] tabla = new int[(int) Math.pow(2, atomos.size())][atomos.size()];
 
@@ -292,6 +364,11 @@ public class FormulaBienFormada {
 		return tabla;
 	}
 
+	/**
+	 * Realiza el axioma 5 de fbf
+	 * @param fnc, formula bien formada
+	 * @return fnf aplicado con el axioma5
+	 */
 	public String axioma5(String fnc) {
 		String salida = fnc;
 		ArbolFormula arbol = new ArbolFormula(salida);
@@ -314,6 +391,11 @@ public class FormulaBienFormada {
 		return salida;
 	}
 
+	/**
+	 * Realiza el axioma 3 de fbf
+	 * @param fnc, formula bien formada
+	 * @return fnf aplicado con el axioma3
+	 */
 	public String axioma3(String fbf, boolean esFNC) {
 		String salida = fbf;
 		ArbolFormula arbol = new ArbolFormula(salida);
@@ -365,7 +447,12 @@ public class FormulaBienFormada {
 		salida = arbol.toString();
 		return salida;
 	}
-
+	
+	/**
+	 * Verifica si es FNC
+	 * @param fbf, formulas bien formadas
+	 * @return true
+	 */
 	public boolean esFNC(String fbf) {
 		boolean flag = true;
 		ArbolFormula arbol = new ArbolFormula(fbf);
@@ -390,6 +477,11 @@ public class FormulaBienFormada {
 
 	}
 
+	/**
+	 * Indica el operador principal de la formula
+	 * @param fbf, formula bien formada
+	 * @return el indice de operador
+	 */
 	public int indiceDeOperadorPrincipal(String fbf) {
 		int indice = -1;
 
@@ -416,12 +508,19 @@ public class FormulaBienFormada {
 		return indice;
 	}
 
+	/**
+	 * get
+	 * @return fbf
+	 */
 	public String getFbf() {
 		return fbf;
 	}
 
+	/**
+	 * get
+	 * @return los atomos
+	 */
 	public ArrayList<Character> getAtomos() {
 		return atomos;
 	}
-
 }
