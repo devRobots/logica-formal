@@ -11,6 +11,12 @@
 
 package modelo;
 
+/**
+ * Clase para los nodos del árbol
+ * 
+ * @author Brayan-PC
+ *
+ */
 public class Nodo {
 
 	private char valor;
@@ -18,11 +24,21 @@ public class Nodo {
 	private Nodo izquierdo;
 	private Nodo derecho;
 
+	/**
+	 * Constructor valor
+	 * 
+	 * @param valor
+	 */
 	public Nodo(char valor) {
 		this.valor = valor;
 		fbf = String.valueOf(valor);
 	}
-	
+
+	/**
+	 * Constructor Nodo
+	 * 
+	 * @param nodo
+	 */
 	public Nodo(Nodo nodo) {
 		super();
 		this.valor = nodo.getValor();
@@ -30,7 +46,12 @@ public class Nodo {
 		this.izquierdo = nodo.getIzquierdo();
 		this.derecho = nodo.getDerecho();
 	}
-	
+
+	/**
+	 * Resetear el nodo actual con los valores del nodo entrante
+	 * 
+	 * @param nodo
+	 */
 	public void resetNodo(Nodo nodo) {
 		this.valor = nodo.getValor();
 		this.fbf = nodo.getFbf();
@@ -38,10 +59,15 @@ public class Nodo {
 		this.derecho = nodo.getDerecho();
 	}
 
+	/**
+	 * Constructor con un FBF en String
+	 * 
+	 * @param fbf
+	 */
 	public Nodo(String fbf) {
 		if (fbf.length() == 1) {
 			valor = fbf.charAt(0);
-		} else if(fbf.length()!=0){
+		} else if (fbf.length() != 0) {
 			int indice = indiceDeOperadorPrincipal(fbf);
 			valor = fbf.charAt(indice);
 
@@ -56,15 +82,27 @@ public class Nodo {
 		this.fbf = fbf;
 	}
 
+	/**
+	 * Agrega un nodo al árbol de una FNC o FND
+	 * 
+	 * @param nodo
+	 */
 	public void addNodo(Nodo nodo) {
-		if((esAtomo()||getValor()==Operadores.NEGACION.charAt(0)||derecho!=null)&&!(nodo.esAtomo()||nodo.getValor()==Operadores.NEGACION.charAt(0))) {
+		if ((esAtomo() || getValor() == Operadores.NEGACION.charAt(0) || derecho != null)
+				&& !(nodo.esAtomo() || nodo.getValor() == Operadores.NEGACION.charAt(0))) {
 			nodo.setIzquierdo(new Nodo(this));
-			resetNodo(nodo);	
-		}else if(nodo.esAtomo()||nodo.getValor()==Operadores.NEGACION.charAt(0)) {
-			derecho=nodo;	
+			resetNodo(nodo);
+		} else if (nodo.esAtomo() || nodo.getValor() == Operadores.NEGACION.charAt(0)) {
+			derecho = nodo;
 		}
 	}
 
+	/**
+	 * Obtiene la posicion del operador principal de la fbf en String
+	 * 
+	 * @param fbf
+	 * @return
+	 */
 	private int indiceDeOperadorPrincipal(String fbf) {
 		int indice = -1;
 
@@ -91,6 +129,11 @@ public class Nodo {
 		return indice;
 	}
 
+	/**
+	 * Valida si el valor del nodo actual es un atomo
+	 * 
+	 * @return
+	 */
 	public boolean esAtomo() {
 		if (valor == Operadores.CONDICIONAL.charAt(0)) {
 			return false;
@@ -119,7 +162,7 @@ public class Nodo {
 	 */
 	public void setValor(char valor) {
 		this.valor = valor;
-		fbf=toString();
+		fbf = toString();
 	}
 
 	/**
@@ -134,7 +177,7 @@ public class Nodo {
 	 */
 	public void setIzquierdo(Nodo izquierdo) {
 		this.izquierdo = izquierdo;
-		fbf=toString();
+		fbf = toString();
 	}
 
 	/**
@@ -149,13 +192,21 @@ public class Nodo {
 	 */
 	public void setDerecho(Nodo derecho) {
 		this.derecho = derecho;
-		fbf=toString();
+		fbf = toString();
 	}
 
+	/**
+	 * Get
+	 * @return
+	 */
 	public String getFbf() {
 		return fbf;
 	}
 
+	/**
+	 * Set
+	 * @param fbf
+	 */
 	public void setFbf(String fbf) {
 		this.fbf = fbf;
 	}

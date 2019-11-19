@@ -13,6 +13,9 @@ package modelo;
 
 import java.util.ArrayList;
 
+/**
+ * Clase para manipular las formulas con exceso de parentesis
+ */
 public class ArbolFormula {
 	private Nodo raiz;
 
@@ -29,7 +32,7 @@ public class ArbolFormula {
 	}
 
 	/**
-	 * Agrega un nodo
+	 * Agrega un nodo al árbol de una FNC o FND
 	 * @param nodo
 	 * @param fnc
 	 */
@@ -57,13 +60,24 @@ public class ArbolFormula {
 			}
 		}
 	}
-
+	
+	/**
+	 * Encuentra todas las coincidencias de un caracter en el árbol
+	 * @param caracter
+	 * @return
+	 */
 	public ArrayList<Nodo> findAll(char caracter) {
 		ArrayList<Nodo> coincidencias = new ArrayList<>();
 		findAll(raiz, caracter, coincidencias);
 		return coincidencias;
 	}
 
+	/**
+	 * Método recursivo usado para encontrar todas las coincidencias de un caracter
+	 * @param nodo
+	 * @param caracter
+	 * @param coincidencias
+	 */
 	private void findAll(Nodo nodo, char caracter, ArrayList<Nodo> coincidencias) {
 		if (raiz == null) {
 			return;
@@ -77,10 +91,21 @@ public class ArbolFormula {
 		findAll(nodo.getDerecho(), caracter, coincidencias);
 	}
 
+	/**
+	 * Encontrar un caracter especifico en el árbol
+	 * @param caracter
+	 * @return
+	 */
 	public Nodo find(char caracter) {
 		return find(raiz, caracter);
 	}
 
+	/**
+	 * Método recursivo para encontrar un caracter especifico en el árbol
+	 * @param nodo
+	 * @param caracter
+	 * @return
+	 */
 	private Nodo find(Nodo nodo, char caracter) {
 		if (nodo == null) {
 			return null;
@@ -100,10 +125,19 @@ public class ArbolFormula {
 		}
 	}
 
+	/**
+	 * Obtiene el nodo al que se le puede aplicar el axioma Morgan
+	 * @return
+	 */
 	public Nodo getNodoMorgan() {
 		return getNodoMorgan(raiz);
 	}
 
+	/**
+	 * Método recursivo para obtener el nodo al que se le puede aplicar el axioma Morgan
+	 * @param nodo
+	 * @return
+	 */
 	private Nodo getNodoMorgan(Nodo nodo) {
 		if (nodo == null) {
 			return null;
@@ -126,10 +160,19 @@ public class ArbolFormula {
 		}
 	}
 
+	/**
+	 * Obtiene el nodo que posee dos conjunciones seguidas
+	 * @return
+	 */
 	public Nodo getNodoConjuncion() {
 		return getNodoConjuncion(raiz);
 	}
 
+	/**
+	 * Método recursivo para obtener el nodo que tiene dos conjunciones seguidas
+	 * @param nodo
+	 * @return
+	 */
 	private Nodo getNodoConjuncion(Nodo nodo) {
 		if (nodo == null) {
 			return null;
@@ -153,10 +196,19 @@ public class ArbolFormula {
 		}
 	}
 
+	/**
+	 * Obtiene el nodo que posee dos disyunciones seguidas
+	 * @return
+	 */
 	public Nodo getNodoDisyuncion() {
 		return getNodoDisyuncion(raiz);
 	}
 
+	/**
+	 * Método recursivo para obtener el nodo que tiene dos disyunciones seguidas
+	 * @param nodo
+	 * @return
+	 */
 	private Nodo getNodoDisyuncion(Nodo nodo) {
 		if (nodo == null) {
 			return null;
@@ -180,10 +232,19 @@ public class ArbolFormula {
 		}
 	}
 
+	/**
+	 * Obtiene el nodo que posee una conjunción seguida de una disyuncion
+	 * @return
+	 */
 	public Nodo getNodoConjuncionDisyuncion() {
 		return getNodoConjuncionDisyuncion(raiz);
 	}
 
+	/**
+	 * Método recursivo para obtener el nodo que posee una conjunción seguida de una disyunción
+	 * @param nodo
+	 * @return
+	 */
 	private Nodo getNodoConjuncionDisyuncion(Nodo nodo) {
 		if (nodo == null) {
 			return null;
@@ -205,10 +266,19 @@ public class ArbolFormula {
 		}
 	}
 
+	/**
+	 * Obtiene el nodo que posee una disyunción seguida de una conjuncion
+	 * @return
+	 */
 	public Nodo getNodoDisyuncionConjuncion() {
 		return getNodoDisyuncionConjuncion(raiz);
 	}
 
+	/**
+	 * Método recursivo para obtener el nodo que posee una disyunción seguida de una conjunción
+	 * @param nodo
+	 * @return
+	 */
 	private Nodo getNodoDisyuncionConjuncion(Nodo nodo) {
 		if (nodo == null) {
 			return null;
@@ -231,10 +301,19 @@ public class ArbolFormula {
 		}
 	}
 
+	/**
+	 * Obtiene el nodo que posee una dos negaciones seguidas
+	 * @return
+	 */
 	public Nodo getNodoNegado() {
 		return getNodoNegado(raiz);
 	}
 
+	/**
+	 * Método recursivo para obtener el nodo que posee una dos negaciones seguidas
+	 * @param nodo
+	 * @return
+	 */
 	private Nodo getNodoNegado(Nodo nodo) {
 		if (nodo == null) {
 			return null;
@@ -258,10 +337,19 @@ public class ArbolFormula {
 		}
 	}
 
+	/**
+	 * Método para obtener un nodo que posee duplicados
+	 * @return
+	 */
 	public Nodo getNodoDuplicado() {
 		return getNodoDuplicado(raiz);
 	}
 
+	/**
+	 * Método recursivo para obtener un nodo que posee duplicados
+	 * @param nodo
+	 * @return
+	 */
 	private Nodo getNodoDuplicado(Nodo nodo) {
 		if (nodo == null) {
 			return null;
@@ -285,10 +373,21 @@ public class ArbolFormula {
 		}
 	}
 	
+	/**
+	 * Método que valida si un caracter está en el árbol
+	 * @param valor
+	 * @return
+	 */
 	public boolean contains(char valor) {
 		return contains(raiz, valor);
 	}
 
+	/**
+	 * Método recursivo para validar si un caracter está en el árbol
+	 * @param nodo
+	 * @param valor
+	 * @return
+	 */
 	private boolean contains(Nodo nodo, char valor) {
 		if (nodo == null) {
 			return false;
@@ -308,6 +407,9 @@ public class ArbolFormula {
 		}
 	}
 
+	/**
+	 * To String
+	 */
 	@Override
 	public String toString() {
 		if(raiz!=null) {

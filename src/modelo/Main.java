@@ -19,7 +19,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import vista.PropertiesLenguaje;
 import vista.TablaFormulas;
-
+/**
+ * Clase principal de Ejecución
+ *
+ */
 public class Main extends Application {
 	
 	@Override
