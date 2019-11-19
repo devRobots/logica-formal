@@ -146,7 +146,6 @@ public class ControladorVentanaPrincipal implements Initializable {
 		textArea.addEventFilter(KeyEvent.ANY, event -> {
 			KeyCode code = event.getCode();
 			textArea.deselect();
-			System.out.println(event.getCode());
 			if(code==KeyCode.OPEN_BRACKET ||code==KeyCode.QUOTE ||code==KeyCode.CLOSE_BRACKET||code==KeyCode.MINUS||code==KeyCode.DEAD_ACUTE) {
 				if (historial.size() > 2) {
 					textArea.setText(historial.get(historial.size() - 1));
