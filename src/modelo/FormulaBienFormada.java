@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import vista.PropertiesLenguaje;
+
 public class FormulaBienFormada {
 	public String fbf;
 	public ArrayList<Character> atomos;
@@ -160,7 +162,7 @@ public class FormulaBienFormada {
 	public ArrayList<String> hallarSatisfacibilidad(ArrayList<String> fcs) {
 		ArrayList<String> op=new ArrayList<String>();
 		for(int i=0;i<fcs.size();i++) {
-			op.add("Hipotesis");
+			op.add(PropertiesLenguaje.prop.getProperty("hipotesis"));
 		}
 		boolean flag = true;
 		int cont = 0;

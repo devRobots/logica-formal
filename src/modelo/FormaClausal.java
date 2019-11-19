@@ -33,7 +33,6 @@ public class FormaClausal {
 	public static FormaClausal resolucion(char atomo, FormaClausal fc1, FormaClausal fc2) {
 		FormaClausal fc = null;
 		boolean mod = false;
-		boolean prueba=false;
 		
 		if (contieneNegacion(fc1, atomo)) {
 			if (contieneAtomo(fc2, atomo)) {

@@ -13,13 +13,13 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
-		PropertiesLenguaje prop=new PropertiesLenguaje();
+		PropertiesLenguaje.setEspanol();
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader();
 			fxmlLoader.setLocation(TablaFormulas.class.getResource("VentanaPrincipal.fxml"));
 			Scene scene = new Scene(fxmlLoader.load());
 			Stage stage = new Stage();
-			stage.setTitle(prop.getProp().getProperty("proyecto"));
+			stage.setTitle(PropertiesLenguaje.prop.getProperty("proyecto"));
 			stage.setScene(scene);
 			stage.show();
 		} catch (IOException e) {

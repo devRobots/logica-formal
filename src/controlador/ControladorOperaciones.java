@@ -6,14 +6,35 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javax.swing.JOptionPane;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+import vista.PropertiesLenguaje;
 
 public class ControladorOperaciones implements Initializable {
+
+	@FXML
+	private Menu menuAyuda;
+
+	@FXML
+	private Button btnSalir;
+
+	@FXML
+	private Menu menuArchivo;
+
+	@FXML
+	private MenuItem submenuCerrar;
+
+	@FXML
+	private MenuItem submenuGuia;
 
 	@FXML
 	private TextArea textFormulaO;
@@ -21,16 +42,18 @@ public class ControladorOperaciones implements Initializable {
 	@FXML
 	private TextArea textFormulaN;
 	
+    @FXML
+    private Label labelFormula;
+
 	@FXML
-    private Label labelTitle;
+	private Label labelTitle;
 
 	private Stage primaryStage;
-
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-
+		cambiarIdioma();
 	}
 
 	@FXML
@@ -39,7 +62,6 @@ public class ControladorOperaciones implements Initializable {
 		Stage aux = (Stage) textFormulaO.getScene().getWindow();
 		aux.close();
 	}
-	
 
 	@FXML
 	void cerrar(ActionEvent event) {
@@ -53,8 +75,13 @@ public class ControladorOperaciones implements Initializable {
 			Desktop.getDesktop().open(objetofile);
 
 		} catch (IOException ex) {
-
-			System.out.println(ex);
+			try {
+				File objetofile = new File("Aplicacion_lib/guia.txt");
+				Desktop.getDesktop().open(objetofile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorGuia"));
+			}
 
 		}
 
@@ -63,7 +90,16 @@ public class ControladorOperaciones implements Initializable {
 	public void setFormula(String formulaAntigua, String formulaNueva, Stage primaryStage, String titulo) {
 		textFormulaO.setText(formulaAntigua);
 		textFormulaN.setText(formulaNueva);
-		this.primaryStage=primaryStage;
+		this.primaryStage = primaryStage;
 		labelTitle.setText(titulo);
+	}
+	
+	public void cambiarIdioma() {	
+		menuAyuda.setText(PropertiesLenguaje.prop.getProperty("ayuda"));
+		menuArchivo.setText(PropertiesLenguaje.prop.getProperty("archivo"));
+		submenuCerrar.setText(PropertiesLenguaje.prop.getProperty("cerrar"));
+		btnSalir.setText(PropertiesLenguaje.prop.getProperty("salir"));
+		submenuGuia.setText(PropertiesLenguaje.prop.getProperty("guia"));
+		labelFormula.setText(PropertiesLenguaje.prop.getProperty("programa"));
 	}
 }

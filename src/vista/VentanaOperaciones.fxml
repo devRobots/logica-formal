@@ -23,7 +23,7 @@
                <children>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Button defaultButton="true" layoutX="26.0" layoutY="27.0" mnemonicParsing="false" onAction="#salir" prefHeight="34.0" prefWidth="114.0" text="Salir" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="27.0" />
+                        <Button fx:id="btnSalir" defaultButton="true" layoutX="26.0" layoutY="27.0" mnemonicParsing="false" onAction="#salir" prefHeight="34.0" prefWidth="114.0" text="Salir" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="27.0" />
                      </children>
                   </AnchorPane>
                   <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -47,7 +47,7 @@
                   </GridPane>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                      <children>
-                        <Label layoutX="168.0" layoutY="8.0" prefHeight="21.0" prefWidth="125.0" text="Fórmula Original" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="168.0" AnchorPane.rightAnchor="205.0" AnchorPane.topAnchor="8.0">
+                        <Label fx:id="labelFormula" layoutX="168.0" layoutY="8.0" prefHeight="21.0" prefWidth="125.0" text="Fórmula Original" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="168.0" AnchorPane.rightAnchor="205.0" AnchorPane.topAnchor="8.0">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
@@ -86,14 +86,14 @@
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="Archivo">
+          <Menu fx:id="menuArchivo" mnemonicParsing="false" text="Archivo">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#cerrar" text="Cerrar" />
+              <MenuItem fx:id="submenuCerrar" mnemonicParsing="false" onAction="#cerrar" text="Cerrar" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Ayuda">
+          <Menu fx:id="menuAyuda" mnemonicParsing="false" text="Ayuda">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#abrirGuia" text="Guia" />
+              <MenuItem fx:id="submenuGuia" mnemonicParsing="false" onAction="#abrirGuia" text="Guia" />
             </items>
           </Menu>
         </menus>

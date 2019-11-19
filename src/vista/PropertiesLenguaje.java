@@ -6,35 +6,42 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import javax.swing.JOptionPane;
+
 public class PropertiesLenguaje {
 	
-	private static Properties prop=new Properties();
-	
-	public PropertiesLenguaje() {
-		setEspanol();
-	}
-	
-	public Properties getProp() {
-		return prop;
-	}
+	public static Properties prop=new Properties();
+	public static boolean idioma=true;
 
-	public void setEspanol() {
+	public static void setEspanol() {
 		InputStream is = null;	
 		try {
-			is = new FileInputStream(new File(PropertiesLenguaje.class.getResource("ES.properties")+""));
+			is = new FileInputStream(new File("Aplicacion_lib/ES.properties"));
 			prop.load(is);
-		} catch(IOException e) {
-			System.out.println(e.toString());
+		} catch(IOException e) {		
+			try {
+				is = new FileInputStream(new File("src/vista/ES.properties"));
+				prop.load(is);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null, "No se pudo cargar el archivo de español.");
+			}
 		}
 	}
 	
-	public void setIngles() {
+	public static void setIngles() {
 		InputStream is = null;	
 		try {
-			is = new FileInputStream(new File(PropertiesLenguaje.class.getResource("EN.properties")+""));
+			is = new FileInputStream(new File("Aplicacion_lib/EN.properties"));
 			prop.load(is);
 		} catch(IOException e) {
-			System.out.println(e.toString());
+			try {
+				is = new FileInputStream(new File("src/vista/EN.properties"));
+				prop.load(is);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null, "No se pudo cargar el archivo de inglés.");
+			}
 		}
 	}
 }

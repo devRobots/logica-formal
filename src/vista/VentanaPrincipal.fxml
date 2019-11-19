@@ -41,7 +41,7 @@
 							<children>
 								<VBox GridPane.halignment="CENTER" GridPane.valignment="CENTER">
 									<children>
-										<Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="LOGICA FORMAL" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER" VBox.vgrow="ALWAYS">
+										<Label fx:id="labelPrograma" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="LOGICA FORMAL" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER" VBox.vgrow="ALWAYS">
 											<font>
 												<Font name="System Bold" size="24.0" />
 											</font>
@@ -56,7 +56,7 @@
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-      										<Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Ingrese la fórmula" textAlignment="CENTER" GridPane.columnIndex="1" />
+      										<Label fx:id="labelEnunciado" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Ingrese la fórmula" textAlignment="CENTER" GridPane.columnIndex="1" />
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                        <children>
                                           <Button fx:id="btnAtras" mnemonicParsing="false" onAction="#atras" prefHeight="25.0" prefWidth="62.0" text="Atrás" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="10.0" />
@@ -64,7 +64,7 @@
                                     </AnchorPane>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
                                        <children>
-                                          <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" onAction="#limpiar" prefHeight="25.0" prefWidth="62.0" text="Limpiar" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
+                                          <Button fx:id="btnLimpiar" layoutX="18.0" layoutY="6.0" mnemonicParsing="false" onAction="#limpiar" prefHeight="25.0" prefWidth="62.0" text="Limpiar" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
                                        </children>
                                     </AnchorPane>
                                  </children>
@@ -125,7 +125,7 @@
 								</AnchorPane>
 								<AnchorPane GridPane.rowIndex="3">
 									<children>
-										<Button layoutX="19.0" layoutY="14.0" mnemonicParsing="false" onAction="#agregarTabla" prefHeight="45.0" prefWidth="298.0" text="Agregar" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+										<Button fx:id="btnAgregar" layoutX="19.0" layoutY="14.0" mnemonicParsing="false" onAction="#agregarTabla" prefHeight="45.0" prefWidth="298.0" text="Agregar" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                                  <graphic>
                                     <ImageView fitHeight="20.0" fitWidth="20.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -137,7 +137,7 @@
 								</AnchorPane>
 								<AnchorPane GridPane.rowIndex="4">
 									<children>
-                              <Label layoutX="22.0" layoutY="24.0" text="Hallar :" />
+                              <Label fx:id="labelHallar" layoutX="22.0" layoutY="24.0" text="Hallar :" />
                               <ComboBox fx:id="comboMetodo" layoutX="82.0" layoutY="25.0" onAction="#seleccionar" prefWidth="150.0" promptText="Seleccione una acción a realizar" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="66.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
 									</children>
 								</AnchorPane>
@@ -179,19 +179,20 @@
 			<top>
 				<MenuBar BorderPane.alignment="CENTER">
 					<menus>
-						<Menu mnemonicParsing="false" text="Archivo">
+						<Menu fx:id="menuArchivo" mnemonicParsing="false" text="Archivo">
 							<items>
-								<MenuItem mnemonicParsing="false" onAction="#cerrar" text="Cerrar" />
+								<MenuItem fx:id="submenuCerrar" mnemonicParsing="false" onAction="#cerrar" text="Cerrar" />
 							</items>
 						</Menu>
-						<Menu mnemonicParsing="false" text="Editar">
+						<Menu fx:id="menuEditar" mnemonicParsing="false" text="Editar">
 							<items>
-								<MenuItem mnemonicParsing="false" onAction="#limpiarTodo" text="Reset" />
+                        <MenuItem fx:id="submenuCambiar" mnemonicParsing="false" onAction="#cambiarIdioma" text="Cambiar Idioma" />
+								<MenuItem fx:id="submenuReset" mnemonicParsing="false" onAction="#limpiarTodo" text="Reset" />
 							</items>
 						</Menu>
-						<Menu mnemonicParsing="false" text="Ayuda">
+						<Menu fx:id="menuAyuda" mnemonicParsing="false" text="Ayuda">
 							<items>
-								<MenuItem mnemonicParsing="false" onAction="#abrirGuia" text="Guia" />
+								<MenuItem fx:id="submenuGuia" mnemonicParsing="false" onAction="#abrirGuia" text="Guia" />
 							</items>
 						</Menu>
 					</menus>
