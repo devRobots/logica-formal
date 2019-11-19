@@ -33,8 +33,8 @@ public class ArbolFormula {
 
 	/**
 	 * Agrega un nodo al árbol de una FNC o FND
-	 * @param nodo
-	 * @param fnc
+	 * @param nodo Inicial
+	 * @param fnc String con la fórmula
 	 */
 	public void addNodo(Nodo nodo, boolean fnc) {
 		char operador;
@@ -74,9 +74,9 @@ public class ArbolFormula {
 
 	/**
 	 * Método recursivo usado para encontrar todas las coincidencias de un caracter
-	 * @param nodo
+	 * @param nodo Inicial
 	 * @param caracter
-	 * @param coincidencias
+	 * @param coincidencias Lista de conincidencias hasta el momento
 	 */
 	private void findAll(Nodo nodo, char caracter, ArrayList<Nodo> coincidencias) {
 		if (raiz == null) {
@@ -102,7 +102,7 @@ public class ArbolFormula {
 
 	/**
 	 * Método recursivo para encontrar un caracter especifico en el árbol
-	 * @param nodo
+	 * @param nodo Inicial
 	 * @param caracter
 	 * @return
 	 */
@@ -135,7 +135,7 @@ public class ArbolFormula {
 
 	/**
 	 * Método recursivo para obtener el nodo al que se le puede aplicar el axioma Morgan
-	 * @param nodo
+	 * @param nodo Inicial
 	 * @return
 	 */
 	private Nodo getNodoMorgan(Nodo nodo) {
@@ -170,7 +170,7 @@ public class ArbolFormula {
 
 	/**
 	 * Método recursivo para obtener el nodo que tiene dos conjunciones seguidas
-	 * @param nodo
+	 * @param nodo Inicial
 	 * @return
 	 */
 	private Nodo getNodoConjuncion(Nodo nodo) {
@@ -206,7 +206,7 @@ public class ArbolFormula {
 
 	/**
 	 * Método recursivo para obtener el nodo que tiene dos disyunciones seguidas
-	 * @param nodo
+	 * @param nodo Inicial
 	 * @return
 	 */
 	private Nodo getNodoDisyuncion(Nodo nodo) {
@@ -242,7 +242,7 @@ public class ArbolFormula {
 
 	/**
 	 * Método recursivo para obtener el nodo que posee una conjunción seguida de una disyunción
-	 * @param nodo
+	 * @param nodo Inicial
 	 * @return
 	 */
 	private Nodo getNodoConjuncionDisyuncion(Nodo nodo) {
@@ -276,7 +276,7 @@ public class ArbolFormula {
 
 	/**
 	 * Método recursivo para obtener el nodo que posee una disyunción seguida de una conjunción
-	 * @param nodo
+	 * @param nodo Inicial
 	 * @return
 	 */
 	private Nodo getNodoDisyuncionConjuncion(Nodo nodo) {
@@ -311,7 +311,7 @@ public class ArbolFormula {
 
 	/**
 	 * Método recursivo para obtener el nodo que posee una dos negaciones seguidas
-	 * @param nodo
+	 * @param nodo Inicial
 	 * @return
 	 */
 	private Nodo getNodoNegado(Nodo nodo) {
@@ -347,7 +347,7 @@ public class ArbolFormula {
 
 	/**
 	 * Método recursivo para obtener un nodo que posee duplicados
-	 * @param nodo
+	 * @param nodo Inicial
 	 * @return
 	 */
 	private Nodo getNodoDuplicado(Nodo nodo) {
@@ -384,8 +384,8 @@ public class ArbolFormula {
 
 	/**
 	 * Método recursivo para validar si un caracter está en el árbol
-	 * @param nodo
-	 * @param valor
+	 * @param nodo Inicial
+	 * @param valor Caracter
 	 * @return
 	 */
 	private boolean contains(Nodo nodo, char valor) {
