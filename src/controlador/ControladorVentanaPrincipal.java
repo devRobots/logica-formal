@@ -167,7 +167,19 @@ public class ControladorVentanaPrincipal implements Initializable {
 					}
 				}
 
+			}else if(code != KeyCode.LEFT&&code != KeyCode.RIGHT) {
+				char c = event.getCharacter().charAt(0);
+				if (!Character.isLetter(c) || c == 'v' || c == 'ʌ' || c == 'V') {
+					event.consume();
+					
+				}
+				if (!esPosicionValida(textArea.getCaretPosition())) {
+					event.consume();
+					
+				}
 			}
+			
+
 			actualizarHistorial();
 
 		});
