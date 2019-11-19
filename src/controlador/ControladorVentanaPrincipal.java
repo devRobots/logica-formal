@@ -9,8 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javax.swing.JOptionPane;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
@@ -20,6 +18,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -146,13 +146,20 @@ public class ControladorVentanaPrincipal implements Initializable {
 		textArea.addEventFilter(KeyEvent.ANY, event -> {
 			KeyCode code = event.getCode();
 			textArea.deselect();
-			if (code == KeyCode.ENTER || code == KeyCode.TAB || code == KeyCode.X || code == KeyCode.V) {
+			System.out.println(event.getCode());
+			if(code==KeyCode.OPEN_BRACKET ||code==KeyCode.QUOTE ||code==KeyCode.CLOSE_BRACKET||code==KeyCode.MINUS||code==KeyCode.DEAD_ACUTE) {
+				if (historial.size() > 2) {
+					textArea.setText(historial.get(historial.size() - 1));
+				}else {
+					textArea.setText("");
+				}
+			}else if (code == KeyCode.ENTER || code == KeyCode.TAB || code == KeyCode.X||code == KeyCode.V) {
 				event.consume();
 			} else if (code == KeyCode.BACK_SPACE) {
 				int pos = textArea.getCaretPosition();
 				if (pos > 0) {
-					char c = textArea.getText().charAt(pos - 1);
-					if (!Character.isAlphabetic(c) || c == 'v' || c == 'ʌ' || c == 'V') {
+					char c1 = textArea.getText().charAt(pos - 1);
+					if (!Character.isAlphabetic(c1) || c1 == 'v' || c1 == 'ʌ' || c1 == 'V') {
 						event.consume();
 					}
 
@@ -161,25 +168,28 @@ public class ControladorVentanaPrincipal implements Initializable {
 			} else if (code == KeyCode.DELETE) {
 				int pos = textArea.getCaretPosition();
 				if (pos < textArea.getText().length()) {
-					char c = textArea.getText().charAt(pos);
+					char c = event.getCharacter().charAt(0);
 					if (!Character.isAlphabetic(c) || c == 'v' || c == 'ʌ') {
 						event.consume();
 					}
 				}
 
 			}else if(code != KeyCode.LEFT&&code != KeyCode.RIGHT) {
-				char c = event.getCharacter().charAt(0);
-				if (!Character.isLetter(c) || c == 'v' || c == 'ʌ' || c == 'V') {
+				if(event.getCharacter().length()>0){
+					char c = event.getCharacter().charAt(0);
+					if (!Character.isLetter(c) || c == 'v' || c == 'ʌ' || c == 'V' || c=='´' || c=='`'|| c=='ç') {
+						event.consume();
+						
+					}
+					if (!esPosicionValida(textArea.getCaretPosition())) {
+						event.consume();
+						
+					}
+				}else{
 					event.consume();
-					
 				}
-				if (!esPosicionValida(textArea.getCaretPosition())) {
-					event.consume();
-					
-				}
+				
 			}
-			
-
 			actualizarHistorial();
 
 		});
@@ -221,20 +231,20 @@ public class ControladorVentanaPrincipal implements Initializable {
 
 	@FXML
 	void agregarAtomo(KeyEvent event) {
-		char c = event.getCharacter().charAt(0);
-		boolean ward = true;
-
-		if (!Character.isLetter(c) || c == 'v' || c == 'ʌ' || c == 'V') {
-			event.consume();
-			ward = false;
-		}
-		if (!esPosicionValida(textArea.getCaretPosition())) {
-			event.consume();
-			ward = false;
-		}
-		if (ward) {
-			actualizarHistorial();
-		}
+//		char c = event.getCharacter().charAt(0);
+//		boolean ward = true;
+//
+//		if (!Character.isLetter(c) || c == 'v' || c == 'ʌ' || c == 'V') {
+//			event.consume();
+//			ward = false;
+//		}
+//		if (!esPosicionValida(textArea.getCaretPosition())) {
+//			event.consume();
+//			ward = false;v
+//		}
+//		if (ward) {
+//			actualizarHistorial();
+//		}
 
 	}
 
@@ -343,14 +353,23 @@ public class ControladorVentanaPrincipal implements Initializable {
 		String cadena = textArea.getText();
 
 		if (cadena.isEmpty()) {
-			JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorVacio"), "Error",
-					JOptionPane.ERROR_MESSAGE);
+			Alert alert=new Alert(AlertType.WARNING);
+			alert.setTitle("Error");
+			alert.setHeaderText(PropertiesLenguaje.prop.getProperty("error"));
+			alert.setContentText(PropertiesLenguaje.prop.getProperty("errorVacio"));
+			alert.show();
 		} else if (cadena.contains("()")) {
-			JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorAtomo"), "Error",
-					JOptionPane.ERROR_MESSAGE);
+			Alert alert=new Alert(AlertType.WARNING);
+			alert.setTitle("Error");
+			alert.setHeaderText(PropertiesLenguaje.prop.getProperty("error"));
+			alert.setContentText(PropertiesLenguaje.prop.getProperty("errorAtomo"));
+			alert.show();
 		} else if(formulasTabla.contains(new TablaFormulas(cadena, null, null))) {
-			JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorFormula"), "Error",
-					JOptionPane.ERROR_MESSAGE);
+			Alert alert=new Alert(AlertType.WARNING);
+			alert.setTitle("Error");
+			alert.setHeaderText(PropertiesLenguaje.prop.getProperty("error"));
+			alert.setContentText(PropertiesLenguaje.prop.getProperty("errorFormula"));
+			alert.show();
 		}	else {
 			textArea.setText("");
 			historial = new ArrayList<String>();
@@ -422,7 +441,11 @@ public class ControladorVentanaPrincipal implements Initializable {
 				Desktop.getDesktop().open(objetofile);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorGuia"));
+				Alert alert=new Alert(AlertType.WARNING);
+				alert.setTitle("Error");
+				alert.setHeaderText(PropertiesLenguaje.prop.getProperty("error"));
+				alert.setContentText(PropertiesLenguaje.prop.getProperty("errorGuia"));
+				alert.show();
 			}
 
 		}
@@ -448,8 +471,11 @@ public class ControladorVentanaPrincipal implements Initializable {
 		String formulaL = tableFormulas.getSelectionModel().getSelectedItem().getFormula();
 		if (comboMetodo.getSelectionModel().getSelectedItem().equals("FNC")) {
 			if (formulasSeleccionadas.size() != 1) {
-				JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorSeleccionar"), "Error",
-						JOptionPane.ERROR_MESSAGE);
+				Alert alert=new Alert(AlertType.WARNING);
+				alert.setTitle("Error");
+				alert.setHeaderText(PropertiesLenguaje.prop.getProperty("error"));
+				alert.setContentText(PropertiesLenguaje.prop.getProperty("errorSeleccionar"));
+				alert.show();
 				return;
 			} else {
 				cadena = visualizarFNC(fbf.toFNC());
@@ -457,8 +483,11 @@ public class ControladorVentanaPrincipal implements Initializable {
 			}
 		} else if (comboMetodo.getSelectionModel().getSelectedItem().equals("FC")) {
 			if (formulasSeleccionadas.size() != 1) {
-				JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorSeleccionar"), "Error",
-						JOptionPane.ERROR_MESSAGE);
+				Alert alert=new Alert(AlertType.WARNING);
+				alert.setTitle("Error");
+				alert.setHeaderText(PropertiesLenguaje.prop.getProperty("error"));
+				alert.setContentText(PropertiesLenguaje.prop.getProperty("errorSeleccionar"));
+				alert.show();
 				return;
 			} else {
 				cadena = visualizarFC(fbf.toFC().toString());
@@ -466,8 +495,11 @@ public class ControladorVentanaPrincipal implements Initializable {
 			}
 		} else if (comboMetodo.getSelectionModel().getSelectedItem().equals("FND")) {
 			if (formulasSeleccionadas.size() != 1) {
-				JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorSeleccionar"), "Error",
-						JOptionPane.ERROR_MESSAGE);
+				Alert alert=new Alert(AlertType.WARNING);
+				alert.setTitle("Error");
+				alert.setHeaderText(PropertiesLenguaje.prop.getProperty("error"));
+				alert.setContentText(PropertiesLenguaje.prop.getProperty("errorSeleccionar"));
+				alert.show();
 				return;
 			} else {
 				cadena = visualizarFND(fbf.toFND());
@@ -503,8 +535,11 @@ public class ControladorVentanaPrincipal implements Initializable {
 				titulo = PropertiesLenguaje.prop.getProperty("satis");
 				formulaL = formulasSeleccionadas.toString();
 			} else {
-				JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorResolucion"), "Error",
-						JOptionPane.ERROR_MESSAGE);
+				Alert alert=new Alert(AlertType.WARNING);
+				alert.setTitle("Error");
+				alert.setHeaderText(PropertiesLenguaje.prop.getProperty("error"));
+				alert.setContentText(PropertiesLenguaje.prop.getProperty("errorResolucion"));
+				alert.show();
 				return;
 			}
 		}

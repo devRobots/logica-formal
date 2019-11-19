@@ -54,6 +54,12 @@ public class TablaFormulas {
 
 	@Override
 	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
 		TablaFormulas other = (TablaFormulas) obj;
 		if (formula == null) {
 			if (other.formula != null)
@@ -62,6 +68,7 @@ public class TablaFormulas {
 			return false;
 		return true;
 	}
+
 	
 	
 

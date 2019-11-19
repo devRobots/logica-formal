@@ -5,11 +5,11 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javax.swing.JOptionPane;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -78,7 +78,11 @@ public class ControladorOperaciones implements Initializable {
 				Desktop.getDesktop().open(objetofile);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null, PropertiesLenguaje.prop.getProperty("errorGuia"));
+				Alert alert=new Alert(AlertType.WARNING);
+				alert.setTitle("Error");
+				alert.setHeaderText(PropertiesLenguaje.prop.getProperty("error"));
+				alert.setContentText(PropertiesLenguaje.prop.getProperty("errorGuia"));
+				alert.show();
 			}
 
 		}
